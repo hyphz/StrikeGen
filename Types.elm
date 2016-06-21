@@ -11,7 +11,7 @@ type Msg =
   | BackgroundsLoaded String
   | OriginsLoaded String
   | HTTPLoadError Error
-  | FreeformFieldUpdated String String
+  | FormFieldUpdated String String
 
 {-| The model in memory. Character holds the active character, Database holds the
 current database read from the data files. -}
@@ -20,8 +20,7 @@ type alias Model =
       database : Database }
 
 type alias Character =
-    { background : Background,
-      origin : Origin,
+    { origin : Origin,
       skills : List Skill,
       kits : List Kit,
       kitadvances : List KitAdvance,
@@ -29,9 +28,8 @@ type alias Character =
       formresponses : Dict String String }
 
 type alias Database =
-    { backgrounds : List Background,
-      origins : List Origin,
-      forms : Dict String Form }
+    { backgrounds : Dict String Background,
+      origins : Dict String Origin }
 
 
 type alias Skill =
@@ -64,8 +62,9 @@ type alias Form =
     fields : Dict String Field }
 
 type Field =
-    DropdownField { name: String, key : String, choices: (List String), value: String }
-  | FreeformField { name: String, key : String, value: String }
+    DropdownField { name: String, key : String, choices: (List String) }
+  | FreeformField { name: String, key : String }
+  | NumberField { name: String, key: String }
 
 nullBackground : Background
 nullBackground = { name="<Not Selected>", skillNames=[], wealth=0, trick=""}
@@ -74,20 +73,24 @@ nullOrigin = { name="<Not Selected>",skillNames=[],complications=[], wealth=0}
 nullKit : Kit
 nullKit = { name="<Not Selected>",base="",advances=[]}
 
+-- Apparently we actually have to do this..
+fieldKey x = case x of
+  DropdownField df -> df.key
+  FreeformField ff -> ff.key
+  NumberField nf -> nf.key
 
+makeForm : String -> List Field -> Form
+makeForm name fields = {name = name,
+  fields = Dict.fromList (List.map (\x -> (fieldKey x, x)) fields)}
 
-
-testForm : Dict String Form
-testForm = singleton "Sheep" {name="Sheep",
-  fields=(singleton "Sheep" (FreeformField { name="Cow", key="Sheep", value="" }))}
-
+blankResponses : Dict String String
+blankResponses = Dict.fromList [("basics-level","1")]
 
 blankCharacter = { skills = [],
-          background = nullBackground,
           origin = nullOrigin,
           kits = [nullKit],
           kitadvances = [],
           formkeys = ["Sheep"],
-          formresponses = Dict.empty }
+          formresponses = blankResponses }
 
-blankDatabase = { backgrounds = [nullBackground], origins = [nullOrigin], forms = testForm }
+blankDatabase = { backgrounds = Dict.empty, origins = Dict.empty }

@@ -14,7 +14,7 @@ import Result exposing (withDefault)
 import Types exposing (..)
 import Dict exposing (..)
 import Maybe exposing (..)
-
+import CharModel exposing (getSkills, getForms)
 
 
 
@@ -45,7 +45,8 @@ skillTableHeader : Html Msg
 skillTableHeader = tr [] (List.map quickTh ["Name", "Source"])
 
 skillTable : Model -> Html Msg
-skillTable m = table [] [thead [] [skillTableHeader], (tbody [] (List.map skillToHtmlTableRow (sortBy .name m.character.skills)))]
+skillTable m =
+  table [] [thead [] [skillTableHeader], (tbody [] (List.map skillToHtmlTableRow (sortBy .name (getSkills m))))]
 
 
 -- For some reason Elm modified the HTML library so that instead of passing Html.Events.on a function to apply
@@ -54,62 +55,31 @@ skillTable m = table [] [thead [] [skillTableHeader], (tbody [] (List.map skillT
 targetAndWrap : (String -> Msg) -> Decoder Msg
 targetAndWrap f = Json.Decode.map f targetValue
 
-maybeToResult : String -> (Maybe a) -> (Result String a)
-maybeToResult err may = case may of
-    Just x -> Ok x
-    Nothing -> Err err
-
--- Gets the one member of a list that satisfies a condition, or throws an error if there's none or more than
--- one.
-theOne : (a -> Bool) -> List a -> (Result String a)
-theOne f l =
-    let filteredList = (List.filter f l) in
-    case (length filteredList) of
-        2 -> Err "Multiple entries matched theOne"
-        _ -> maybeToResult "No entry matched theOne" (head filteredList)
-
-
--- Used within genericListPicker to generate the individual options.
-genericListOption : (a -> String) -> (Model -> a) -> Model -> a -> Html Msg
-genericListOption nameExtractor modelComponent model x =
-    option [selected ((modelComponent model) == x)] [text (nameExtractor x)]
-
--- Generates a list picker.
--- nameExtractor: function to apply to a model member to get the name to show in the list.
--- modelComponent: function to apply to a model to get the member to refer to.
--- messageGenerator: function to apply to the chosen option to get the message to send.
--- theList: list of components to pick from.
-genericListPicker : (a -> String) -> (Model -> a) -> (String -> Msg) -> List a -> Model -> Html Msg
-genericListPicker nameExtractor modelComponent messageGenerator theList model =
-    select [(Html.Events.on "change" (targetAndWrap messageGenerator))]
-      (List.map (genericListOption nameExtractor modelComponent model) (sortBy nameExtractor theList))
-
-backgroundPicker : Model -> Html Msg
-backgroundPicker model = genericListPicker .name (.character >> .background) BackgroundChanged model.database.backgrounds model
-
-originPicker : Model -> Html Msg
-originPicker model = genericListPicker .name (.character >> .origin) OriginChanged model.database.origins model
+dropdownFieldOption model key opt =
+  let isSelected = case (Dict.get key model.character.formresponses) of
+    Just x -> opt == x
+    Nothing -> False
+  in option [selected isSelected] [text opt]
 
 formFieldDisplay : Model -> Field -> Html Msg
 formFieldDisplay model field = case field of
   FreeformField ff -> tr [] [td [] [(text ff.name)], td []
-    [input [(Html.Events.on "change" (targetAndWrap (FreeformFieldUpdated ff.key))),
+    [input [(Html.Events.on "change" (targetAndWrap (FormFieldUpdated ff.key))),
             (Html.Attributes.value (Maybe.withDefault "" (get ff.key model.character.formresponses)))] []]]
-  DropdownField df -> tr [] [td [] [(text df.name)]]
-
+  DropdownField df -> tr [] [td [] [(text df.name)], td []
+    [select [(Html.Events.on "change" (targetAndWrap (FormFieldUpdated df.key)))]
+             (List.map ((dropdownFieldOption model) df.key) df.choices)]]
+  NumberField nf -> tr [] [td [] [(text nf.name)], td []
+    [input [(Html.Events.on "change" (targetAndWrap (FormFieldUpdated nf.key))),
+            (Html.Attributes.value (Maybe.withDefault "" (get nf.key model.character.formresponses))),
+            (Html.Attributes.type' "number")] []]]
+            
 formDisplay : Model -> Form -> Html Msg
-formDisplay model form = table [] [thead [] [th [] [text form.name]],
+formDisplay model form = table [] [thead [] [th [Html.Attributes.colspan 2] [text form.name]],
                                    tbody [] (List.map (formFieldDisplay model) (values form.fields))]
 
-formDisplayByKey : Model -> String -> Html Msg
-formDisplayByKey model key = case (get key model.database.forms) of
-  Just form -> formDisplay model form
-  Nothing -> text ("Missing form " ++ key ++ "!")
-
-
 formsDisplay : Model -> Html Msg
-formsDisplay model = div [] (List.map (formDisplayByKey model) model.character.formkeys)
-
+formsDisplay model = div [] (List.map (formDisplay model) (getForms model))
 
 view : Model -> Html Msg
-view model = div [] [backgroundPicker model, originPicker model, skillTable model, formsDisplay model]
+view model = div [] [skillTable model, formsDisplay model, input [type' "number"] []]

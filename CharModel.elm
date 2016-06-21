@@ -10,11 +10,76 @@ import Http exposing (getString, Error)
 import Task exposing (perform)
 import Result exposing (withDefault)
 import Types exposing (..)
-import Dict exposing (insert)
+import Dict exposing (Dict, insert)
+import String exposing (toInt)
 
 init = ({character = blankCharacter,
          database = blankDatabase},
          getJsonFileCommand "data/backgrounds.json" BackgroundsLoaded)
+
+
+mayList x = case x of
+  Nothing -> []
+  Just y -> [y]
+
+
+indirectLookup : Model -> String -> Dict String a -> (a -> b) -> b -> b -> b
+indirectLookup model key db func default error =
+  case Dict.get key model.character.formresponses of
+    Nothing -> default
+    Just x -> case Dict.get x db of
+      Nothing -> default
+      Just o -> func o
+
+
+backgroundSkills : Model -> List String
+backgroundSkills m = indirectLookup m "basics-bg" m.database.backgrounds
+  .skillNames [] ["Missing background"]
+
+originSkills : Model -> List String
+originSkills m = indirectLookup m "basics-origin" m.database.origins
+  .skillNames [] ["Missing origin"]
+
+complexOrigin : Origin -> (Bool, Bool)
+complexOrigin x = ((length x.skillNames) > 2, (length x.complications) > 1)
+
+hasComplexOrigin : Model -> (Bool, Bool)
+hasComplexOrigin m = indirectLookup m "basics-origin" m.database.origins
+  complexOrigin (False, False) (False, False)
+
+complexOriginForm : Model -> Maybe Form
+complexOriginForm m = case (hasComplexOrigin m) of
+  (False, False) -> Nothing
+  (complexSkills, complexComplications) ->
+    let
+      skillPart = case complexSkills of
+        True -> [DropdownField {name="First Skill:",key="origin-s1",choices=([""] ++ originSkills m)},
+                 DropdownField {name="Second Skill:",key="origin-s2",choices=([""] ++ originSkills m)}]
+        False -> []
+      complicationPart = []
+    in
+      Just (makeForm "Origin" (skillPart ++ complicationPart))
+
+resolvedOriginSkills : Model -> List String
+resolvedOriginSkills m = case (hasComplexOrigin m) of
+  (False, _) -> originSkills m
+  (True, _) -> mayList (Dict.get "origin-s1" m.character.formresponses) ++
+               mayList (Dict.get "origin-s2" m.character.formresponses)
+
+
+getSkills : Model -> List Skill
+getSkills m = map (skillNameToSkill 0) (backgroundSkills m)
+          ++ map (skillNameToSkill 1) (resolvedOriginSkills m)
+
+{-| Turns a skill name from the database into a skill storable on the character,
+setting the source and name according to the parameters. -}
+skillNameToSkill : Int -> String -> Skill
+skillNameToSkill source name = { name = name, source = source }
+
+
+updateCharacter : (a -> Character -> Character) -> a -> Model -> Model
+updateCharacter updater updata model = {model | character = (updater updata model.character) }
+
 
 {-| Returns the command to load a JSON data file. If it loads successfully, send the
 specified message. If it doesn't, send HTTPLoadError.  -}
@@ -23,82 +88,12 @@ getJsonFileCommand fileName signal =
    perform HTTPLoadError signal (getString fileName)
 
 
-{-| Gets the one member of a list that satisfies a condition, or throws an error
-if there's none or more than one. -}
-theOne : (a -> Bool) -> List a -> (Result String a)
-theOne f l =
-    let filteredList = (filter f l) in
-    case (length filteredList) of
-        2 -> Err "Multiple entries matched theOne"
-        _ -> maybeToResult "No entry matched theOne" (head filteredList)
-
-{-| Model update function that searches the provided list for a item with a matching
-name, and if it is found, calls another model update function with the model and the
-found entry; otherwise, leaves the model untouched. -}
-fetchAndUpdate : List a -> String -> (a -> String) -> (a -> Model -> Model) -> Model -> Model
-fetchAndUpdate theList target nameExtractor updater model =
-    case (theOne (\x -> (nameExtractor x) == target) theList) of
-        Ok x -> updater x model
-        Err _ -> model
-
-
-
-{-| Turns a Maybe value into a Result, using the provided string as the error message
-if the Maybe is absent. -}
-maybeToResult : String -> (Maybe a) -> (Result String a)
-maybeToResult err may = case may of
-    Just x -> Ok x
-    Nothing -> Err err
-
-{-| Turns a skill name from the database into a skill storable on the character,
-setting the source and name according to the parameters. -}
-skillNameToSkill : Int -> String -> Skill
-skillNameToSkill source name = { name = name, source = source }
-
-
-{-| Adds all skill names in the string list to the given skill list, giving them
-the specific source tag. -}
-addSkillsWithSource : Int -> List String -> List Skill -> List Skill
-addSkillsWithSource source newskills skills =
-   skills ++ map (skillNameToSkill source) newskills
-
-{-| Deletes all skill names in the given skill list that have a specific source
-tag. -}
-wipeSkillsWithSource : Int -> List Skill -> List Skill
-wipeSkillsWithSource target = filter (\s -> s.source /= target)
-
-
-{-| Replaces all skills in the given skill list which have the given source tag
-with newly generated skills with the same source tag generated from the given
-list of strings. -}
-switchSkillsWithSource : Int -> List String -> List Skill -> List Skill
-switchSkillsWithSource source newskills oldskills =
-    addSkillsWithSource source (newskills) (wipeSkillsWithSource source oldskills)
-
-updateCharacter : (a -> Character -> Character) -> a -> Model -> Model
-updateCharacter updater updata model = {model | character = (updater updata model.character) }
-
 updateDatabase : (Database -> Database) -> Model -> Model
 updateDatabase updater model = {model | database = (updater model.database) }
 
 
-
-updateForNewBackground : Background -> Character -> Character
-updateForNewBackground newbg model =
-    { model | background = newbg, skills = (switchSkillsWithSource 0 newbg.skillNames model.skills) }
-
-applyBackgroundChange : String -> Model -> Model
-applyBackgroundChange newname model =
-    fetchAndUpdate model.database.backgrounds newname .name (updateCharacter updateForNewBackground) model
-
-updateForNewOrigin newo model =
-    { model  | origin = newo, skills = (switchSkillsWithSource 1 newo.skillNames model.skills) }
-
-applyOriginChange newname model =
-    fetchAndUpdate model.database.origins newname .name (updateCharacter updateForNewOrigin) model
-
 httpError : Model -> Model
-httpError model = (updateDatabase (\db -> { db | backgrounds = [nullBackground] } )) model
+httpError model =  model
 
 
 originsDecoder : Decoder (List Origin)
@@ -123,25 +118,87 @@ backgroundDecoder =
     ("wealth" := int)
     ("trick" := string)
 
+
+toDict : (a -> comparable) -> List a -> Dict comparable a
+toDict keygetter list = Dict.fromList (map (\s -> (keygetter s, s)) list)
+
 unpackBackgrounds : String -> Model -> Model
 unpackBackgrounds s model = updateDatabase ( \d ->
-       { d | backgrounds = [nullBackground] ++ (withDefault [] (decodeString backgroundsDecoder s))}) model
+ { d | backgrounds = toDict .name ([nullBackground] ++ (withDefault [] (decodeString backgroundsDecoder s)))}) model
 
 unpackOrigins : String -> Model -> Model
 unpackOrigins s model = updateDatabase ( \d ->
-       { d | origins = [nullOrigin] ++ (withDefault [] (decodeString originsDecoder s))}) model
+ { d | origins = toDict .name ([nullOrigin] ++ (withDefault [] (decodeString originsDecoder s)))}) model
+
+setResponse model key value =
+  let
+    char = model.character
+    resp = char.formresponses
+  in
+   { model | character = { char | formresponses = Dict.insert key value resp }}
+
+killResponse model key =
+  let
+    char = model.character
+    resp = char.formresponses
+  in
+   { model | character = { char | formresponses = Dict.remove key resp }}
+
+getResponse model key =
+  Dict.get key model.character.formresponses
+
 
 updateFieldResponse key value model =
-  updateCharacter (\junk char -> { char | formresponses = Dict.insert key value char.formresponses }) 0 model
+  fieldChanged key (setResponse model key value)
 
+
+validateAlteredOrigin m =
+  case hasComplexOrigin m of
+    (False, _) -> m
+    (True, _) -> case getResponse m "origin-s1" of
+      Nothing -> m
+      Just ocs -> case List.member ocs (originSkills m) of
+        True -> m
+        False -> killResponse m "origin-s1"
+
+getLevel m =
+  case getResponse m "basics-level" of
+    Nothing -> 1
+    Just x -> case (toInt x) of
+      Ok l -> l
+      Err _ -> 1
+
+validateLevel m =
+  case getResponse m "basics-level" of
+    Nothing -> setResponse m "basics-level" "1"
+    Just x -> case (toInt x) of
+      Err _ -> setResponse m "basics-level" "1"
+      Ok l -> if l < 1 then setResponse m "basics-level" "1" else
+              if l > 10 then setResponse m "basics-level" "10" else m
+
+
+fieldChanged field m =
+  case field of
+    "basics-origin" -> validateAlteredOrigin m
+    "basics-level" -> validateLevel m
+    _ -> m
+
+
+
+basicsForm model = makeForm "The Basics" [
+  DropdownField {name="Background", key="basics-bg", choices=(Dict.keys model.database.backgrounds)},
+  DropdownField {name="Origin", key="basics-origin", choices=(Dict.keys model.database.origins)},
+  NumberField {name="Level", key="basics-level"}]
+
+
+getForms model =
+   [basicsForm model] ++ (mayList (complexOriginForm model))
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model = case msg of
-    BackgroundChanged x -> (applyBackgroundChange x model, Cmd.none)
-    OriginChanged x -> (applyOriginChange x model, Cmd.none)
     HTTPLoadError e -> (httpError model, Cmd.none)
     BackgroundsLoaded bgs -> (unpackBackgrounds bgs model, getJsonFileCommand "data/origins.json" OriginsLoaded)
     OriginsLoaded ogs -> (unpackOrigins ogs model, Cmd.none)
-    FreeformFieldUpdated k s -> (updateFieldResponse k s model, Cmd.none)
+    FormFieldUpdated k s -> (updateFieldResponse k s model, Cmd.none)
     _ -> (model, Cmd.none)
