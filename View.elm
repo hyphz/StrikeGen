@@ -11,11 +11,11 @@ import Json.Decode exposing (Decoder, decodeString, (:=), object4, string, list,
 import Http exposing (getString, Error)
 import Task exposing (perform)
 import Result exposing (withDefault)
-import Types exposing (..)
+import ModelDB exposing (..)
 import Dict exposing (..)
 import Maybe exposing (..)
 import CharModel exposing (getSkills, getForms)
-
+import FormsModel exposing (..)
 
 
 -- Some utilities for quickly making strings into HTML options for use in selects.
@@ -56,7 +56,7 @@ targetAndWrap : (String -> Msg) -> Decoder Msg
 targetAndWrap f = Json.Decode.map f targetValue
 
 dropdownFieldOption model key opt =
-  let isSelected = case (Dict.get key model.character.formresponses) of
+  let isSelected = case (Dict.get key model.character) of
     Just x -> opt == x
     Nothing -> False
   in option [selected isSelected] [text opt]
@@ -65,18 +65,18 @@ formFieldDisplay : Model -> Field -> Html Msg
 formFieldDisplay model field = case field of
   FreeformField ff -> tr [] [td [] [(text ff.name)], td []
     [input [(Html.Events.on "change" (targetAndWrap (FormFieldUpdated ff.key))),
-            (Html.Attributes.value (Maybe.withDefault "" (get ff.key model.character.formresponses)))] []]]
+            (Html.Attributes.value (Maybe.withDefault "" (get ff.key model.character)))] []]]
   DropdownField df -> tr [] [td [] [(text df.name)], td []
     [select [(Html.Events.on "change" (targetAndWrap (FormFieldUpdated df.key)))]
              (List.map ((dropdownFieldOption model) df.key) df.choices)]]
   NumberField nf -> tr [] [td [] [(text nf.name)], td []
     [input [(Html.Events.on "change" (targetAndWrap (FormFieldUpdated nf.key))),
-            (Html.Attributes.value (Maybe.withDefault "" (get nf.key model.character.formresponses))),
+            (Html.Attributes.value (Maybe.withDefault "" (get nf.key model.character))),
             (Html.Attributes.type' "number")] []]]
-            
+
 formDisplay : Model -> Form -> Html Msg
 formDisplay model form = table [] [thead [] [th [Html.Attributes.colspan 2] [text form.name]],
-                                   tbody [] (List.map (formFieldDisplay model) (values form.fields))]
+                                   tbody [] (List.map (formFieldDisplay model) (form.fields))]
 
 formsDisplay : Model -> Html Msg
 formsDisplay model = div [] (List.map (formDisplay model) (getForms model))
