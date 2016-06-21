@@ -3,7 +3,8 @@ module ModelDB exposing (..)
 import Http exposing (getString, Error)
 import Dict exposing (..)
 import FormsModel exposing (..)
-import Json.Decode exposing (Decoder, decodeString, (:=), object3, object4, string, list, int, at)
+import Json.Decode exposing (Decoder, decodeString, (:=), object3, object4, object6,
+  string, list, int, at, bool, oneOf, succeed)
 import Result exposing (withDefault)
 import Task exposing (perform)
 
@@ -41,7 +42,9 @@ type alias Origin =
     { name : String,
       skillNames : List String,
       wealth : Int,
-      complications : List String }
+      complications : List String,
+      freeformSkill : Bool, -- Those pesky humans
+      freeformComplication : Bool }
 
 type alias Kit =
   { name : String,
@@ -81,11 +84,13 @@ originsDecoder = "origins" := (Json.Decode.list originDecoder)
 
 originDecoder : Decoder Origin
 originDecoder =
-  object4 Origin
+  Json.Decode.object6 Origin
     ("name" := string)
     ("skillNames" := Json.Decode.list string)
     ("wealth" := int)
     ("complications" := Json.Decode.list string)
+    (Json.Decode.oneOf [("freeformSkill" := bool), succeed False])
+    (Json.Decode.oneOf [("freeformComplication" := bool), succeed False])
 
 backgroundsDecoder : Decoder (List Background)
 backgroundsDecoder = "backgrounds" := (Json.Decode.list backgroundDecoder)
@@ -119,12 +124,14 @@ unpackOrigins s model = updateDatabase ( \d ->
 nullBackground : Background
 nullBackground = { name="<Not Selected>", skillNames=[], wealth=0, trick=""}
 nullOrigin : Origin
-nullOrigin = { name="<Not Selected>",skillNames=[],complications=[], wealth=0}
+nullOrigin = { name="<Not Selected>",skillNames=[],complications=[], wealth=0,
+  freeformSkill = False, freeformComplication = False}
 nullKit : Kit
 nullKit = { name="<Not Selected>",base="",advances=[]}
 
 blankCharacter : Dict String String
-blankCharacter = Dict.fromList [("basics-level","1")]
+blankCharacter = Dict.fromList [("basics-level","1"),
+                                ("basics-bg","<Not Selected>")]
 
 blankDatabase = { backgrounds = Dict.empty, origins = Dict.empty }
 

@@ -17,21 +17,11 @@ import Maybe exposing (..)
 import CharModel exposing (getSkills, getForms)
 import FormsModel exposing (..)
 
-
--- Some utilities for quickly making strings into HTML options for use in selects.
-stringToOption : String -> Html msg
-stringToOption s = option [] [text s]
-
-stringsToOptions : List String -> List (Html msg)
-stringsToOptions = List.map stringToOption
-
 sourceName : Int -> String
 sourceName s = case s of
     0 -> "Background"
     1 -> "Origin"
     _ -> "Broken"
-
-
 
 -- Generates the HTML skill table row for a skill.
 skillToHtmlTableRow : Skill -> Html Msg
@@ -72,10 +62,12 @@ formFieldDisplay model field = case field of
   NumberField nf -> tr [] [td [] [(text nf.name)], td []
     [input [(Html.Events.on "change" (targetAndWrap (FormFieldUpdated nf.key))),
             (Html.Attributes.value (Maybe.withDefault "" (get nf.key model.character))),
-            (Html.Attributes.type' "number")] []]]
+            (Html.Attributes.type' "number"),
+            (Html.Attributes.min <| toString nf.min),
+            (Html.Attributes.max <| toString nf.max)] []]]
 
 formDisplay : Model -> Form -> Html Msg
-formDisplay model form = table [] [thead [] [th [Html.Attributes.colspan 2] [text form.name]],
+formDisplay model form = table [(Html.Attributes.class "form")] [thead [] [th [Html.Attributes.colspan 2] [text form.name]],
                                    tbody [] (List.map (formFieldDisplay model) (form.fields))]
 
 formsDisplay : Model -> Html Msg

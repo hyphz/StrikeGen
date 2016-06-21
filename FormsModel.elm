@@ -13,9 +13,9 @@ type alias Form =
 
 -- Field types.
 type Field =
-    DropdownField { name: String, key : String, seq: Int, choices: (List String) }
-  | FreeformField { name: String, key : String, seq: Int }
-  | NumberField { name: String, key: String, seq: Int }
+    DropdownField { name: String, key : String, choices: (List String) }
+  | FreeformField { name: String, key : String  }
+  | NumberField { name: String, key: String, min: Int, max: Int }
 
 -- We have to do this because we're using tagged types instead of aliases.
 fieldKey x = case x of

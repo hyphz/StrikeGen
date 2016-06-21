@@ -44,41 +44,51 @@ originComplications m = indirectLookup m "basics-origin" m.database.origins
 -- these.
 
 {-| Is an origin complex and if so, why? -}
-complexOrigin : Origin -> (Bool, Bool)
-complexOrigin x = ((length x.skillNames) > 2, (length x.complications) > 1)
+complexOrigin : Origin -> (Bool, Bool, Bool, Bool)
+complexOrigin x = ((length x.skillNames) > 2, (length x.complications) > 1,
+  x.freeformSkill, x.freeformComplication)
 
 {-| Is this model's origin conmplex and if so, why? -}
-hasComplexOrigin : Model -> (Bool, Bool)
+hasComplexOrigin : Model -> (Bool, Bool, Bool, Bool)
 hasComplexOrigin m = indirectLookup m "basics-origin" m.database.origins
-  complexOrigin (False, False) (False, False)
+  complexOrigin (False, False, False, False) (False, False, False, False)
 
 {-| Form for making the choices resulting from having a complex origin. -}
 complexOriginForm : Model -> Maybe Form
 complexOriginForm m = case (hasComplexOrigin m) of
-  (False, False) -> Nothing
-  (complexSkills, complexComplications) ->
+  (False, False, False, False) -> Nothing
+  (complexSkills, complexComplications, freeformSkill, _) ->
     let
       skillPart = case complexSkills of
-        True -> [DropdownField {name="First Skill:",seq=0,key="origin-s1",choices=([""] ++ originSkills m)},
-                 DropdownField {name="Second Skill:",seq=1,key="origin-s2",choices=([""] ++ originSkills m)}]
+        True -> [DropdownField {name="First Skill:",key="origin-s1",choices=([""] ++ originSkills m)},
+                 DropdownField {name="Second Skill:",key="origin-s2",choices=([""] ++ originSkills m)}]
         False -> []
       complicationPart = case complexComplications of
-        True -> [DropdownField {name="Complication:",seq=2,key="origin-co",choices=([""] ++ originComplications m)}]
+        True -> [DropdownField {name="Complication:",key="origin-co",choices=([""] ++ originComplications m)}]
         False -> []
+      freeformSkillPart = case freeformSkill of
+        True -> [FreeformField {name="Custom skill:",key="origin-cs"}]
+        False -> []
+      originName = case getResponse m "basics-origin" of
+        Just x -> x
+        Nothing -> "(BUG) Origin complex but missing"
     in
-      Just (Form "Origin" (skillPart ++ complicationPart))
+      Just (Form originName (skillPart ++ complicationPart ++ freeformSkillPart))
 
 {-| Gets the two skills our origin actually contributes, based on the list
 and/or choices. -}
 resolvedOriginSkills : Model -> List String
 resolvedOriginSkills m = case (hasComplexOrigin m) of
-  (False, _) -> originSkills m
-  (True, _) -> mayList (Dict.get "origin-s1" m.character) ++
+  (False, _, False, _) -> originSkills m
+  (True, _, False, _) -> mayList (Dict.get "origin-s1" m.character) ++
                mayList (Dict.get "origin-s2" m.character)
+  (False, _, True, _) -> originSkills m ++ mayList(Dict.get "origin-cs" m.character)
+  (True, _, True, _) -> mayList (Dict.get "origin-s1" m.character) ++
+               mayList (Dict.get "origin-cs" m.character)
 
 {-| Gets the list of character skills. -}
 getSkills : Model -> List Skill
-getSkills m = map (skillNameToSkill 0) (backgroundSkills m) -- Background
+getSkills m = map (skillNameToSkill 0) (resolvedBackgroundSkills m) -- Background
           ++ map (skillNameToSkill 1) (resolvedOriginSkills m) -- Origin
 
 {-| Turns a skill name from the database into a skill storable on the character,
@@ -86,7 +96,42 @@ setting the source and name according to the parameters. -}
 skillNameToSkill : Int -> String -> Skill
 skillNameToSkill source name = { name = name, source = source }
 
+customBackgroundFields : Model -> List Field
+customBackgroundFields m = [
+   FreeformField {name="Skill you need the most?", key="bg-custom-s1"},
+   FreeformField {name="Supporting skill or knowledge?", key="bg-custom-s2"},
+   FreeformField {name="Social/business skill?", key="bg-custom-s3"},
+   DropdownField {name="What helps when times are tough?", key="bg-custom-wos1", choices=["","Wealth","People"]}]
+   ++ mayList (
+        case getResponse m "bg-custom-wos1" of
+          Just "People" -> Just <| FreeformField {name="Who?", key="bg-custom-wos1s"}
+          _ -> Nothing
+        )
+   ++ [DropdownField {name="How you get stuff?", key="bg-custom-wos2", choices=["","Money","Skill"]}]
+   ++ mayList (
+        case getResponse m "bg-custom-wos2" of
+          Just "Skill" -> Just <| FreeformField {name="What skill?", key="bg-custom-wos2s"}
+          _ -> Nothing
+        )
 
+resolvedBackgroundSkills m = case getResponse m "basics-bg" of
+  Nothing -> []
+  Just "<Custom>" -> (mayList <| getResponse m "bg-custom-s1") ++
+                     (mayList <| getResponse m "bg-custom-s2") ++
+                     (mayList <| getResponse m "bg-custom-s3") ++
+                      if (getResponse m "bg-custom-wos1" == Just "People") then mayList <| getResponse m "bg-custom-wos1s" else [] ++
+                      if (getResponse m "bg-custom-wos2" == Just "Skill") then mayList <| getResponse m "bg-custom-wos2s" else []
+  Just _ -> backgroundSkills m
+
+customBackgroundForm : Model -> Maybe Form
+customBackgroundForm m =
+  case getResponse m "basics-bg" of
+    Nothing -> Nothing
+    Just "<Custom>" -> Just (Form "Custom background" (customBackgroundFields m))
+    Just _ -> Nothing
+
+{-| Quick function for removing a field value that's out of range, if it
+exists. -}
 killOutOfRange field list model =
   case getResponse model field of
     Nothing -> model
@@ -95,9 +140,12 @@ killOutOfRange field list model =
       False -> killResponse model field
 
 
+{-| When origin is changed, if it's changed to a new complex origin,
+remove any skill choices made for a previous complex origin that aren't
+relevant to the new one. -}
 validateAlteredOrigin m =
   case hasComplexOrigin m of
-    (False, False) -> m
+    (False, False, False, False) -> m
     _ -> (killOutOfRange "origin-s1" (originSkills m)
            (killOutOfRange "origin-s2" (originSkills m)
              (killOutOfRange "origin-co" (originComplications m) m)))
@@ -109,6 +157,8 @@ getLevel m =
       Ok l -> l
       Err _ -> 1
 
+{-| Validate the level setting. This shouldn't ever become invalid, but
+better safe than sorry, I guess.. -}
 validateLevel m =
   case getResponse m "basics-level" of
     Nothing -> setResponse m "basics-level" "1"
@@ -127,14 +177,17 @@ fieldChanged field m =
 
 
 basicsForm model = Form "The Basics" [
-  DropdownField {name="Background", key="basics-bg", seq=0, choices=(Dict.keys model.database.backgrounds)},
-  DropdownField {name="Origin", key="basics-origin", seq=1, choices=(Dict.keys model.database.origins)},
-  NumberField {name="Level", key="basics-level", seq=2}]
+  DropdownField {name="Background", key="basics-bg", choices=(["<Custom>"] ++ (Dict.keys model.database.backgrounds))},
+  DropdownField {name="Origin", key="basics-origin", choices=(Dict.keys model.database.origins)},
+  NumberField {name="Level", key="basics-level", min=1, max=10}]
 
 {-| Get the active forms. -}
 getForms : Model -> List Form
 getForms model =
-   [basicsForm model] ++ (mayList (complexOriginForm model))
+   [basicsForm model] ++
+   (mayList (complexOriginForm model)) ++
+   (mayList (customBackgroundForm model))
+
 
 {-| Update a field on the character when a form value changes, and call validation. -}
 updateFieldResponse : String -> String -> Model -> Model
