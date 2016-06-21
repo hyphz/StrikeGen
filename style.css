@@ -1,0 +1,35 @@
+body {
+  font-family: sans-serif;
+}
+
+div.forms {
+  position: absolute;
+  top: 0px;
+  left: 2px;
+  width: 30%;
+}
+
+div.sheet {
+  position: absolute;
+  top: 0px;
+  left: 30%;
+  width: 50%;
+}
+
+table.form {
+  border: 1px solid black;    
+  width: 100%;
+}
+
+table.form th {
+  background-color: lightblue;
+}
+
+table.form td input {
+  width: 100%;
+}
+
+table.form td select {
+  width: 100%;
+}
+

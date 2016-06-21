@@ -1,0 +1,16 @@
+<html>
+<head>
+  <title>Strike! Character Generator</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script src="StrikeGen.js"></script>
+  <script>
+      function loaded() {
+        var node=document.getElementById("main");
+        var app = Elm.Main.embed(node);
+      }
+  </script>
+</head>
+<body onload="loaded()">
+  <div id="main"> </div>
+</body>
+</html>

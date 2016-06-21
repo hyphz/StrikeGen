@@ -74,4 +74,4 @@ formsDisplay : Model -> Html Msg
 formsDisplay model = div [] (List.map (formDisplay model) (getForms model))
 
 view : Model -> Html Msg
-view model = div [] [skillTable model, formsDisplay model, input [type' "number"] []]
+view model = div [] [div [Html.Attributes.class "forms"] [formsDisplay model], div [Html.Attributes.class "sheet"] [skillTable model]]
