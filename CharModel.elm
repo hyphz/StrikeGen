@@ -15,9 +15,10 @@ import FormsModel exposing (..)
 import Ports exposing (download)
 import Json.Encode exposing (encode)
 import Necromancer exposing (classNecro)
+import Archer exposing (classArcher)
 
 
-classes = Dict.fromList [("Necromancer",classNecro)]
+classes = Dict.fromList [("Necromancer",classNecro),("Archer",classArcher)]
 
 init = ({character = blankCharacter,
          database = blankDatabase},
@@ -227,6 +228,12 @@ basicRangeDamageModifier m = case (getResponse m "basics-class") of
     Nothing -> 0
     Just x -> x.modifyBasicRangeDamage m
 
+basicRangeRangeModifier m = case (getResponse m "basics-class") of
+  Nothing -> 0
+  Just classname -> case (Dict.get classname classes) of
+    Nothing -> 0
+    Just x -> x.modifyBasicRangeRange m
+
 
 pmeleeBasic : Model -> Power
 pmeleeBasic m = {name = "Melee Basic Attack",
@@ -243,7 +250,7 @@ prangedBasic m = {name = "Ranged Basic Attack",
                text = "No effect.",
                slot = Attack,
                freq = AtWill,
-               range = 5,
+               range = (5 + basicRangeRangeModifier m),
                area = 0,
                damage = (2 + basicRangeDamageModifier m)
                }

@@ -74,7 +74,8 @@ type alias Class =
     classPowerList : (Model -> List Power),
     classForms : (Model -> List Form),
     modifyBasicMeleeDamage : (Model -> Int),
-    modifyBasicRangeDamage : (Model -> Int) }
+    modifyBasicRangeDamage : (Model -> Int),
+    modifyBasicRangeRange : (Model -> Int) }
 
 type Slot = Role | Attack | Misc | Special | Reaction
 type Freq = AtWill | Encounter | None

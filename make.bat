@@ -1,1 +1,1 @@
-elm make Main.elm --output=Strikegen.js
+elm make Main.elm --output=StrikeGen.js

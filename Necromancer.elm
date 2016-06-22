@@ -3,6 +3,7 @@ module Necromancer exposing (classNecro)
 import ModelDB exposing (..)
 import FormsModel exposing (..)
 import Dict exposing (..)
+import PowerUtilities exposing (..)
 
 
 classNecro : Class
@@ -10,12 +11,16 @@ classNecro = { name = "Necromancer",
                classPowerList = necroPowers,
                classForms = necroForms,
                modifyBasicMeleeDamage = necroBasicMeleeDamage,
-               modifyBasicRangeDamage = necroBasicRangeDamage }
+               modifyBasicRangeDamage = necroBasicRangeDamage,
+               modifyBasicRangeRange = basicRangeRange }
+
 necroBasicMeleeDamage : Model -> Int
 necroBasicMeleeDamage m = if (getLevel m < 5) then 0 else 1
 
 necroBasicRangeDamage : Model -> Int
 necroBasicRangeDamage m = if (getLevel m < 5) then 0 else 1
+
+basicRangeRange m = 0
 
 
 
@@ -99,15 +104,10 @@ raiseAlly m = {name = "Raise Ally",
               damage = 0
             }
 
+
 seedOfFear : Model -> Power
-seedOfFear m = {name = "Seed Of Fear",
-              text = overtext "SeedOfFear" "See page 102.",
-              slot = Attack,
-              freq = Encounter,
-              range = 5,
-              area = 0,
-              damage = 3
-            }
+seedOfFear = quickPower "Seed Of Fear" 102 Attack Encounter 5 0 3
+
 
 greaterMarkOfDeath : Model -> Power
 greaterMarkOfDeath m = {name = "Greater Mark Of Death",
@@ -199,46 +199,23 @@ giftPower m = case (getResponse m "necro-gift") of
 
 
 
-powerDict : Model -> List (Model -> Power) -> Dict String Power
-powerDict m l =
-  let toTuple p = ((p m).name, p m) in
-    Dict.fromList (List.map toTuple l)
-
-
-powerlookup : Model -> String -> (Model -> Dict String Power) -> List Power
-powerlookup m key list = case (getResponse m key) of
-  Nothing -> []
-  Just choice -> case (get choice (list m)) of
-    Nothing -> []
-    Just power -> [power]
-
 l1atwills m = powerDict m [deadlyPoison, phantasms, terrifyingVisage]
 l1atwillpower1 m = powerlookup m "necro-aw1" l1atwills
 l1atwillpower2 m = powerlookup m "necro-aw2" l1atwills
 
 
 l1encoptions m = powerDict m [lifeDrain,corpseExplosion,raiseAlly,seedOfFear]
-
 l3encoptions m = powerDict m [greaterMarkOfDeath, lichPact, healthSwap]
-
 l7encoptions m = powerDict m [crudeDomination, armyOfSpecters, playDiceWithDeath, terror]
 
 l1encpower m = powerlookup m "necro-enc" l1encoptions
-
 l3encpower m = powerlookup m "necro-enc3" l3encoptions
-
 l7encpower m = powerlookup m "necro-enc7" l7encoptions
 
 necroPowers m = [commandUndead m, markOfDeath m] ++
     (giftPower m) ++ (l1atwillpower1 m) ++ (l1atwillpower2 m) ++ (l1encpower m) ++
     (if ((getLevel m) >= 3) then (l3encpower m) else []) ++
     (if ((getLevel m) >= 7) then (l7encpower m) else [])
-
-
-powerChoiceField m name key list =
-  DropdownField { name=name, del=False, key=key, choices=[""] ++ (keys (list m)) }
-
-
 
 necroForm m = Form False "Necromancer" ([
   DropdownField { name="Gift", del=False, key="necro-gift", choices=["","Undeath","Terror","Vampirism"] },
