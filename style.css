@@ -12,8 +12,9 @@ div.forms {
 div.sheet {
   position: absolute;
   top: 0px;
-  left: 30%;
-  width: 50%;
+  left: 31%;
+  width: 70%;
+   
 }
 
 table.form {
@@ -33,3 +34,87 @@ table.form td select {
   width: 100%;
 }
 
+div.powerbox {
+  position: relative;
+  width: 80%;
+  height: 30%;
+  margin-bottom: 4px;
+}
+
+div.powerhead {
+  padding: 3px;
+  padding-left: 5px;
+  padding-right: 5px;
+  height: 20px;
+}
+
+div.powertext {
+  height: 100%;
+  padding: 3px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+div.powerti {
+  position: relative;
+  top: 2px;
+  float: left;
+  width: 20px;
+}
+
+
+div.powername {
+  font-weight: bold;
+  float: left;
+}
+
+div.powertype {
+  position: absolute;
+  right: 30%;
+  float: right;
+}
+
+div.powericons {
+  position: absolute;
+  right: 5px;
+  
+}
+
+div.atwillattack div.powerhead {
+  background-color: hsl(120,32%,72%);
+}
+
+div.atwillattack div.powertext {
+  background-color: hsl(120,50%,90%);
+}
+
+div.encattack div.powerhead {
+  background-color: hsl(300,50%,72%);
+}
+
+div.encattack div.powertext {
+  background-color: hsl(300,50%,90%);
+}
+
+div.encmisc div.powerhead {
+  background-color: hsl(50, 50%, 72%);
+}
+div.encmisc div.powertext {
+  background-color: hsl(50, 50%, 90%);
+}
+
+div.roleatwill div.powerhead {
+  background-color: hsl(230,50%,72%);
+}
+
+div.roleatwill div.powertext {
+  background-color: hsl(230,50%,90%);
+}
+
+div.roleenc div.powerhead {
+  background-color: hsl(0,50%,72%);
+}
+
+div.roleenc div.powertext {
+  background-color: hsl(0,50%,90%);
+}

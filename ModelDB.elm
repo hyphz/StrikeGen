@@ -21,7 +21,7 @@ type Msg =
   | FormFieldUpdated String String
   | FormAddClicked String
   | DoSave
-  
+
 {-| The model in memory. Character holds the active character, Database holds the
 current database read from the data files. -}
 type alias Model =
@@ -60,6 +60,23 @@ type alias KitAdvance =
   { name : String,
     desc : String }
 
+type alias Power =
+  { name : String,
+    text : String,
+    slot : Slot,
+    freq : Freq,
+    range : Int,
+    area : Int,
+    damage : Int }
+
+type alias Class =
+  { name : String,
+    classPowerList : (Model -> List Power),
+    classForms : (Model -> List Form),
+    modifyBasicDamage : (Model -> Int) }
+
+type Slot = Role | Attack | Misc | Special
+type Freq = AtWill | Encounter | None
 
 
 setResponse model key value =
@@ -83,6 +100,15 @@ getResponseInt model key default =
     Just x -> case (toInt x) of
       Err _ -> default
       Ok i -> i
+
+getLevel m =
+  case getResponse m "basics-level" of
+    Nothing -> 1
+    Just x -> case (toInt x) of
+      Ok l -> l
+      Err _ -> 1
+
+overtext key default = default
 
 
 updateDatabase : (Database -> Database) -> Model -> Model

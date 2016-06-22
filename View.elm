@@ -14,7 +14,7 @@ import Result exposing (withDefault)
 import ModelDB exposing (..)
 import Dict exposing (..)
 import Maybe exposing (..)
-import CharModel exposing (getSkills, getForms)
+import CharModel exposing (getSkills, getForms, getPowers)
 import FormsModel exposing (..)
 import Color
 import Svg exposing (svg)
@@ -104,6 +104,66 @@ formDisplay model form =
         [thead [] [tr [] ([th colSpanForAdd [text form.name]] ++ addCol)],
             tbody [] (List.map (formFieldDisplay model) (form.fields))]
 
+powerCard power =
+  let
+    cardCssClass = case power.freq of
+      AtWill -> case power.slot of
+        Attack -> "atwillattack"
+        Role -> "roleatwill"
+        Misc -> "roleatwill"
+        Special -> "special"
+      Encounter -> case power.slot of
+        Attack -> "encattack"
+        Role -> "roleenc"
+        Misc -> "encmisc"
+        Special -> "special"
+      None -> "special"
+    typeIcon = case power.slot of
+      Attack -> "attack.svg"
+      Role -> "role.svg"
+      Misc -> "circle.svg"
+      Special -> "circle.svg"
+    freqText = case power.freq of
+      AtWill -> "At-Will"
+      Encounter -> "Encounter"
+      None -> ""
+    attackTypeIcon = case power.slot of
+      Attack -> case power.range of
+        0 -> [img [src "icons/melee.svg", height 16, width 16] []]
+        x -> if (x > 0) then
+              [img [src "icons/range.svg", height 16, width 16] [],
+                (text (toString power.range))]
+             else
+              [img [src "icons/melee.svg", height 16, width 16] [],
+                text("/"),
+               img [src "icons/range.svg", height 16, width 16] [],
+                (text (toString (-power.range)))]
+      _ -> []
+    areaIcon = case power.area of
+      0 -> []
+      x -> [img [src "icons/area.svg", height 16, width 16] [],
+             (text (toString power.area))]
+    damageIcon = case power.damage of
+      0 -> []
+      x -> [img [src "icons/damage.svg", height 16, width 16] [],
+             (text (toString power.damage))]
+    iconblock = attackTypeIcon ++ areaIcon ++ damageIcon
+  in
+  div [Html.Attributes.class ("powerbox " ++ cardCssClass)] [
+    div [Html.Attributes.class "powerhead"] [
+      div [Html.Attributes.class "powerti"] [
+        img [src ("icons/"++typeIcon), height 16, width 16] []
+      ],
+      div [Html.Attributes.class "powername"] [text power.name],
+      div [class "powericons"] iconblock,
+      div [class "powertype"] [text freqText]
+    ],
+    div [class "powertext"] [text power.text]
+  ]
+
+powerCards model =
+  div [Html.Attributes.class "powercards"] (List.map powerCard (getPowers model))
+
 fileops : Html Msg
 fileops = button [onClick DoSave] [text "Download"]
 
@@ -111,4 +171,5 @@ formsDisplay : Model -> Html Msg
 formsDisplay model = div [] ([fileops] ++ (List.map (formDisplay model) (getForms model)))
 
 view : Model -> Html Msg
-view model = div [] [div [Html.Attributes.class "forms"] [formsDisplay model], div [Html.Attributes.class "sheet"] [skillTable model]]
+view model = div [] [div [Html.Attributes.class "forms"] [formsDisplay model],
+                     div [Html.Attributes.class "sheet"] [skillTable model, powerCards model]]

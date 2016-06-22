@@ -14,7 +14,10 @@ import String exposing (toInt)
 import FormsModel exposing (..)
 import Ports exposing (download)
 import Json.Encode exposing (encode)
+import Necromancer exposing (classNecro)
 
+
+classes = Dict.fromList [("Necromancer",classNecro)]
 
 init = ({character = blankCharacter,
          database = blankDatabase},
@@ -157,12 +160,6 @@ validateAlteredOrigin m =
            (killOutOfRange "origin-s2" (originSkills m)
              (killOutOfRange "origin-co" (originComplications m) m)))
 
-getLevel m =
-  case getResponse m "basics-level" of
-    Nothing -> 1
-    Just x -> case (toInt x) of
-      Ok l -> l
-      Err _ -> 1
 
 {-| Validate the level setting. This shouldn't ever become invalid, but
 better safe than sorry, I guess.. -}
@@ -191,6 +188,7 @@ basicsForm model = Form False "The Basics" [
   DropdownField {name="Background", del=False, key="basics-bg", choices=(["<Custom>"] ++ (Dict.keys model.database.backgrounds))},
   DropdownField {name="Origin", del=False, key="basics-origin", choices=(Dict.keys model.database.origins)},
   NumberField {name="Level", del=False, key="basics-level", min=1, max=10},
+  DropdownField {name="Class", del=False, key="basics-class", choices=([""] ++ Dict.keys classes)},
   FreeformField {name="Custom Skill:", del=False, key="basics-skill"},
   FreeformField {name="Custom Trick:", del=False, key="basics-trick"},
   FreeformField {name="Complication:", del=False, key="basics-comp"}]
@@ -213,7 +211,95 @@ getForms model =
    [learnedSkillsForm model] ++
    (if ((getLevel model) >= 2) then [levelForm model] else []) ++
    (mayList (complexOriginForm model)) ++
-   (mayList (customBackgroundForm model))
+   (mayList (customBackgroundForm model)) ++
+   classForms model
+
+
+basicDamageModifier m = case (getResponse m "basics-class") of
+  Nothing -> 0
+  Just classname -> case (Dict.get classname classes) of
+    Nothing -> 0
+    Just x -> x.modifyBasicDamage m
+
+
+pmeleeBasic : Model -> Power
+pmeleeBasic m = {name = "Melee Basic Attack",
+               text = "No effect.",
+               slot = Attack,
+               freq = AtWill,
+               range = 0,
+               area = 0,
+               damage = (2 + basicDamageModifier m)
+               }
+
+prangedBasic : Power
+prangedBasic = {name = "Ranged Basic Attack",
+               text = "No effect.",
+               slot = Attack,
+               freq = AtWill,
+               range = 5,
+               area = 0,
+               damage = 2
+               }
+
+pcharge : Power
+pcharge = {name = "Charge",
+               text = "Move up to your speed to a square adjacent a creature, and make a Melee Basic
+                       Attack against it. Each square of movement must bring you closer to the target.
+                       You cannot Charge through Difficult Terrain.",
+               slot = Attack,
+               freq = AtWill,
+               range = 0,
+               area = 0,
+               damage = 0
+               }
+
+pRally : Power
+pRally = {name = "Rally",
+               text = "No action. You may only use this on your turn, but you may use at any point
+               in your turn, even while Incapacitated, Dominated, or under any other Status. Spend
+               an Action Point. Regain 4 Hit Points and regain the use of one Encounter Power from your
+               Class (not a Role Action) you have expended.",
+               slot = Misc,
+               freq = Encounter,
+               range = 0,
+               area = 0,
+               damage = 0
+               }
+
+pAssess : Power
+pAssess = {name = "Assess",
+               text = "Roll a die and ask the GM that many questions as listed on page 90.",
+               slot = Role,
+               freq = AtWill,
+               range = 0,
+               area = 0,
+               damage = 0
+               }
+
+
+basicPowers : Model -> List Power
+basicPowers m = [pmeleeBasic m, prangedBasic, pcharge, pRally, pAssess]
+
+classPowers : Model -> List Power
+classPowers m = case (getResponse m "basics-class") of
+  Nothing -> []
+  Just classname -> case (Dict.get classname classes) of
+    Nothing -> []
+    Just x -> x.classPowerList m
+
+classForms : Model -> List Form
+classForms m = case (getResponse m "basics-class") of
+  Nothing -> []
+  Just classname -> case (Dict.get classname classes) of
+    Nothing -> []
+    Just x -> x.classForms m
+
+
+getPowers : Model -> List Power
+getPowers m = basicPowers m ++ classPowers m
+
+
 
 
 {-| Update a field on the character when a form value changes, and call validation. -}
