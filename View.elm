@@ -16,6 +16,12 @@ import Dict exposing (..)
 import Maybe exposing (..)
 import CharModel exposing (getSkills, getForms)
 import FormsModel exposing (..)
+import Color
+import Svg exposing (svg)
+import Material.Icons.Action exposing (delete)
+import Material.Icons.Content exposing (add_box)
+import Svg.Attributes
+
 
 sourceName : Int -> String
 sourceName s = case s of
@@ -51,24 +57,51 @@ dropdownFieldOption model key opt =
     Nothing -> False
   in option [selected isSelected] [text opt]
 
+useIcon : (Color.Color -> Int -> Svg.Svg a) -> Int -> Html a
+useIcon icon size = Svg.svg [Svg.Attributes.height (toString size),
+    Svg.Attributes.width (toString size)] [icon Color.black size]
+
 formFieldDisplay : Model -> Field -> Html Msg
-formFieldDisplay model field = case field of
-  FreeformField ff -> tr [] [td [] [(text ff.name)], td []
+formFieldDisplay model field =
+  let
+    colSpanForDel = case (fieldDel field) of
+      True -> [(Html.Attributes.colspan 1)]
+      False -> [(Html.Attributes.colspan 2)]
+    delCol = case (fieldDel field) of
+      True -> [td [Html.Attributes.width 20] [useIcon delete 20]]
+      False -> []
+  in case field of
+  FreeformField ff -> tr [] ([td [] [(text ff.name)], td colSpanForDel
     [input [(Html.Events.on "change" (targetAndWrap (FormFieldUpdated ff.key))),
             (Html.Attributes.value (Maybe.withDefault "" (get ff.key model.character)))] []]]
-  DropdownField df -> tr [] [td [] [(text df.name)], td []
+    ++ delCol)
+
+  DropdownField df -> tr [] ([td [] [(text df.name)], td colSpanForDel
     [select [(Html.Events.on "change" (targetAndWrap (FormFieldUpdated df.key)))]
              (List.map ((dropdownFieldOption model) df.key) df.choices)]]
-  NumberField nf -> tr [] [td [] [(text nf.name)], td []
+           ++ delCol)
+  NumberField nf -> tr [] ([td [] [(text nf.name)], td colSpanForDel
     [input [(Html.Events.on "change" (targetAndWrap (FormFieldUpdated nf.key))),
             (Html.Attributes.value (Maybe.withDefault "" (get nf.key model.character))),
             (Html.Attributes.type' "number"),
             (Html.Attributes.min <| toString nf.min),
             (Html.Attributes.max <| toString nf.max)] []]]
+            ++ delCol)
 
 formDisplay : Model -> Form -> Html Msg
-formDisplay model form = table [(Html.Attributes.class "form")] [thead [] [th [Html.Attributes.colspan 2] [text form.name]],
-                                   tbody [] (List.map (formFieldDisplay model) (form.fields))]
+formDisplay model form =
+  let
+    colSpanForAdd = case (form.addable) of
+      False -> [Html.Attributes.colspan 3]
+      True -> [Html.Attributes.colspan 2]
+    addCol = case (form.addable) of
+      False -> []
+      True -> [th [Html.Attributes.width 20,
+                   Html.Events.onClick (FormAddClicked form.name)] [useIcon add_box 20]]
+  in
+    table [(Html.Attributes.class "form")]
+        [thead [] [tr [] ([th colSpanForAdd [text form.name]] ++ addCol)],
+            tbody [] (List.map (formFieldDisplay model) (form.fields))]
 
 formsDisplay : Model -> Html Msg
 formsDisplay model = div [] (List.map (formDisplay model) (getForms model))

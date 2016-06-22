@@ -7,6 +7,9 @@ import Json.Decode exposing (Decoder, decodeString, (:=), object3, object4, obje
   string, list, int, at, bool, oneOf, succeed)
 import Result exposing (withDefault)
 import Task exposing (perform)
+import String exposing (toInt)
+import Result exposing (Result)
+
 
 type Msg =
     SkillChanged String Bool
@@ -16,6 +19,7 @@ type Msg =
   | OriginsLoaded String
   | HTTPLoadError Error
   | FormFieldUpdated String String
+  | FormAddClicked String
 
 {-| The model in memory. Character holds the active character, Database holds the
 current database read from the data files. -}
@@ -71,6 +75,14 @@ killResponse model key =
 
 getResponse model key =
   Dict.get key model.character
+
+getResponseInt model key default =
+  case (Dict.get key model.character) of
+    Nothing -> default
+    Just x -> case (toInt x) of
+      Err _ -> default
+      Ok i -> i
+
 
 updateDatabase : (Database -> Database) -> Model -> Model
 updateDatabase updater model = {model | database = (updater model.database) }

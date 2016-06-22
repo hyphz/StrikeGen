@@ -13,7 +13,6 @@ import Dict exposing (Dict, insert)
 import String exposing (toInt)
 import FormsModel exposing (..)
 
-
 init = ({character = blankCharacter,
          database = blankDatabase},
          getJsonFileCommand "data/backgrounds.json" BackgroundsLoaded)
@@ -60,20 +59,20 @@ complexOriginForm m = case (hasComplexOrigin m) of
   (complexSkills, complexComplications, freeformSkill, _) ->
     let
       skillPart = case complexSkills of
-        True -> [DropdownField {name="First Skill:",key="origin-s1",choices=([""] ++ originSkills m)},
-                 DropdownField {name="Second Skill:",key="origin-s2",choices=([""] ++ originSkills m)}]
+        True -> [DropdownField {name="First Skill:",del=False, key="origin-s1",choices=([""] ++ originSkills m)},
+                 DropdownField {name="Second Skill:",del=False,key="origin-s2",choices=([""] ++ originSkills m)}]
         False -> []
       complicationPart = case complexComplications of
-        True -> [DropdownField {name="Complication:",key="origin-co",choices=([""] ++ originComplications m)}]
+        True -> [DropdownField {name="Complication:",del=False,key="origin-co",choices=([""] ++ originComplications m)}]
         False -> []
       freeformSkillPart = case freeformSkill of
-        True -> [FreeformField {name="Custom skill:",key="origin-cs"}]
+        True -> [FreeformField {name="Custom skill:",del=False,key="origin-cs"}]
         False -> []
       originName = case getResponse m "basics-origin" of
         Just x -> x
         Nothing -> "(BUG) Origin complex but missing"
     in
-      Just (Form originName (skillPart ++ complicationPart ++ freeformSkillPart))
+      Just (Form False originName (skillPart ++ complicationPart ++ freeformSkillPart))
 
 {-| Gets the two skills our origin actually contributes, based on the list
 and/or choices. -}
@@ -98,19 +97,19 @@ skillNameToSkill source name = { name = name, source = source }
 
 customBackgroundFields : Model -> List Field
 customBackgroundFields m = [
-   FreeformField {name="Skill you need the most?", key="bg-custom-s1"},
-   FreeformField {name="Supporting skill or knowledge?", key="bg-custom-s2"},
-   FreeformField {name="Social/business skill?", key="bg-custom-s3"},
-   DropdownField {name="What helps when times are tough?", key="bg-custom-wos1", choices=["","Wealth","People"]}]
+   FreeformField {name="Skill you need the most?", key="bg-custom-s1", del=False},
+   FreeformField {name="Supporting skill or knowledge?", key="bg-custom-s2", del=False},
+   FreeformField {name="Social/business skill?", key="bg-custom-s3", del=False},
+   DropdownField {name="What helps when times are tough?", del=False, key="bg-custom-wos1", choices=["","Wealth","People"]}]
    ++ mayList (
         case getResponse m "bg-custom-wos1" of
-          Just "People" -> Just <| FreeformField {name="Who?", key="bg-custom-wos1s"}
+          Just "People" -> Just <| FreeformField {name="Who?", del=False, key="bg-custom-wos1s"}
           _ -> Nothing
         )
-   ++ [DropdownField {name="How you get stuff?", key="bg-custom-wos2", choices=["","Money","Skill"]}]
+   ++ [DropdownField {name="How you get stuff?", del=False, key="bg-custom-wos2", choices=["","Money","Skill"]}]
    ++ mayList (
         case getResponse m "bg-custom-wos2" of
-          Just "Skill" -> Just <| FreeformField {name="What skill?", key="bg-custom-wos2s"}
+          Just "Skill" -> Just <| FreeformField {name="What skill?", del=False, key="bg-custom-wos2s"}
           _ -> Nothing
         )
 
@@ -127,7 +126,7 @@ customBackgroundForm : Model -> Maybe Form
 customBackgroundForm m =
   case getResponse m "basics-bg" of
     Nothing -> Nothing
-    Just "<Custom>" -> Just (Form "Custom background" (customBackgroundFields m))
+    Just "<Custom>" -> Just (Form False "Custom background" (customBackgroundFields m))
     Just _ -> Nothing
 
 {-| Quick function for removing a field value that's out of range, if it
@@ -174,17 +173,22 @@ fieldChanged field m =
     "basics-level" -> validateLevel m
     _ -> m
 
+learnedSkillEntry m x = FreeformField{name="Skill",del=True,key="ls-"++(toString x)}
+
+learnedSkillsForm m = Form True "Learned Skills" (map (learnedSkillEntry m) [1..(getResponseInt m "ls-count" 0)])
 
 
-basicsForm model = Form "The Basics" [
-  DropdownField {name="Background", key="basics-bg", choices=(["<Custom>"] ++ (Dict.keys model.database.backgrounds))},
-  DropdownField {name="Origin", key="basics-origin", choices=(Dict.keys model.database.origins)},
-  NumberField {name="Level", key="basics-level", min=1, max=10}]
+
+basicsForm model = Form False "The Basics" [
+  DropdownField {name="Background", del=False, key="basics-bg", choices=(["<Custom>"] ++ (Dict.keys model.database.backgrounds))},
+  DropdownField {name="Origin", del=False, key="basics-origin", choices=(Dict.keys model.database.origins)},
+  NumberField {name="Level", del=False, key="basics-level", min=1, max=10}]
 
 {-| Get the active forms. -}
 getForms : Model -> List Form
 getForms model =
    [basicsForm model] ++
+   [learnedSkillsForm model] ++
    (mayList (complexOriginForm model)) ++
    (mayList (customBackgroundForm model))
 
@@ -194,7 +198,13 @@ updateFieldResponse : String -> String -> Model -> Model
 updateFieldResponse key value model =
   fieldChanged key (setResponse model key value)
 
+updateExtendForm key model =
+  case key of
+    "Learned Skills" -> setResponse model "ls-count" (toString ((getResponseInt model "ls-count" 0) + 1))
+    _ -> model
+
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model = case msg of
     FormFieldUpdated k s -> (updateFieldResponse k s model, Cmd.none)
+    FormAddClicked f -> (updateExtendForm f model, Cmd.none)
     _ -> dbUpdate msg model
