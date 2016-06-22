@@ -20,7 +20,8 @@ type Msg =
   | HTTPLoadError Error
   | FormFieldUpdated String String
   | FormAddClicked String
-
+  | DoSave
+  
 {-| The model in memory. Character holds the active character, Database holds the
 current database read from the data files. -}
 type alias Model =

@@ -3,10 +3,14 @@
   <title>Strike! Character Generator</title>
   <link rel="stylesheet" type="text/css" href="style.css">
   <script src="StrikeGen.js"></script>
+  <script src="download.js"></script>
   <script>
       function loaded() {
         var node=document.getElementById("main");
         var app = Elm.Main.embed(node);
+        app.ports.download.subscribe(function(dlinfo) {
+          download(dlinfo[1], dlinfo[0], "text/plain");
+        })
       }
   </script>
 </head>

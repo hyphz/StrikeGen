@@ -12,6 +12,9 @@ import ModelDB exposing (..)
 import Dict exposing (Dict, insert)
 import String exposing (toInt)
 import FormsModel exposing (..)
+import Ports exposing (download)
+import Json.Encode exposing (encode)
+
 
 init = ({character = blankCharacter,
          database = blankDatabase},
@@ -56,7 +59,7 @@ hasComplexOrigin m = indirectLookup m "basics-origin" m.database.origins
 complexOriginForm : Model -> Maybe Form
 complexOriginForm m = case (hasComplexOrigin m) of
   (False, False, False, False) -> Nothing
-  (complexSkills, complexComplications, freeformSkill, _) ->
+  (complexSkills, complexComplications, freeformSkill, freeformComplication) ->
     let
       skillPart = case complexSkills of
         True -> [DropdownField {name="First Skill:",del=False, key="origin-s1",choices=([""] ++ originSkills m)},
@@ -68,11 +71,14 @@ complexOriginForm m = case (hasComplexOrigin m) of
       freeformSkillPart = case freeformSkill of
         True -> [FreeformField {name="Custom skill:",del=False,key="origin-cs"}]
         False -> []
+      freeformComplicationPart = case freeformComplication of
+        True -> [FreeformField {name="Complication:", del=False, key="origin-cco"}]
+        False -> []
       originName = case getResponse m "basics-origin" of
         Just x -> x
         Nothing -> "(BUG) Origin complex but missing"
     in
-      Just (Form False originName (skillPart ++ complicationPart ++ freeformSkillPart))
+      Just (Form False originName (skillPart ++ complicationPart ++ freeformSkillPart ++ freeformComplicationPart))
 
 {-| Gets the two skills our origin actually contributes, based on the list
 and/or choices. -}
@@ -89,6 +95,7 @@ resolvedOriginSkills m = case (hasComplexOrigin m) of
 getSkills : Model -> List Skill
 getSkills m = map (skillNameToSkill 0) (resolvedBackgroundSkills m) -- Background
           ++ map (skillNameToSkill 1) (resolvedOriginSkills m) -- Origin
+          ++ mayList (Maybe.map (skillNameToSkill 2) (getResponse m "basics-skill"))
 
 {-| Turns a skill name from the database into a skill storable on the character,
 setting the source and name according to the parameters. -}
@@ -106,12 +113,13 @@ customBackgroundFields m = [
           Just "People" -> Just <| FreeformField {name="Who?", del=False, key="bg-custom-wos1s"}
           _ -> Nothing
         )
-   ++ [DropdownField {name="How you get stuff?", del=False, key="bg-custom-wos2", choices=["","Money","Skill"]}]
+   ++ [DropdownField {name="How do you get stuff?", del=False, key="bg-custom-wos2", choices=["","Money","Skill"]}]
    ++ mayList (
         case getResponse m "bg-custom-wos2" of
           Just "Skill" -> Just <| FreeformField {name="What skill?", del=False, key="bg-custom-wos2s"}
           _ -> Nothing
         )
+    ++ [FreeformField {name="Trick?", key="bg-custom-t", del=False}]
 
 resolvedBackgroundSkills m = case getResponse m "basics-bg" of
   Nothing -> []
@@ -182,13 +190,28 @@ learnedSkillsForm m = Form True "Learned Skills" (map (learnedSkillEntry m) [1..
 basicsForm model = Form False "The Basics" [
   DropdownField {name="Background", del=False, key="basics-bg", choices=(["<Custom>"] ++ (Dict.keys model.database.backgrounds))},
   DropdownField {name="Origin", del=False, key="basics-origin", choices=(Dict.keys model.database.origins)},
-  NumberField {name="Level", del=False, key="basics-level", min=1, max=10}]
+  NumberField {name="Level", del=False, key="basics-level", min=1, max=10},
+  FreeformField {name="Custom Skill:", del=False, key="basics-skill"},
+  FreeformField {name="Custom Trick:", del=False, key="basics-trick"},
+  FreeformField {name="Complication:", del=False, key="basics-comp"}]
+
+levelForm model = Form False "Advancement" (
+  (if ((getLevel model) >= 2) then [FreeformField {name="Fallback", del=False, key="adv-fallback"},
+                                    FreeformField {name="Trick", del=False, key="adv-l2trick"}] else []) ++
+  (if ((getLevel model) >= 4) then [FreeformField {name="Complication", del=False, key="adv-l4comp"}] else []) ++
+  (if ((getLevel model) >= 6) then [FreeformField {name="Trick", del=False, key="adv-l6trick"}] else []) ++
+  (if ((getLevel model) >= 8) then [FreeformField {name="Complication", del=False, key="adv-l8comp"}] else []) ++
+  (if ((getLevel model) >= 10) then [FreeformField {name="Trick", del=False, key="adv-l10trick"}] else [])
+  )
+
+
 
 {-| Get the active forms. -}
 getForms : Model -> List Form
 getForms model =
    [basicsForm model] ++
    [learnedSkillsForm model] ++
+   (if ((getLevel model) >= 2) then [levelForm model] else []) ++
    (mayList (complexOriginForm model)) ++
    (mayList (customBackgroundForm model))
 
@@ -203,8 +226,18 @@ updateExtendForm key model =
     "Learned Skills" -> setResponse model "ls-count" (toString ((getResponseInt model "ls-count" 0) + 1))
     _ -> model
 
+encodeChar : Model -> String
+encodeChar model =
+  model.character
+  |> Dict.toList
+  |> map (\(x,y) -> (x,Json.Encode.string y))
+  |> Json.Encode.object
+  |> Json.Encode.encode 2
+
+
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model = case msg of
     FormFieldUpdated k s -> (updateFieldResponse k s model, Cmd.none)
     FormAddClicked f -> (updateExtendForm f model, Cmd.none)
+    DoSave -> (model, Ports.download ("character.json", encodeChar model))
     _ -> dbUpdate msg model

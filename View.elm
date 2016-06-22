@@ -27,6 +27,7 @@ sourceName : Int -> String
 sourceName s = case s of
     0 -> "Background"
     1 -> "Origin"
+    2 -> "Starting"
     _ -> "Broken"
 
 -- Generates the HTML skill table row for a skill.
@@ -103,8 +104,11 @@ formDisplay model form =
         [thead [] [tr [] ([th colSpanForAdd [text form.name]] ++ addCol)],
             tbody [] (List.map (formFieldDisplay model) (form.fields))]
 
+fileops : Html Msg
+fileops = button [onClick DoSave] [text "Download"]
+
 formsDisplay : Model -> Html Msg
-formsDisplay model = div [] (List.map (formDisplay model) (getForms model))
+formsDisplay model = div [] ([fileops] ++ (List.map (formDisplay model) (getForms model)))
 
 view : Model -> Html Msg
 view model = div [] [div [Html.Attributes.class "forms"] [formsDisplay model], div [Html.Attributes.class "sheet"] [skillTable model]]
