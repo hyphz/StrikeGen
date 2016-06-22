@@ -215,11 +215,17 @@ getForms model =
    classForms model
 
 
-basicDamageModifier m = case (getResponse m "basics-class") of
+basicMeleeDamageModifier m = case (getResponse m "basics-class") of
   Nothing -> 0
   Just classname -> case (Dict.get classname classes) of
     Nothing -> 0
-    Just x -> x.modifyBasicDamage m
+    Just x -> x.modifyBasicMeleeDamage m
+
+basicRangeDamageModifier m = case (getResponse m "basics-class") of
+  Nothing -> 0
+  Just classname -> case (Dict.get classname classes) of
+    Nothing -> 0
+    Just x -> x.modifyBasicRangeDamage m
 
 
 pmeleeBasic : Model -> Power
@@ -229,17 +235,17 @@ pmeleeBasic m = {name = "Melee Basic Attack",
                freq = AtWill,
                range = 0,
                area = 0,
-               damage = (2 + basicDamageModifier m)
+               damage = (2 + basicMeleeDamageModifier m)
                }
 
-prangedBasic : Power
-prangedBasic = {name = "Ranged Basic Attack",
+prangedBasic : Model -> Power
+prangedBasic m = {name = "Ranged Basic Attack",
                text = "No effect.",
                slot = Attack,
                freq = AtWill,
                range = 5,
                area = 0,
-               damage = 2
+               damage = (2 + basicRangeDamageModifier m)
                }
 
 pcharge : Power
@@ -279,7 +285,7 @@ pAssess = {name = "Assess",
 
 
 basicPowers : Model -> List Power
-basicPowers m = [pmeleeBasic m, prangedBasic, pcharge, pRally, pAssess]
+basicPowers m = [pmeleeBasic m, prangedBasic m, pcharge, pRally, pAssess]
 
 classPowers : Model -> List Power
 classPowers m = case (getResponse m "basics-class") of

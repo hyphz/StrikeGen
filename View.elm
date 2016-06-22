@@ -111,18 +111,21 @@ powerCard power =
         Attack -> "atwillattack"
         Role -> "roleatwill"
         Misc -> "roleatwill"
+        Reaction -> "special"
         Special -> "special"
       Encounter -> case power.slot of
         Attack -> "encattack"
         Role -> "roleenc"
         Misc -> "encmisc"
         Special -> "special"
+        Reaction -> "encmisc"
       None -> "special"
     typeIcon = case power.slot of
       Attack -> "attack.svg"
       Role -> "role.svg"
       Misc -> "circle.svg"
       Special -> "circle.svg"
+      Reaction -> "reaction.svg"
     freqText = case power.freq of
       AtWill -> "At-Will"
       Encounter -> "Encounter"
@@ -162,7 +165,13 @@ powerCard power =
   ]
 
 powerCards model =
-  div [Html.Attributes.class "powercards"] (List.map powerCard (getPowers model))
+  let
+    specials = List.filter (\x -> x.slot == Special) (getPowers model)
+    atwills = List.filter (\x -> x.freq == AtWill) (getPowers model)
+    encounters = List.filter (\x -> x.freq == Encounter) (getPowers model)
+    weirdoes = List.filter (\x -> (x.freq == None) && (x.slot /= Special)) (getPowers model)
+  in
+    div [Html.Attributes.class "powercards"] (List.map powerCard (specials ++ atwills ++ encounters ++ weirdoes))
 
 fileops : Html Msg
 fileops = button [onClick DoSave] [text "Download"]

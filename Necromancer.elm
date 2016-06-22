@@ -9,15 +9,21 @@ classNecro : Class
 classNecro = { name = "Necromancer",
                classPowerList = necroPowers,
                classForms = necroForms,
-               modifyBasicDamage = necroBasicDamage }
-necroBasicDamage : Model -> Int
-necroBasicDamage m = if (getLevel m < 5) then 0 else 1
+               modifyBasicMeleeDamage = necroBasicMeleeDamage,
+               modifyBasicRangeDamage = necroBasicRangeDamage }
+necroBasicMeleeDamage : Model -> Int
+necroBasicMeleeDamage m = if (getLevel m < 5) then 0 else 1
+
+necroBasicRangeDamage : Model -> Int
+necroBasicRangeDamage m = if (getLevel m < 5) then 0 else 1
 
 
 
-commandUndead : Power
-commandUndead = {name = "Command Undead",
-                 text = overtext "CommandUndead" "See page 102.",
+
+commandUndead : Model -> Power
+commandUndead m = {name = "Command Undead",
+                 text = (if (getLevel m) < 9 then (overtext "CommandUndead" "See page 102.")
+                             else (overtext "CommandUndead9+" "See pages 102 and 103.")),
                  slot = Attack,
                  freq = Encounter,
                  range = 10,
@@ -25,8 +31,46 @@ commandUndead = {name = "Command Undead",
                  damage = 0
                 }
 
-lifeDrain : Power
-lifeDrain = {name = "Life Drain",
+deadlyPoison : Model -> Power
+deadlyPoison m = {name = "Deadly Poison",
+                 text = (if (getLevel m) < 5 then (overtext "DeadlyPoison" "See page 102.")
+                                      else (overtext "DeadlyPoison5+" "See page 102 (increased ongoing damage).")),
+                 slot = Attack,
+                 freq = AtWill,
+                 range = -5,
+                 area = 0,
+                 damage = 2
+                }
+
+phantasms : Model -> Power
+phantasms m = {name = "Phantasms",
+                 text = overtext "Phantasms" "See page 102.",
+                 slot = Attack,
+                 freq = AtWill,
+                 range = 5,
+                 area = 0,
+                 damage = 2
+                }
+
+terrifyingVisage : Model -> Power
+terrifyingVisage m = {name = "Terrifying Visage",
+                 text = (if (getLevel m) < 5 then (overtext "TerrifyingVisage" "See page 102.")
+                                      else (overtext "TerrifyingVisage5+" "See page 102 (improved).")),
+                 slot = Attack,
+                 freq = AtWill,
+                 range = 5,
+                 area = 0,
+                 damage = 2
+                }
+
+
+
+
+
+
+
+lifeDrain : Model -> Power
+lifeDrain m = {name = "Life Drain",
                  text = overtext "LifeDrain" "See page 102.",
                  slot = Attack,
                  freq = Encounter,
@@ -35,8 +79,8 @@ lifeDrain = {name = "Life Drain",
                  damage = 2
                 }
 
-corpseExplosion : Power
-corpseExplosion = {name = "Corpse Explosion",
+corpseExplosion : Model -> Power
+corpseExplosion m = {name = "Corpse Explosion",
                  text = overtext "CorpseExplosion" "See page 102.",
                  slot = Attack,
                  freq = Encounter,
@@ -45,8 +89,8 @@ corpseExplosion = {name = "Corpse Explosion",
                  damage = 0
                 }
 
-raiseAlly : Power
-raiseAlly = {name = "Raise Ally",
+raiseAlly : Model -> Power
+raiseAlly m = {name = "Raise Ally",
               text = overtext "RaiseAlly" "Free action. See page 102.",
               slot = Misc,
               freq = Encounter,
@@ -55,8 +99,8 @@ raiseAlly = {name = "Raise Ally",
               damage = 0
             }
 
-seedOfFear : Power
-seedOfFear = {name = "Seed Of Fear",
+seedOfFear : Model -> Power
+seedOfFear m = {name = "Seed Of Fear",
               text = overtext "SeedOfFear" "See page 102.",
               slot = Attack,
               freq = Encounter,
@@ -65,8 +109,8 @@ seedOfFear = {name = "Seed Of Fear",
               damage = 3
             }
 
-greaterMarkOfDeath : Power
-greaterMarkOfDeath = {name = "Greater Mark Of Death",
+greaterMarkOfDeath : Model -> Power
+greaterMarkOfDeath m = {name = "Greater Mark Of Death",
               text = overtext "GreaterMarkOfDeath" "See page 102.",
               slot = Attack,
               freq = Encounter,
@@ -75,9 +119,48 @@ greaterMarkOfDeath = {name = "Greater Mark Of Death",
               damage = 3
             }
 
+lichPact : Model -> Power
+lichPact m = {name = "Lich Pact",
+        text = overtext "LichPact" "Reaction. See page 102.",
+        slot = Reaction, freq = Encounter,
+        range = 0, area = 0, damage = 0}
 
-markOfDeath : Power
-markOfDeath = {name = "Mark of Death",
+healthSwap : Model -> Power
+healthSwap m = {name = "Health Swap",
+        text = overtext "HealthSwap" "Free Action. See page 102.",
+        slot = Misc, freq = Encounter,
+        range = 0, area = 0, damage = 0}
+
+crudeDomination : Model -> Power
+crudeDomination m = {name = "Crude Domination",
+        text = overtext "CrudeDomination" "See page 103.",
+        slot = Attack, freq = Encounter,
+        range = 5, area = 0, damage = 4}
+
+armyOfSpecters : Model -> Power
+armyOfSpecters m = {name = "Army of Specters",
+        text = overtext "ArmyOfSpecters" "See page 103.",
+        slot = Attack, freq = Encounter,
+        range = 0, area = 10, damage = 0}
+
+playDiceWithDeath : Model -> Power
+playDiceWithDeath m = {name = "Play Dice with Death",
+        text = overtext "PlayDiceWithDeath" "See page 103.",
+        slot = Attack, freq = Encounter,
+        range = 0, area = 10, damage = 0}
+
+terror : Model -> Power
+terror m = {name = "Terror",
+        text = overtext "Terror" "See page 103.",
+        slot = Attack, freq = Encounter,
+        range = -5, area = 0, damage = 4}
+
+
+
+
+
+markOfDeath : Model -> Power
+markOfDeath m = {name = "Mark of Death",
               text = overtext "MarkOfDeath" "See page 102.",
               slot = Special,
               freq = None,
@@ -116,43 +199,60 @@ giftPower m = case (getResponse m "necro-gift") of
 
 
 
+powerDict : Model -> List (Model -> Power) -> Dict String Power
+powerDict m l =
+  let toTuple p = ((p m).name, p m) in
+    Dict.fromList (List.map toTuple l)
 
-l1encoptions = Dict.fromList [("Life Drain",lifeDrain),
-                ("Corpse Explosion",corpseExplosion),
-                ("Raise Ally",raiseAlly),
-                ("Seed of Fear",seedOfFear)]
 
-l3encoptions = Dict.fromList [("Greater Mark of Death",greaterMarkOfDeath)]
-
-l1encpower m = case (getResponse m "necro-enc") of
+powerlookup : Model -> String -> (Model -> Dict String Power) -> List Power
+powerlookup m key list = case (getResponse m key) of
   Nothing -> []
-  Just enc -> case (get enc l1encoptions) of
+  Just choice -> case (get choice (list m)) of
     Nothing -> []
-    Just p -> [p]
+    Just power -> [power]
 
-l3encpower m = case (getResponse m "necro-enc3") of
-  Nothing -> []
-  Just enc -> case (get enc l3encoptions) of
-    Nothing -> []
-    Just p -> [p]
+l1atwills m = powerDict m [deadlyPoison, phantasms, terrifyingVisage]
+l1atwillpower1 m = powerlookup m "necro-aw1" l1atwills
+l1atwillpower2 m = powerlookup m "necro-aw2" l1atwills
 
 
+l1encoptions m = powerDict m [lifeDrain,corpseExplosion,raiseAlly,seedOfFear]
 
-necroPowers m = [commandUndead, markOfDeath] ++
-    (giftPower m) ++ (l1encpower m) ++
-    if ((getLevel m) >= 3) then (l3encpower m) else []
+l3encoptions m = powerDict m [greaterMarkOfDeath, lichPact, healthSwap]
+
+l7encoptions m = powerDict m [crudeDomination, armyOfSpecters, playDiceWithDeath, terror]
+
+l1encpower m = powerlookup m "necro-enc" l1encoptions
+
+l3encpower m = powerlookup m "necro-enc3" l3encoptions
+
+l7encpower m = powerlookup m "necro-enc7" l7encoptions
+
+necroPowers m = [commandUndead m, markOfDeath m] ++
+    (giftPower m) ++ (l1atwillpower1 m) ++ (l1atwillpower2 m) ++ (l1encpower m) ++
+    (if ((getLevel m) >= 3) then (l3encpower m) else []) ++
+    (if ((getLevel m) >= 7) then (l7encpower m) else [])
 
 
+powerChoiceField m name key list =
+  DropdownField { name=name, del=False, key=key, choices=[""] ++ (keys (list m)) }
 
 
 
 necroForm m = Form False "Necromancer" ([
   DropdownField { name="Gift", del=False, key="necro-gift", choices=["","Undeath","Terror","Vampirism"] },
-  DropdownField { name="Encounter Power:", del=False, key="necro-enc", choices=([""] ++ keys l1encoptions)}
+  powerChoiceField m "At-Will:" "necro-aw1" l1atwills,
+  powerChoiceField m "At-Will:" "necro-aw2" l1atwills,
+  DropdownField { name="Encounter Power:", del=False, key="necro-enc", choices=([""] ++ keys (l1encoptions m))}
  ] ++
-  if ((getLevel m) >= 3) then
-    [DropdownField { name="Encounter Power:",del=False,key="necro-enc3",choices=([""] ++ keys l3encoptions)}]
+  (if ((getLevel m) >= 3) then
+    [DropdownField { name="Encounter Power:",del=False,key="necro-enc3",choices=([""] ++ keys (l3encoptions m))}]
   else []
-  )
+  ) ++
+  (if ((getLevel m) >= 7) then
+    [DropdownField { name="Encounter Power:",del=False,key="necro-enc7",choices=([""] ++ keys (l7encoptions m))}]
+  else []
+  ))
 
 necroForms m = [necroForm m]

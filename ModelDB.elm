@@ -73,9 +73,10 @@ type alias Class =
   { name : String,
     classPowerList : (Model -> List Power),
     classForms : (Model -> List Form),
-    modifyBasicDamage : (Model -> Int) }
+    modifyBasicMeleeDamage : (Model -> Int),
+    modifyBasicRangeDamage : (Model -> Int) }
 
-type Slot = Role | Attack | Misc | Special
+type Slot = Role | Attack | Misc | Special | Reaction
 type Freq = AtWill | Encounter | None
 
 
