@@ -34,3 +34,9 @@ quickPower name page slot freq range area damage col m =
          damage = damage,
          styl = col
        }
+
+quickSpecial name page m = quickPower name page Special None 0 0 0 White m
+
+atLevel m level ab = if ((getLevel m) >= level) then [ab] else []
+
+atLevelList m level ab = if ((getLevel m) >= level) then ab else []
