@@ -74,47 +74,55 @@ div.powertype {
   float: right;
 }
 
+div.powertext div p:first-child {
+  margin: 0 0 0 0;
+}
+div.powertext div p:last-child {
+  margin-bottom: 0;
+}
+
 div.powericons {
   position: absolute;
   right: 5px;
-  
 }
 
-div.atwillattack div.powerhead {
+
+
+div.greenpower div.powerhead {
   background-color: hsl(120,32%,72%);
 }
 
-div.atwillattack div.powertext {
+div.greenpower div.powertext {
   background-color: hsl(120,50%,90%);
 }
 
-div.encattack div.powerhead {
+div.purplepower div.powerhead {
   background-color: hsl(300,50%,72%);
 }
 
-div.encattack div.powertext {
+div.purplepower div.powertext {
   background-color: hsl(300,50%,90%);
 }
 
-div.encmisc div.powerhead {
+div.yellowpower div.powerhead {
   background-color: hsl(50, 50%, 72%);
 }
-div.encmisc div.powertext {
+div.yellowpower div.powertext {
   background-color: hsl(50, 50%, 90%);
 }
 
-div.roleatwill div.powerhead {
+div.bluepower div.powerhead {
   background-color: hsl(230,50%,72%);
 }
 
-div.roleatwill div.powertext {
+div.bluepower div.powertext {
   background-color: hsl(230,50%,90%);
 }
 
-div.roleenc div.powerhead {
+div.redpower div.powerhead {
   background-color: hsl(0,50%,72%);
 }
 
-div.roleenc div.powertext {
+div.redpower div.powertext {
   background-color: hsl(0,50%,90%);
 }

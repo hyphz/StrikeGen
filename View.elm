@@ -21,6 +21,7 @@ import Svg exposing (svg)
 import Material.Icons.Action exposing (delete)
 import Material.Icons.Content exposing (add_box)
 import Svg.Attributes
+import Markdown
 
 
 sourceName : Int -> String
@@ -104,22 +105,20 @@ formDisplay model form =
         [thead [] [tr [] ([th colSpanForAdd [text form.name]] ++ addCol)],
             tbody [] (List.map (formFieldDisplay model) (form.fields))]
 
+
+mdOptions : Markdown.Options
+mdOptions = { githubFlavored = Nothing, defaultHighlighting = Nothing,
+              sanitize = True, smartypants = False }
+
 powerCard power =
   let
-    cardCssClass = case power.freq of
-      AtWill -> case power.slot of
-        Attack -> "atwillattack"
-        Role -> "roleatwill"
-        Misc -> "roleatwill"
-        Reaction -> "special"
-        Special -> "special"
-      Encounter -> case power.slot of
-        Attack -> "encattack"
-        Role -> "roleenc"
-        Misc -> "encmisc"
-        Special -> "special"
-        Reaction -> "encmisc"
-      None -> "special"
+    cardCssClass = case power.styl of
+      Yellow -> "yellowpower"
+      Red -> "redpower"
+      Blue -> "bluepower"
+      Green -> "greenpower"
+      White -> "powerwhite" -- Not going there
+      Purple -> "purplepower"
     typeIcon = case power.slot of
       Attack -> "attack.svg"
       Role -> "role.svg"
@@ -132,7 +131,9 @@ powerCard power =
       None -> ""
     attackTypeIcon = case power.slot of
       Attack -> case power.range of
-        0 -> [img [src "icons/melee.svg", height 16, width 16] []]
+        0 -> if (power.area == 0) then
+               [img [src "icons/melee.svg", height 16, width 16] []]
+             else []
         x -> if (x > 0) then
               [img [src "icons/range.svg", height 16, width 16] [],
                 (text (toString power.range))]
@@ -161,17 +162,20 @@ powerCard power =
       div [class "powericons"] iconblock,
       div [class "powertype"] [text freqText]
     ],
-    div [class "powertext"] [text power.text]
+    div [class "powertext"] [Markdown.toHtmlWith mdOptions [] power.text]
   ]
 
+powerOrder power =
+  case power.styl of
+    White -> 0
+    Green -> 1
+    Blue -> 2
+    Purple -> 3
+    Red -> 4
+    Yellow -> 5
+
 powerCards model =
-  let
-    specials = List.filter (\x -> x.slot == Special) (getPowers model)
-    atwills = List.filter (\x -> x.freq == AtWill) (getPowers model)
-    encounters = List.filter (\x -> x.freq == Encounter) (getPowers model)
-    weirdoes = List.filter (\x -> (x.freq == None) && (x.slot /= Special)) (getPowers model)
-  in
-    div [Html.Attributes.class "powercards"] (List.map powerCard (specials ++ atwills ++ encounters ++ weirdoes))
+    div [Html.Attributes.class "powercards"] (List.map powerCard (List.sortBy powerOrder (getPowers model)))
 
 fileops : Html Msg
 fileops = button [onClick DoSave] [text "Download"]

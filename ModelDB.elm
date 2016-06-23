@@ -9,6 +9,7 @@ import Result exposing (withDefault)
 import Task exposing (perform)
 import String exposing (toInt)
 import Result exposing (Result)
+import List
 
 
 type Msg =
@@ -20,6 +21,7 @@ type Msg =
   | HTTPLoadError Error
   | FormFieldUpdated String String
   | FormAddClicked String
+  | TextsLoaded String
   | DoSave
 
 {-| The model in memory. Character holds the active character, Database holds the
@@ -30,7 +32,8 @@ type alias Model =
 
 type alias Database =
     { backgrounds : Dict String Background,
-      origins : Dict String Origin }
+      origins : Dict String Origin,
+      texts : Dict String String }
 
 
 type alias Skill =
@@ -67,7 +70,8 @@ type alias Power =
     freq : Freq,
     range : Int,
     area : Int,
-    damage : Int }
+    damage : Int,
+    styl : PowerStyle }
 
 type alias Class =
   { name : String,
@@ -79,6 +83,7 @@ type alias Class =
 
 type Slot = Role | Attack | Misc | Special | Reaction
 type Freq = AtWill | Encounter | None
+type PowerStyle = White | Red | Blue | Yellow | Green | Purple
 
 
 setResponse model key value =
@@ -110,7 +115,8 @@ getLevel m =
       Ok l -> l
       Err _ -> 1
 
-overtext key default = default
+overtext model key default = Maybe.withDefault default (get key model.database.texts)
+
 
 
 updateDatabase : (Database -> Database) -> Model -> Model
@@ -174,8 +180,24 @@ blankCharacter : Dict String String
 blankCharacter = Dict.fromList [("basics-level","1"),
                                 ("basics-bg","<Not Selected>")]
 
-blankDatabase = { backgrounds = Dict.empty, origins = Dict.empty }
+blankDatabase = { backgrounds = Dict.empty, origins = Dict.empty, texts = Dict.empty }
 
+
+splitTexts str =
+  let
+    paragraphs = String.split "@@" str
+    brokenParas = List.map String.lines paragraphs
+    extractParaKey s =
+      let
+        theTail = Maybe.withDefault ["Header without a body in texts??"] (List.tail s)
+        theHead = Maybe.withDefault "BrokenHeader" (List.head s)
+      in
+        (theHead,String.join "\n" theTail)
+    paraPairs = List.map extractParaKey brokenParas
+  in
+    Dict.fromList paraPairs
+
+unpackTexts str model = updateDatabase ( \d -> {d | texts = splitTexts str} ) model
 
 indirectLookup : Model -> String -> Dict String a -> (a -> b) -> b -> b -> b
 indirectLookup model key db func default error =
@@ -189,5 +211,6 @@ dbUpdate : Msg -> Model -> (Model, Cmd Msg)
 dbUpdate msg model = case msg of
     HTTPLoadError e -> (httpError model, Cmd.none)
     BackgroundsLoaded bgs -> (unpackBackgrounds bgs model, getJsonFileCommand "data/origins.json" OriginsLoaded)
-    OriginsLoaded ogs -> (unpackOrigins ogs model, Cmd.none)
+    OriginsLoaded ogs -> (unpackOrigins ogs model, getJsonFileCommand "data/texts.md" TextsLoaded)
+    TextsLoaded txs -> (unpackTexts txs model, Cmd.none)
     _ -> (model, Cmd.none)

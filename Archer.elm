@@ -34,16 +34,16 @@ basicRangeRange m = case (getResponse m "archer-feature") of
 
 
 
-aim = quickPower "Aim" 106 Attack AtWill 0 0 0
-flare m = (quickPower "Flare" 106 Attack AtWill (sniperDouble m 10) 0 (atWillDamage m)) m
-pinDown m = (quickPower "Pin Down" 106 Attack AtWill (sniperDouble m 10) 0 (atWillDamage m)) m
-areaDenial m = (quickPower "Area Denial" 106 Attack AtWill (sniperDouble m 10) 0 (atWillDamage m)) m
+aim = quickPower "Aim" 106 Attack AtWill 0 0 0 Green
+flare m = (quickPower "Flare" 106 Attack AtWill (sniperDouble m 10) 0 (atWillDamage m) Green) m
+pinDown m = (quickPower "Pin Down" 106 Attack AtWill (sniperDouble m 10) 0 (atWillDamage m) Green) m
+areaDenial m = (quickPower "Area Denial" 106 Attack AtWill (sniperDouble m 10) 0 (atWillDamage m) Green) m
 
-trickArrow m = (quickPower "Trick Arrow" 106 Attack Encounter (sniperDouble m 10) 0 3) m
+trickArrow m = (quickPower "Trick Arrow" 106 Attack Encounter (sniperDouble m 10) 0 3 Purple) m
 
-bullseye = (quickPower "Bullseye" 107 Attack Encounter 0 0 0)
+bullseye = (quickPower "Bullseye" 107 Attack Encounter 0 0 0 Purple)
 
-extraTrickArrow m = (quickPower "Extra Trick Arrow" 107 Attack Encounter (sniperDouble m 10) 0 3) m
+extraTrickArrow m = (quickPower "Extra Trick Arrow" 107 Attack Encounter (sniperDouble m 10) 0 3 Purple) m
 
 
 powers m = [aim m, flare m, pinDown m, areaDenial m]

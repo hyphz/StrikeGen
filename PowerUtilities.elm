@@ -24,12 +24,13 @@ powerChoiceField m name key list =
   DropdownField { name=name, del=False, key=key, choices=[""] ++ (Dict.keys (list m)) }
 
 
-quickPower name page slot freq range area damage m =
+quickPower name page slot freq range area damage col m =
         {name = name,
-         text = overtext (String.filter (\x -> (x /= ' ')) name) ("See page " ++ (toString page) ++ "."),
+         text = overtext m (String.filter (\x -> (x /= ' ')) name) ("See page " ++ (toString page) ++ "."),
          slot = slot,
          freq = freq,
          range = range,
          area = area,
-         damage = damage
+         damage = damage,
+         styl = col
        }

@@ -242,7 +242,8 @@ pmeleeBasic m = {name = "Melee Basic Attack",
                freq = AtWill,
                range = 0,
                area = 0,
-               damage = (2 + basicMeleeDamageModifier m)
+               damage = (2 + basicMeleeDamageModifier m),
+               styl = Green
                }
 
 prangedBasic : Model -> Power
@@ -252,7 +253,8 @@ prangedBasic m = {name = "Ranged Basic Attack",
                freq = AtWill,
                range = (5 + basicRangeRangeModifier m),
                area = 0,
-               damage = (2 + basicRangeDamageModifier m)
+               damage = (2 + basicRangeDamageModifier m),
+               styl = Green
                }
 
 pcharge : Power
@@ -264,7 +266,8 @@ pcharge = {name = "Charge",
                freq = AtWill,
                range = 0,
                area = 0,
-               damage = 0
+               damage = 0,
+               styl = Green
                }
 
 pRally : Power
@@ -277,7 +280,8 @@ pRally = {name = "Rally",
                freq = Encounter,
                range = 0,
                area = 0,
-               damage = 0
+               damage = 0,
+               styl = Yellow
                }
 
 pAssess : Power
@@ -287,7 +291,8 @@ pAssess = {name = "Assess",
                freq = AtWill,
                range = 0,
                area = 0,
-               damage = 0
+               damage = 0,
+               styl = Blue
                }
 
 
