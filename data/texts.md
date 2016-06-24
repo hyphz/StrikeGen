@@ -384,3 +384,128 @@ are teleported back to their previous locations.
 **Effect:** Until the end of the encounter, when the target leaves a square
 adjacent to you, after it finishes its move you may shift up to your speed + 4
 to a square adjacent the target.
+@@Stances
+You may start an encounter in any Stance you have access to.
+@@ChangeStance
+Free action, once per turn. Change your selected stance.
+@@StoneWallStyle
+Stance. **Melee Effect:** Target has disadvantage to attack you with melee attacks
+on its next turn.
+
+**Continuous:** Each turn you may pick a cardinal or intercardinal direction.
+Until the start of your next turn you Resist 1 against ranged attacks in that half-plane.
+@@GreaterStoneWallStyle
+Stance. **Melee Effect:** Target's melee atttacks against you on its next turn automatically
+miss.
+
+**Continuous:** Each turn you may pick a cardinal or intercardinal direction.
+Until the start of your next turn you Resist 2 against ranged attacks in that half-plane.
+@@SupremeStoneWallStyle
+Stance. **Melee Effect:** All target's melee attacks on its next turn automatically miss.
+
+**Continuous:** Resist 2 against ranged attacks.
+@@WeepingWillowStyle
+Stance. **Melee Effect:** Slide target 2 squares.
+
+**Continuous:** You have Reach 2.
+@@GreaterWeepingWillowStyle
+Stance. **Melee Effect:** Slide target 4 squares.
+
+**Continuous:** You have Reach 3.
+@@SupremeWeepingWillowStyle
+Stance. **Melee Effect:** Slide target 4 squares and knock it Prone.
+
+**Continuous:** You have Reach 4.
+@@TempestStyle
+Stance. **Melee Effect:** Deal 2 damage to an enemy adjacent the target.
+
+**Continuous:** Enemies that end their turn adjacent to you take 1 damage.
+@@GreaterTempestStyle
+Stance. **Melee Effect:** Deal 2 damage to each enemy adjacent the target.
+
+**Continuous:** Enemies that end their turn adjacent to you or move adjacent take 1 damage.
+@@SupremeTempestStyle
+Stance. **Melee Effect:** Deal 3 damage to each enemy adjacent the target, and to each enemy adjacent
+you other than the target.
+
+**Continuous:** Enemies that end their turn adjacent to you or move adjacent take 2 damage.
+@@PythonStyle
+Stance. **Melee Effect:** Grab the target.
+
+**Continuous:** If an attack misses you while you have an enemy Grabbed, the Grabbed enemy takes 2
+damage.
+@@GreaterPythonStyle
+Stance. **Melee Effect:** Grab the target. While Grabbed, it has Disadvantage to attack anyone
+other than you.
+
+**Continuous:** If an attack misses you while you have an enemy Grabbed, the attack hits the
+Grabbed enemy as if the attacker had rolled a 4.
+@@SupremePythonStyle
+Stance. **Melee Effect:** Grab the target. It is Restrained until it escapes.
+
+**Continuous:** If an attack misses you while you have an enemy Grabbed, the attack hits the
+Grabbed enemy as if the attacker had rolled a 6.
+@@ScorpionStyle
+Stance. **Melee Effect:** Target takes 1 ongoing damage (save ends).
+
+**Continuous:** Add 1 damage to your Opportunities.
+@@GreaterScorpionStyle
+Stance. **Melee Effect:** Target takes 2 ongoing damage (save ends).
+
+**Continuous:** Add 1 ongoing damage (save ends) to your Opportunities.
+@@SupremeScorpionStyle
+Stance. **Melee Effect:** Target takes 2 ongoing damage until the end of the encounter.
+
+**Continuous:** Add 2 ongoing damage (save ends) to your Opportunities.
+@@FlickeringFlameStyle
+Stance. **Melee Effect:** Shift 2 squares.
+
+**Continuous:** You may shift 2 squares as a move action.
+@@GreaterFlickeringFlameStyle
+Stance. **Melee Effect:** Teleport 3 squares.
+
+**Continuous:** You may teleport 3 squares as a move action.
+@@SupremeFlickeringFlameStyle
+Stance. **Melee Effect:** Teleport 5 squares and if you end in cover or concealment from all
+enemies, you are Hidden.
+
+**Continuous:** You may teleport your speed as a move action.
+@@MandalaStyle
+Stance. **Melee Effect:** Target is Distracted (save ends).
+
+**Continuous:** Enemies adjacent to you cannot take advantage of Opportunities granted by your
+allies.
+@@GreaterMandalaStyle
+Stance. **Melee Effect:** Target is Distracted and Slowed (save ends).
+
+**Continuous:** Enemies within 3 squares of you cannot take advantage of Opportunities granted by your
+allies.
+@@SupremeMandalaStyle
+Stance. **Melee Effect:** Target is Dazed (save ends).
+
+**Continuous:** Enemies who can see you cannot take advantage of Opportunities granted by your
+allies.
+@@OppanGangnamStyle
+Well, those were a pain in the ass to type. Also, we voted to leave the EU today. I think
+we are all quite possibly screwed.
+@@FocusedAttack
+On your next attack, treat your stances although they were one tier higher for the effect and
+add one to the damage line of the attack. Until the start of your next turn, treat all your
+stances as though they were one tier higher for the passive effect. This action may stack
+with itself to increase damage and tier multiple times.
+@@MasterMartialArtist
+When you take a stance, you may also take a secondary stance you know at Basic level. When
+you change stance you may change both.
+@@Decapitation
+**Effect:** Target must make a Saving Throw. If it fails, it is immediately Taken Out. Only
+one target of this power may be subject to the effect. If this power somehow gains
+additional targets, they suffer 3 additional damage instead.
+@@TheFalseDeath
+When you are Taken Out, or at or below 0 HP, on your next Initiative count you may stand
+up and re-enter the fight with 1HP.
+@@MartialFrenzy
+You drop all stances and lose the ability to take on stances or to use Focused attack.
+You have two Attack Actions per round. Save ends all. This Saving Throw cannot be
+manipulated or modified in any way.
+@@ExtraFocusedAttack
+You can use Focused Attack an additional time per encounter.

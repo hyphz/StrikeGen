@@ -102,6 +102,13 @@ blankDatabase : Database
 blankDatabase = { backgrounds = Dict.empty, origins = Dict.empty, texts = Dict.empty }
 
 
+
+{-| Turns a maybe value into a single element list for concatting. -}
+mayList : Maybe x -> List x
+mayList x = case x of
+  Nothing -> []
+  Just y -> [y]
+
 {-| Updates the character store with a form response. -}
 setResponse : Model -> String -> String -> Model
 setResponse model key value =

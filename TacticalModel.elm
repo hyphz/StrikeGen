@@ -2,6 +2,7 @@ module TacticalModel exposing (..)
 import Necromancer exposing (classNecro)
 import Archer exposing (classArcher)
 import Duelist exposing (classDuelist)
+import MartialArtist exposing (classMA)
 import ModelDB exposing (..)
 import FormsModel exposing (..)
 import Dict exposing (Dict)
@@ -10,6 +11,7 @@ import Dict exposing (Dict)
 classes : Dict String Class
 classes = Dict.fromList [("Archer",classArcher),
                          ("Duelist",classDuelist),
+                         ("Martial Artist",classMA),
                          ("Necromancer",classNecro)]
 
 

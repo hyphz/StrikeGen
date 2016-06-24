@@ -38,6 +38,7 @@ quickPower name slot freq range area damage col m =
 
 quickSpecial name m = quickPower name Special None 0 0 0 White m
 
+atLevel : Model -> Int -> a -> List a 
 atLevel m level ab = if ((getLevel m) >= level) then [ab] else []
 
 atLevelList m level ab = if ((getLevel m) >= level) then ab else []

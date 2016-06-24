@@ -22,12 +22,6 @@ init = ({character = blankCharacter,
          getJsonFileCommand "data/backgrounds.json" BackgroundsLoaded)
 
 
-{-| Turns a maybe value into a single element list for concatting. -}
-mayList : Maybe x -> List x
-mayList x = case x of
-  Nothing -> []
-  Just y -> [y]
-
 {-| Reads the character's background skill list. -}
 backgroundSkills : Model -> List String
 backgroundSkills m = indirectLookup m "basics-bg" m.database.backgrounds
