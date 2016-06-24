@@ -14,12 +14,9 @@ import String exposing (toInt)
 import FormsModel exposing (..)
 import Ports exposing (download)
 import Json.Encode exposing (encode)
-import Necromancer exposing (classNecro)
-import Archer exposing (classArcher)
+import TacticalModel exposing (classes, tacticalForms)
 
-
-classes = Dict.fromList [("Necromancer",classNecro),("Archer",classArcher)]
-
+{-| ELM Architecture Initialization Function. -}
 init = ({character = blankCharacter,
          database = blankDatabase},
          getJsonFileCommand "data/backgrounds.json" BackgroundsLoaded)
@@ -41,6 +38,8 @@ originSkills : Model -> List String
 originSkills m = indirectLookup m "basics-origin" m.database.origins
   .skillNames [] ["Missing origin"]
 
+{-| Reads the character's origin complication list. -}
+originComplications : Model -> List String
 originComplications m = indirectLookup m "basics-origin" m.database.origins
   .complications [] ["Missing origin"]
 
@@ -106,25 +105,33 @@ setting the source and name according to the parameters. -}
 skillNameToSkill : Int -> String -> Skill
 skillNameToSkill source name = { name = name, source = source }
 
-customBackgroundFields : Model -> List Field
-customBackgroundFields m = [
-   FreeformField {name="Skill you need the most?", key="bg-custom-s1", del=False},
-   FreeformField {name="Supporting skill or knowledge?", key="bg-custom-s2", del=False},
-   FreeformField {name="Social/business skill?", key="bg-custom-s3", del=False},
-   DropdownField {name="What helps when times are tough?", del=False, key="bg-custom-wos1", choices=["","Wealth","People"]}]
-   ++ mayList (
-        case getResponse m "bg-custom-wos1" of
-          Just "People" -> Just <| FreeformField {name="Who?", del=False, key="bg-custom-wos1s"}
-          _ -> Nothing
-        )
-   ++ [DropdownField {name="How do you get stuff?", del=False, key="bg-custom-wos2", choices=["","Money","Skill"]}]
-   ++ mayList (
-        case getResponse m "bg-custom-wos2" of
-          Just "Skill" -> Just <| FreeformField {name="What skill?", del=False, key="bg-custom-wos2s"}
-          _ -> Nothing
-        )
-    ++ [FreeformField {name="Trick?", key="bg-custom-t", del=False}]
+{-| Form giving the standard prompts from the book for selecting skills for a custom
+background. -}
+customBackgroundForm : Model -> Maybe Form
+customBackgroundForm m =
+  case getResponse m "basics-bg" of
+    Nothing -> Nothing
+    Just "<Custom>" -> Just (Form False "Custom background" ([
+       FreeformField {name="Skill you need the most?", key="bg-custom-s1", del=False},
+       FreeformField {name="Supporting skill or knowledge?", key="bg-custom-s2", del=False},
+       FreeformField {name="Social/business skill?", key="bg-custom-s3", del=False},
+       DropdownField {name="What helps when times are tough?", del=False, key="bg-custom-wos1", choices=["","Wealth","People"]}]
+       ++ mayList (
+            case getResponse m "bg-custom-wos1" of
+              Just "People" -> Just <| FreeformField {name="Who?", del=False, key="bg-custom-wos1s"}
+              _ -> Nothing
+            )
+       ++ [DropdownField {name="How do you get stuff?", del=False, key="bg-custom-wos2", choices=["","Money","Skill"]}]
+       ++ mayList (
+            case getResponse m "bg-custom-wos2" of
+              Just "Skill" -> Just <| FreeformField {name="What skill?", del=False, key="bg-custom-wos2s"}
+              _ -> Nothing
+            )
+        ++ [FreeformField {name="Trick?", key="bg-custom-t", del=False}]))
+    Just _ -> Nothing
 
+
+{-| Returns the skill choices for the background, allowing for it being custom.  -}
 resolvedBackgroundSkills m = case getResponse m "basics-bg" of
   Nothing -> []
   Just "<Custom>" -> (mayList <| getResponse m "bg-custom-s1") ++
@@ -134,15 +141,10 @@ resolvedBackgroundSkills m = case getResponse m "basics-bg" of
                       if (getResponse m "bg-custom-wos2" == Just "Skill") then mayList <| getResponse m "bg-custom-wos2s" else []
   Just _ -> backgroundSkills m
 
-customBackgroundForm : Model -> Maybe Form
-customBackgroundForm m =
-  case getResponse m "basics-bg" of
-    Nothing -> Nothing
-    Just "<Custom>" -> Just (Form False "Custom background" (customBackgroundFields m))
-    Just _ -> Nothing
 
 {-| Quick function for removing a field value that's out of range, if it
 exists. -}
+killOutOfRange : String -> List String -> Model -> Model
 killOutOfRange field list model =
   case getResponse model field of
     Nothing -> model
@@ -150,10 +152,10 @@ killOutOfRange field list model =
       True -> model
       False -> killResponse model field
 
-
 {-| When origin is changed, if it's changed to a new complex origin,
 remove any skill choices made for a previous complex origin that aren't
 relevant to the new one. -}
+validateAlteredOrigin : Model -> Model
 validateAlteredOrigin m =
   case hasComplexOrigin m of
     (False, False, False, False) -> m
@@ -164,6 +166,7 @@ validateAlteredOrigin m =
 
 {-| Validate the level setting. This shouldn't ever become invalid, but
 better safe than sorry, I guess.. -}
+validateLevel : Model -> Model
 validateLevel m =
   case getResponse m "basics-level" of
     Nothing -> setResponse m "basics-level" "1"
@@ -172,7 +175,8 @@ validateLevel m =
       Ok l -> if l < 1 then setResponse m "basics-level" "1" else
               if l > 10 then setResponse m "basics-level" "10" else m
 
-
+{-| Performs validation when a field changes. -}
+fieldChanged : String -> Model -> Model
 fieldChanged field m =
   case field of
     "basics-origin" -> validateAlteredOrigin m
@@ -184,7 +188,8 @@ learnedSkillEntry m x = FreeformField{name="Skill",del=True,key="ls-"++(toString
 learnedSkillsForm m = Form True "Learned Skills" (map (learnedSkillEntry m) [1..(getResponseInt m "ls-count" 0)])
 
 
-
+{-| Form with the most basic common parts of a character. -}
+basicsForm : Model -> Form
 basicsForm model = Form False "The Basics" [
   DropdownField {name="Background", del=False, key="basics-bg", choices=(["<Custom>"] ++ (Dict.keys model.database.backgrounds))},
   DropdownField {name="Origin", del=False, key="basics-origin", choices=(Dict.keys model.database.origins)},
@@ -194,6 +199,8 @@ basicsForm model = Form False "The Basics" [
   FreeformField {name="Custom Trick:", del=False, key="basics-trick"},
   FreeformField {name="Complication:", del=False, key="basics-comp"}]
 
+{-| Form holding the values set as a character advances in level. -}
+levelForm : Model -> Form
 levelForm model = Form False "Advancement" (
   (if ((getLevel model) >= 2) then [FreeformField {name="Fallback", del=False, key="adv-fallback"},
                                     FreeformField {name="Trick", del=False, key="adv-l2trick"}] else []) ++
@@ -203,8 +210,6 @@ levelForm model = Form False "Advancement" (
   (if ((getLevel model) >= 10) then [FreeformField {name="Trick", del=False, key="adv-l10trick"}] else [])
   )
 
-
-
 {-| Get the active forms. -}
 getForms : Model -> List Form
 getForms model =
@@ -213,109 +218,8 @@ getForms model =
    (if ((getLevel model) >= 2) then [levelForm model] else []) ++
    (mayList (complexOriginForm model)) ++
    (mayList (customBackgroundForm model)) ++
-   classForms model
+   tacticalForms model
 
-
-basicMeleeDamageModifier m = case (getResponse m "basics-class") of
-  Nothing -> 0
-  Just classname -> case (Dict.get classname classes) of
-    Nothing -> 0
-    Just x -> x.modifyBasicMeleeDamage m
-
-basicRangeDamageModifier m = case (getResponse m "basics-class") of
-  Nothing -> 0
-  Just classname -> case (Dict.get classname classes) of
-    Nothing -> 0
-    Just x -> x.modifyBasicRangeDamage m
-
-basicRangeRangeModifier m = case (getResponse m "basics-class") of
-  Nothing -> 0
-  Just classname -> case (Dict.get classname classes) of
-    Nothing -> 0
-    Just x -> x.modifyBasicRangeRange m
-
-
-pmeleeBasic : Model -> Power
-pmeleeBasic m = {name = "Melee Basic Attack",
-               text = "No effect.",
-               slot = Attack,
-               freq = AtWill,
-               range = 0,
-               area = 0,
-               damage = (2 + basicMeleeDamageModifier m),
-               styl = Green
-               }
-
-prangedBasic : Model -> Power
-prangedBasic m = {name = "Ranged Basic Attack",
-               text = "No effect.",
-               slot = Attack,
-               freq = AtWill,
-               range = (5 + basicRangeRangeModifier m),
-               area = 0,
-               damage = (2 + basicRangeDamageModifier m),
-               styl = Green
-               }
-
-pcharge : Power
-pcharge = {name = "Charge",
-               text = "Move up to your speed to a square adjacent a creature, and make a Melee Basic
-                       Attack against it. Each square of movement must bring you closer to the target.
-                       You cannot Charge through Difficult Terrain.",
-               slot = Attack,
-               freq = AtWill,
-               range = 0,
-               area = 0,
-               damage = 0,
-               styl = Green
-               }
-
-pRally : Power
-pRally = {name = "Rally",
-               text = "No action. You may only use this on your turn, but you may use at any point
-               in your turn, even while Incapacitated, Dominated, or under any other Status. Spend
-               an Action Point. Regain 4 Hit Points and regain the use of one Encounter Power from your
-               Class (not a Role Action) you have expended.",
-               slot = Misc,
-               freq = Encounter,
-               range = 0,
-               area = 0,
-               damage = 0,
-               styl = Yellow
-               }
-
-pAssess : Power
-pAssess = {name = "Assess",
-               text = "Roll a die and ask the GM that many questions as listed on page 90.",
-               slot = Role,
-               freq = AtWill,
-               range = 0,
-               area = 0,
-               damage = 0,
-               styl = Blue
-               }
-
-
-basicPowers : Model -> List Power
-basicPowers m = [pmeleeBasic m, prangedBasic m, pcharge, pRally, pAssess]
-
-classPowers : Model -> List Power
-classPowers m = case (getResponse m "basics-class") of
-  Nothing -> []
-  Just classname -> case (Dict.get classname classes) of
-    Nothing -> []
-    Just x -> x.classPowerList m
-
-classForms : Model -> List Form
-classForms m = case (getResponse m "basics-class") of
-  Nothing -> []
-  Just classname -> case (Dict.get classname classes) of
-    Nothing -> []
-    Just x -> x.classForms m
-
-
-getPowers : Model -> List Power
-getPowers m = basicPowers m ++ classPowers m
 
 
 

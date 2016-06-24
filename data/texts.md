@@ -264,4 +264,123 @@ Monster. An Elite takes 3 rounds, a Champion or Titan takes 5.
 
 **Special:** When you roll a 2 on your Super Trick Arrow power,
 you must treat it as though you rolled a 5, but you have run out of
-that kind of ammo. Cross the effect off the list. 
+that kind of ammo. Cross the effect off the list.
+@@Duel
+Target one creature within 10 squares. Until the end of the encounter, when you
+attack the target, any 2s on your dice are treated as though they were 4s.
+
+**Special:** This power recharges when its target is Taken Out.
+@@Duel5+
+Target one creature within 10 squares. Until the end of the encounter, when you
+attack the target, any 2s on your dice are treated as though they were 6s.
+
+**Special:** This power recharges when its target is Taken Out.
+@@Duel9+
+Target one creature within 10 squares. Until the end of the encounter, when you
+attack the target, any 2s on your dice are treated as though they were 6s and
+you deal 1 extra damage if you hit.
+
+**Special:** This power recharges when its target is Taken Out.
+@@ChangeTarget
+Make a Basic Attack against a creature. Then change the target of Duel to that
+creature. The original target loses all points of Focus and associated
+Statuses. You may only ever have one target of Duel. If you make this attack
+multiple times at once, choose one target to change your Duel to after resolving
+the attacks.
+@@Focus
+Whenever you start your turn, the target of your Duel takes one
+Focus. Then for each point of Focus the enemy has, pick one
+effect from the list below. It has all the Statuses you chose until the end
+of its next turn.
+
+* Harried.
+* Cannot benefit from positive effects from its allies’ powers.
+* Cannot take advantage of Opportunities.
+* Cannot benefit from positive effects from its own powers.
+* Cannot use Interrupts or Reactions.
+
+The target may ignore your “Cannots” but it grants you an Opportunity
+if it does. If you spend a point of Focus on a power, remove one of
+the accumulated Statuses. If you are Incapacitated, remove all your Focus.
+@@Focus5+
+Whenever you start your turn, the target of your Duel takes one
+Focus. Then for each point of Focus the enemy has, pick one
+effect from the list below. It has all the Statuses you chose until the end
+of its next turn.
+
+* Harried.
+* Cannot benefit from positive effects from its allies’ powers.
+* Cannot take advantage of Opportunities.
+* Cannot benefit from positive effects from its own powers.
+* Cannot use Interrupts or Reactions.
+
+The target may ignore your “Cannots” but it grants you an Opportunity
+if it does and the Opportunity deals 1 extra damage. If you spend a point of
+Focus on a power, remove one of the accumulated Statuses. If you are Incapacitated,
+remove all your Focus.
+@@Focus9+
+Whenever you start your turn, the target of your Duel takes one
+Focus. Then for each point of Focus the enemy has, pick one
+effect from the list below. It has all the Statuses you chose until the end
+of its next turn.
+
+* Harried.
+* Cannot benefit from positive effects from its allies’ powers.
+* Cannot take advantage of Opportunities.
+* Cannot benefit from positive effects from its own powers.
+* Cannot use Interrupts or Reactions.
+
+The target may ignore your “Cannots” but it grants you an Opportunity
+if it does and the Opportunity deals 2 extra damage. If you spend a point of
+Focus on a power, remove one of the accumulated Statuses but treat the
+power as if you had spent 2 points. If you are Incapacitated,
+remove all your Focus.
+@@FindanOpening
+When you attack the target of your Duel, you may spend any number of points
+of its Focus. If you hit, increase your damage by 1 per point spent.
+@@ThrowofftheirAim
+When the target of your Duel hits your ally with an attack, you may spend
+any number of points of its Focus to reduce the damage by one per point
+spent.
+@@Forcetheirposition
+When the target of your Duel ends its turn, you may spend any number of
+points of its Focus to slide it one square per point spent.
+@@GetOverHere
+**Effect:** Target is pulled to an adjacent square.
+@@NoEscape
+**Effect:** Target is Slowed (save ends).
+@@DemandAttention
+**Effect:** Target takes 1 point of Focus if it's the target of your Duel.
+@@ExploitWeakness
+**Effect:** Target is Vulnerable 1 to all damage with you as the source
+until the end of the encounter. This does not stack with itself.
+@@GuessingGame
+**Effect:** Set up a die where the GM can't see. If you set it to 1-3, the
+target is Marked until the end of its next turn. If you set it to 4-6,
+until the end of the target's next turn you are guarded against its
+attacks and if it attacks you it grants you an Opportunity. Reveal the die
+when you need to prove what it was.
+@@Ain'tNoOneElseAround
+**Effect:** 3 damage if neither you nor the target have any other creatures
+adjacent.
+@@PerfectDefense
+**Effect:** Target has Disadvantage to attack you. It makes a Saving Throw
+against this status each time it hits you with an attack.
+@@TakeTheOpening
+**Effect:** Damage equal to the number of points of Focus the target has.
+@@Stalker
+**Effect:** While the target is the target of your Duel, it takes one point
+of Focus whenever you end your turn adjacent to it.
+@@YouCan'tIgnoreMe
+**Effect:** Target cannot make attacks that do not include you as a target
+(save ends).
+@@Let'sTakeThisOutside
+**Effect:** You and the target are teleported to an empty 10x10 room. Neither
+of you can affect or be affected by any creatures not in the room. You and
+the target remain there until either you are Taken Out or you are the only
+creature in the room that is not Taken Out. Then, all creatures in the room
+are teleported back to their previous locations.
+@@WhereYouGoIFollow
+**Effect:** Until the end of the encounter, when the target leaves a square
+adjacent to you, after it finishes its move you may shift up to your speed + 4
+to a square adjacent the target.

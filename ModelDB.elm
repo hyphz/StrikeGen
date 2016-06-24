@@ -77,30 +77,63 @@ type alias Class =
   { name : String,
     classPowerList : (Model -> List Power),
     classForms : (Model -> List Form),
-    modifyBasicMeleeDamage : (Model -> Int),
-    modifyBasicRangeDamage : (Model -> Int),
-    modifyBasicRangeRange : (Model -> Int) }
+    modifyBasicMelee : Maybe (Model -> Power -> Power),
+    modifyBasicRange : Maybe (Model -> Power -> Power),
+    modifyCharge : Maybe (Model -> Power -> Power),
+    modifyRally : Maybe (Model -> Power -> Power) }
 
 type Slot = Role | Attack | Misc | Special | Reaction
 type Freq = AtWill | Encounter | None
 type PowerStyle = White | Red | Blue | Yellow | Green | Purple
 
+nullBackground : Background
+nullBackground = { name="<Not Selected>", skillNames=[], wealth=0, trick=""}
+nullOrigin : Origin
+nullOrigin = { name="<Not Selected>",skillNames=[],complications=[], wealth=0,
+  freeformSkill = False, freeformComplication = False}
+nullKit : Kit
+nullKit = { name="<Not Selected>",base="",advances=[]}
 
+blankCharacter : Dict String String
+blankCharacter = Dict.fromList [("basics-level","1"),
+                                ("basics-bg","<Not Selected>")]
+
+blankDatabase : Database
+blankDatabase = { backgrounds = Dict.empty, origins = Dict.empty, texts = Dict.empty }
+
+
+{-| Updates the character store with a form response. -}
+setResponse : Model -> String -> String -> Model
 setResponse model key value =
   let
     char = model.character
   in
    { model | character = Dict.insert key value char }
 
+{-| Removes a form response from the character store. -}
+killResponse : Model -> String -> Model
 killResponse model key =
   let
     char = model.character
   in
    { model | character = Dict.remove key char }
 
+{-| Gets a form response from the character store. -}
+getResponse : Model -> String -> Maybe String
 getResponse model key =
   Dict.get key model.character
 
+{-| Gets a form response from the character store, and runs a function on it
+if it exists; otherwise, returns the default value. -}
+ifResponse : Model -> String -> a -> (String -> a) -> a
+ifResponse model key default func =
+  case (getResponse model key) of
+    Just x -> func x
+    Nothing -> default
+
+{-| Gets a form response from the character store and casts it to Int. Returns
+the default if it is missing or not an int. -}
+getResponseInt : Model -> String -> Int -> Int
 getResponseInt model key default =
   case (Dict.get key model.character) of
     Nothing -> default
@@ -108,47 +141,56 @@ getResponseInt model key default =
       Err _ -> default
       Ok i -> i
 
+{-| Gets the character's level. -}
+getLevel : Model -> Int
 getLevel m =
-  case getResponse m "basics-level" of
-    Nothing -> 1
-    Just x -> case (toInt x) of
-      Ok l -> l
-      Err _ -> 1
-
-overtext model key default = Maybe.withDefault default (get key model.database.texts)
+  getResponseInt m "basics-level" 1
 
 
+{-| Gets a value from the character store, looks it up in another dictionary, and
+then runs a function on it if it's found. If it's not in the store, returns default.
+If the value from the store isn't in the dictionary, returns error. -}
+indirectLookup : Model -> String -> Dict String a -> (a -> b) -> b -> b -> b
+indirectLookup model key db func default error =
+  ifResponse model key default (\x ->
+    case Dict.get x db of
+      Nothing -> error
+      Just o -> func o)
 
+
+{-| Looks up the given key in the text database and returns the text if found,
+otherwise returns the default. -}
+overtext : Model -> String -> String
+overtext model key = Maybe.withDefault "(Text not available)" (get key model.database.texts)
+
+
+{-| Updates the database part of the model.-}
 updateDatabase : (Database -> Database) -> Model -> Model
 updateDatabase updater model = {model | database = (updater model.database) }
 
+{-| What to do with the model if a data load fails. -}
 httpError : Model -> Model
 httpError model =  model
 
 
 originsDecoder : Decoder (List Origin)
-originsDecoder = "origins" := (Json.Decode.list originDecoder)
-
-originDecoder : Decoder Origin
-originDecoder =
-  Json.Decode.object6 Origin
-    ("name" := string)
-    ("skillNames" := Json.Decode.list string)
-    ("wealth" := int)
-    ("complications" := Json.Decode.list string)
-    (Json.Decode.oneOf [("freeformSkill" := bool), succeed False])
-    (Json.Decode.oneOf [("freeformComplication" := bool), succeed False])
+originsDecoder = "origins" := (Json.Decode.list
+    (Json.Decode.object6 Origin
+      ("name" := string)
+      ("skillNames" := Json.Decode.list string)
+      ("wealth" := int)
+      ("complications" := Json.Decode.list string)
+      (Json.Decode.oneOf [("freeformSkill" := bool), succeed False])
+      (Json.Decode.oneOf [("freeformComplication" := bool), succeed False])))
 
 backgroundsDecoder : Decoder (List Background)
-backgroundsDecoder = "backgrounds" := (Json.Decode.list backgroundDecoder)
-
-backgroundDecoder : Decoder Background
-backgroundDecoder =
-  object4 Background
+backgroundsDecoder = "backgrounds" := (Json.Decode.list
+  (object4 Background
     ("name" := string)
     ("skillNames" := Json.Decode.list string)
     ("wealth" := int)
-    ("trick" := string)
+    ("trick" := string)))
+
 
 
 {-| Returns the command to load a JSON data file. If it loads successfully, send the
@@ -168,21 +210,9 @@ unpackOrigins : String -> Model -> Model
 unpackOrigins s model = updateDatabase ( \d ->
  { d | origins = toDict .name ([nullOrigin] ++ (withDefault [] (decodeString originsDecoder s)))}) model
 
-nullBackground : Background
-nullBackground = { name="<Not Selected>", skillNames=[], wealth=0, trick=""}
-nullOrigin : Origin
-nullOrigin = { name="<Not Selected>",skillNames=[],complications=[], wealth=0,
-  freeformSkill = False, freeformComplication = False}
-nullKit : Kit
-nullKit = { name="<Not Selected>",base="",advances=[]}
 
-blankCharacter : Dict String String
-blankCharacter = Dict.fromList [("basics-level","1"),
-                                ("basics-bg","<Not Selected>")]
-
-blankDatabase = { backgrounds = Dict.empty, origins = Dict.empty, texts = Dict.empty }
-
-
+{-| Parses the text file blob into the text database. -}
+splitTexts : String -> Dict String String
 splitTexts str =
   let
     paragraphs = String.split "@@" str
@@ -197,15 +227,8 @@ splitTexts str =
   in
     Dict.fromList paraPairs
 
+unpackTexts : String -> Model -> Model
 unpackTexts str model = updateDatabase ( \d -> {d | texts = splitTexts str} ) model
-
-indirectLookup : Model -> String -> Dict String a -> (a -> b) -> b -> b -> b
-indirectLookup model key db func default error =
-  case Dict.get key model.character of
-    Nothing -> default
-    Just x -> case Dict.get x db of
-      Nothing -> default
-      Just o -> func o
 
 dbUpdate : Msg -> Model -> (Model, Cmd Msg)
 dbUpdate msg model = case msg of

@@ -10,25 +10,25 @@ classNecro : Class
 classNecro = { name = "Necromancer",
                classPowerList = necroPowers,
                classForms = necroForms,
-               modifyBasicMeleeDamage = necroBasicMeleeDamage,
-               modifyBasicRangeDamage = necroBasicRangeDamage,
-               modifyBasicRangeRange = basicRangeRange }
+               modifyBasicMelee = Just necroBasicMelee,
+               modifyBasicRange = Just necroBasicRange,
+               modifyCharge = Nothing,
+               modifyRally = Nothing }
 
-necroBasicMeleeDamage : Model -> Int
-necroBasicMeleeDamage m = if (getLevel m < 5) then 0 else 1
+necroBasicMelee : Model -> Power -> Power
+necroBasicMelee m p = if (getLevel m < 5) then p else {p | damage = 3}
 
-necroBasicRangeDamage : Model -> Int
-necroBasicRangeDamage m = if (getLevel m < 5) then 0 else 1
 
-basicRangeRange m = 0
+necroBasicRange : Model -> Power -> Power
+necroBasicRange m p = if (getLevel m < 5) then p else {p | damage = 3}
 
 
 
 
 commandUndead : Model -> Power
 commandUndead m = {name = "Command Undead",
-                 text = (if (getLevel m) < 9 then (overtext m "CommandUndead" "See page 102.")
-                             else (overtext m "CommandUndead9+" "See pages 102 and 103.")),
+                 text = (if (getLevel m) < 9 then (overtext m "CommandUndead")
+                             else (overtext m "CommandUndead9+")),
                  slot = Attack,
                  freq = Encounter,
                  range = 10,
@@ -42,8 +42,8 @@ atwilldamage m = if (getLevel m < 5) then 2 else 3
 
 deadlyPoison : Model -> Power
 deadlyPoison m = {name = "Deadly Poison",
-                 text = (if (getLevel m) < 5 then (overtext m "DeadlyPoison" "See page 102.")
-                                      else (overtext m "DeadlyPoison5+" "See page 102 (increased ongoing damage).")),
+                 text = (if (getLevel m) < 5 then (overtext m "DeadlyPoison")
+                                      else (overtext m "DeadlyPoison5+")),
                  slot = Attack,
                  freq = AtWill,
                  range = -5,
@@ -54,7 +54,7 @@ deadlyPoison m = {name = "Deadly Poison",
 
 phantasms : Model -> Power
 phantasms m = {name = "Phantasms",
-                 text = overtext m "Phantasms" "See page 102.",
+                 text = overtext m "Phantasms",
                  slot = Attack,
                  freq = AtWill,
                  range = 5,
@@ -65,8 +65,8 @@ phantasms m = {name = "Phantasms",
 
 terrifyingVisage : Model -> Power
 terrifyingVisage m = {name = "Terrifying Visage",
-                 text = (if (getLevel m) < 5 then (overtext m "TerrifyingVisage" "See page 102.")
-                                      else (overtext m "TerrifyingVisage5+" "See page 102 (improved).")),
+                 text = (if (getLevel m) < 5 then (overtext m "TerrifyingVisage")
+                                      else (overtext m "TerrifyingVisage5+")),
                  slot = Attack,
                  freq = AtWill,
                  range = 5,
@@ -76,54 +76,19 @@ terrifyingVisage m = {name = "Terrifying Visage",
                 }
 
 
-
-
-
-
-
-lifeDrain : Model -> Power
-lifeDrain m = {name = "Life Drain",
-                 text = overtext m "LifeDrain" "See page 102.",
-                 slot = Attack,
-                 freq = Encounter,
-                 range = 0,
-                 area = 0,
-                 damage = 2,
-                 styl = Purple
-                }
-
-corpseExplosion : Model -> Power
-corpseExplosion m = {name = "Corpse Explosion",
-                 text = overtext m "CorpseExplosion" "See page 102.",
-                 slot = Attack,
-                 freq = Encounter,
-                 range = 0,
-                 area = 0,
-                 damage = 0,
-                 styl = Purple
-                }
-
-raiseAlly : Model -> Power
-raiseAlly m = {name = "Raise Ally",
-              text = overtext m "RaiseAlly" "Free action. See page 102.",
-              slot = Misc,
-              freq = Encounter,
-              range = 0,
-              area = 0,
-              damage = 0,
-              styl = Purple
-            }
-
+lifeDrain = quickPower "Life Drain" Attack Encounter 0 0 2 Purple
+corpseExplosion = quickPower "Corpse Explosion" Attack Encounter 0 0 0 Purple
+raiseAlly = quickPower "Raise Ally" Misc Encounter 0 0 0 Purple
 
 seedOfFear : Model -> Power
-seedOfFear = quickPower "Seed Of Fear" 102 Attack Encounter 5 0 3 Purple
+seedOfFear = quickPower "Seed Of Fear" Attack Encounter 5 0 3 Purple
 
 
 greaterMarkOfDeath : Model -> Power
 greaterMarkOfDeath m = {name = "Greater Mark Of Death",
               text = case (getResponse m "necro-gift") of
-                    Just "Undeath" -> overtext m "GreaterMarkOfDeathWithUndeath" "See page 102."
-                    _ -> overtext m "GreaterMarkOfDeath" "See page 102.",
+                    Just "Undeath" -> overtext m "GreaterMarkOfDeathWithUndeath"
+                    _ -> overtext m "GreaterMarkOfDeath",
               slot = Attack,
               freq = Encounter,
               range = -5,
@@ -134,37 +99,37 @@ greaterMarkOfDeath m = {name = "Greater Mark Of Death",
 
 lichPact : Model -> Power
 lichPact m = {name = "Lich Pact",
-        text = overtext m "LichPact" "Reaction. See page 102.",
+        text = overtext m "LichPact",
         slot = Reaction, freq = Encounter,
         range = 0, area = 0, damage = 0, styl = Purple}
 
 healthSwap : Model -> Power
 healthSwap m = {name = "Health Swap",
-        text = overtext m "HealthSwap" "Free Action. See page 102.",
+        text = overtext m "HealthSwap",
         slot = Misc, freq = Encounter,
         range = 0, area = 0, damage = 0, styl = Purple}
 
 crudeDomination : Model -> Power
 crudeDomination m = {name = "Crude Domination",
-        text = overtext m "CrudeDomination" "See page 103.",
+        text = overtext m "CrudeDomination",
         slot = Attack, freq = Encounter,
         range = 5, area = 0, damage = 4, styl = Purple}
 
 armyOfSpecters : Model -> Power
 armyOfSpecters m = {name = "Army of Specters",
-        text = overtext m "ArmyOfSpecters" "See page 103.",
+        text = overtext m "ArmyOfSpecters",
         slot = Attack, freq = Encounter,
         range = 0, area = 10, damage = 0, styl = Purple}
 
 playDiceWithDeath : Model -> Power
 playDiceWithDeath m = {name = "Play Dice with Death",
-        text = overtext m "PlayDiceWithDeath" "See page 103.",
+        text = overtext m "PlayDiceWithDeath",
         slot = Attack, freq = Encounter,
         range = 0, area = 10, damage = 0, styl = Purple}
 
 terror : Model -> Power
 terror m = {name = "Terror",
-        text = overtext m "Terror" "See page 103.",
+        text = overtext m "Terror",
         slot = Attack, freq = Encounter,
         range = -5, area = 0, damage = 4, styl = Purple}
 
@@ -174,7 +139,7 @@ terror m = {name = "Terror",
 
 markOfDeath : Model -> Power
 markOfDeath m = {name = "Mark of Death",
-              text = overtext m "MarkOfDeath" "See page 102.",
+              text = overtext m "MarkOfDeath",
               slot = Special,
               freq = None,
               range = 0,
@@ -207,7 +172,7 @@ giftPower m = case (getResponse m "necro-gift") of
         _ -> "XX"
     in
       [{name = giftName,
-       text = overtext m giftTextKey ("See page " ++ giftPage ++ "."),
+       text = overtext m giftTextKey,
        slot = Special, freq = None,
        range = 0, area = 0, damage = 0, styl=White}]
 

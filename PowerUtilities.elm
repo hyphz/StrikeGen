@@ -24,9 +24,10 @@ powerChoiceField m name key list =
   DropdownField { name=name, del=False, key=key, choices=[""] ++ (Dict.keys (list m)) }
 
 
-quickPower name page slot freq range area damage col m =
+quickPower : String -> Slot -> Freq -> Int -> Int -> Int -> PowerStyle -> Model -> Power
+quickPower name slot freq range area damage col m =
         {name = name,
-         text = overtext m (String.filter (\x -> (x /= ' ')) name) ("See page " ++ (toString page) ++ "."),
+         text = overtext m (String.filter (\x -> (x /= ' ')) name),
          slot = slot,
          freq = freq,
          range = range,
@@ -35,7 +36,7 @@ quickPower name page slot freq range area damage col m =
          styl = col
        }
 
-quickSpecial name page m = quickPower name page Special None 0 0 0 White m
+quickSpecial name m = quickPower name Special None 0 0 0 White m
 
 atLevel m level ab = if ((getLevel m) >= level) then [ab] else []
 
