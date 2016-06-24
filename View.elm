@@ -122,7 +122,7 @@ powerCard power =
       Purple -> "purplepower"
     typeIcon = case power.slot of
       Attack -> "attack.svg"
-      Role -> "role.svg"
+      RoleSlot -> "role.svg"
       Misc -> "circle.svg"
       Special -> "circle.svg"
       Reaction -> "reaction.svg"

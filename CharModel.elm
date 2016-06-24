@@ -14,7 +14,7 @@ import String exposing (toInt)
 import FormsModel exposing (..)
 import Ports exposing (download)
 import Json.Encode exposing (encode)
-import TacticalModel exposing (classes, tacticalForms)
+import TacticalModel exposing (classes, roles, tacticalForms)
 
 {-| ELM Architecture Initialization Function. -}
 init = ({character = blankCharacter,
@@ -189,6 +189,7 @@ basicsForm model = Form False "The Basics" [
   DropdownField {name="Origin", del=False, key="basics-origin", choices=(Dict.keys model.database.origins)},
   NumberField {name="Level", del=False, key="basics-level", min=1, max=10},
   DropdownField {name="Class", del=False, key="basics-class", choices=([""] ++ Dict.keys classes)},
+  DropdownField {name="Role", del=False, key="basics-role", choices=([""] ++ Dict.keys roles)},
   FreeformField {name="Custom Skill:", del=False, key="basics-skill"},
   FreeformField {name="Custom Trick:", del=False, key="basics-trick"},
   FreeformField {name="Complication:", del=False, key="basics-comp"}]

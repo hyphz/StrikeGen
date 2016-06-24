@@ -82,7 +82,12 @@ type alias Class =
     modifyCharge : Maybe (Model -> Power -> Power),
     modifyRally : Maybe (Model -> Power -> Power) }
 
-type Slot = Role | Attack | Misc | Special | Reaction
+type alias Role =
+  { name : String,
+    rolePowerList : (Model -> List Power),
+    roleForms : (Model -> List Power)}
+
+type Slot = RoleSlot | Attack | Misc | Special | Reaction
 type Freq = AtWill | Encounter | None
 type PowerStyle = White | Red | Blue | Yellow | Green | Purple
 
