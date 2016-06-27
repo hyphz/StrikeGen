@@ -18,6 +18,7 @@ import CharModel exposing (getSkills, getForms)
 import TacticalModel exposing (getPowers)
 import FormsModel exposing (..)
 import Color
+import String
 import Svg exposing (svg)
 import Material.Icons.Action exposing (delete)
 import Material.Icons.Content exposing (add_box)
@@ -176,7 +177,8 @@ powerOrder power =
     Yellow -> 5
 
 powerCards model =
-    div [Html.Attributes.class "powercards"] (List.map powerCard (List.sortBy powerOrder (getPowers model)))
+    div [Html.Attributes.class "powercards"] (List.map powerCard (List.sortBy powerOrder (TacticalModel.getPowers model)))
+
 
 fileops : Html Msg
 fileops = select [(Html.Events.on "change" (targetAndWrap FileCommand)),Html.Attributes.id "fileops"]
@@ -184,6 +186,7 @@ fileops = select [(Html.Events.on "change" (targetAndWrap FileCommand)),Html.Att
             (option [selected False, value "download"] [text "Download to local file"]),
             (option [selected False, value "upload"] [text "Upload from local file"]),
             (option [selected False, value "seturl"] [text "Save to URL (bookmark to store)"]),
+            (option [selected False, value "roll20"] [text "Export Roll20 macros (text file)"]),
             (option [selected False, value "reset"] [text "Clear character (no confirm - save first!)"])]
 
 formsDisplay : Model -> Html Msg

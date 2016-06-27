@@ -10,7 +10,7 @@ import Task exposing (perform)
 import Result exposing (withDefault)
 import ModelDB exposing (..)
 import Dict exposing (Dict, insert)
-import String exposing (toInt)
+import String exposing (toInt, concat)
 import FormsModel exposing (..)
 import Ports exposing (download, saveURL)
 import Json.Encode exposing (encode)
@@ -244,6 +244,7 @@ handleFileCommand x m = case x of
   "upload" -> (m, Ports.doUpload 0)
   "seturl" -> (m, Ports.saveURL (encodeChar m))
   "reset" -> ({m | character = blankCharacter},Ports.resetFileMenu 0)
+  "roll20" -> (m, Ports.download ("macros.txt",powerMacros m))
   _ -> (m, Ports.alert ("Invalid message " ++ x ++ " from file menu"))
 
 
@@ -255,6 +256,83 @@ importChar x m =
     case newChar of
       Ok chardata -> ({ m | character = chardata }, Cmd.none)
       Err string -> (m, Ports.alert "Error decoding character file.")
+
+
+tidyEdges s = s |> String.split "\n" |> String.join " "
+
+unSlice start end str =
+  (String.slice 0 start str) ++ (String.slice end -1 str)
+
+
+
+textExtract : String -> String -> (Maybe String, String)
+textExtract section text =
+  let
+    start = List.head (String.indexes ("**" ++ section ++":**") text)
+    possEnds = (String.indexes "\n\n" text) ++ (String.indexes "\r\n\r\n" text) ++ [String.length text]
+    realEnd = case start of
+      Nothing -> Nothing
+      Just st -> List.head (List.filter (\x -> x > st) possEnds)
+    offset = (String.length section) + 5
+  in
+    case start of
+      Nothing -> (Nothing, text)
+      Just s -> case realEnd of
+        Nothing -> (Nothing, text)
+        Just en -> (Just (tidyEdges (String.slice (s+offset) en text)), unSlice s en text)
+
+
+extractToMacroPart name string =
+  case textExtract name string of
+    (Nothing, x) -> ("",x)
+    (Just text, x) -> ("{{" ++ name ++"=" ++ text ++ "}}",x)
+
+powerMacro power =
+  let
+    rangeDesc = case power.slot of
+      Attack -> if power.range == 0 then "{{Range=Melee}}"
+                 else if power.range > 0 then ("{{Range=Ranged " ++ toString power.range++"}}")
+                 else ("{{Range=Melee or Ranged " ++ toString power.range++"}}")
+      _ -> if power.range > 0 then ("{{Range=Ranged " ++ toString power.range ++"}}")
+           else if power.range < 0 then ("{{Range=Adjacent or ranged " ++ toString power.range++"}}")
+           else ""
+    typeDesc = case power.slot of
+            Attack -> "{{Type=Attack}}"
+            RoleSlot -> "{{Type=Role}}"
+            Reaction -> "{{Type=Reaction}}"
+            _ -> ""
+    attackRoll = case power.slot of
+            Attack -> "{{Attack=[[1d6]]}}"
+            _ -> ""
+    areaDesc = case power.area of
+            0 -> ""
+            _ -> "{{Area=" ++ (toString power.area) ++ "}}"
+    damageDesc = case power.damage of
+            0 -> ""
+            (-1) -> "{{Damage=Support}}"
+            _ -> "{{Damage=" ++ (toString power.damage) ++ "}}"
+    (triggerDesc, triggerRest) = extractToMacroPart "Trigger" power.text
+    (effectDesc, effectRest) = extractToMacroPart "Effect" triggerRest
+    (specialDesc, specialRest) = extractToMacroPart "Special" effectRest
+    (martialDesc, martialRest) = extractToMacroPart "Melee Effect" specialRest
+    (marconDesc, marconRest) = extractToMacroPart "Continuous" martialRest
+    restText = if (effectRest /= "") then "{{Text=" ++ tidyEdges marconRest ++ "}}" else ""
+  in
+    "&{template:default}{{name=" ++ power.name ++ "}}" ++
+                       typeDesc ++
+                       rangeDesc ++
+                       areaDesc ++
+                       attackRoll ++
+                       damageDesc ++
+                       triggerDesc ++
+                       effectDesc ++
+                       specialDesc ++
+                       martialDesc ++
+                       marconDesc ++
+                         restText ++ "\r\n\r\n"
+
+powerMacros model =
+  String.concat (List.map powerMacro (TacticalModel.getPowers model))
 
 
 

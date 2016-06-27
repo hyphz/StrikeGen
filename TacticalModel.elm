@@ -54,9 +54,7 @@ prangedBasic m = applyClassModifier m .modifyBasicRange {name = "Ranged Basic At
 
 pcharge : Model -> Power
 pcharge m = applyClassModifier m .modifyCharge {name = "Charge",
-               text = "Move up to your speed to a square adjacent a creature, and make a Melee Basic
-                       Attack against it. Each square of movement must bring you closer to the target.
-                       You cannot Charge through Difficult Terrain.",
+               text = overtext m "GlobalCharge",
                slot = Attack,
                freq = AtWill,
                range = 0,
@@ -67,10 +65,7 @@ pcharge m = applyClassModifier m .modifyCharge {name = "Charge",
 
 pRally : Model -> Power
 pRally m = applyClassModifier m .modifyRally {name = "Rally",
-               text = "No action. You may only use this on your turn, but you may use at any point
-               in your turn, even while Incapacitated, Dominated, or under any other Status. Spend
-               an Action Point. Regain 4 Hit Points and regain the use of one Encounter Power from your
-               Class (not a Role Action) you have expended.",
+               text = overtext m "GlobalRally",
                slot = Misc,
                freq = Encounter,
                range = 0,

@@ -509,3 +509,12 @@ You have two Attack Actions per round. Save ends all. This Saving Throw cannot b
 manipulated or modified in any way.
 @@ExtraFocusedAttack
 You can use Focused Attack an additional time per encounter.
+@@GlobalCharge
+Move up to your speed to a square adjacent a creature, and make a Melee Basic
+Attack against it. Each square of movement must bring you closer to the target.
+You cannot Charge through Difficult Terrain.
+@@GlobalRally
+No action. You may only use this on your turn, but you may use at any point
+in your turn, even while Incapacitated, Dominated, or under any other Status. Spend
+an Action Point. Regain 4 Hit Points and regain the use of one Encounter Power from your
+Class (not a Role Action) you have expended.
