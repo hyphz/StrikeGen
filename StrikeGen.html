@@ -4,17 +4,74 @@
   <link rel="stylesheet" type="text/css" href="style.css">
   <script src="StrikeGen.js"></script>
   <script src="download.js"></script>
+  <script src="lz-string.min.js"></script>
   <script>
       function loaded() {
         var node=document.getElementById("main");
-        var app = Elm.Main.embed(node);
+        app = Elm.Main.embed(node);
         app.ports.download.subscribe(function(dlinfo) {
+          fileSupport = window.File && window.FileReader && window.FileList && window.Blob;
+          if (!fileSupport) {
+            window.alert("Your browser doesn't support local file access! Try save to URL.");
+            return;
+          }
           download(dlinfo[1], dlinfo[0], "text/plain");
-        })
+          document.getElementById("fileops").selectedIndex = 0;
+        });
+        app.ports.saveURL.subscribe(function(data) {
+          var oldHref = window.location.href;
+          var loc = oldHref.indexOf("?");
+          if (loc != -1) {
+             oldHref = oldHref.slice(0,loc);
+          }
+          var str = LZString.compressToEncodedURIComponent(data);
+          window.location.assign(oldHref + "?load=" + str);
+        });
+        app.ports.dbLoaded.subscribe(function(junk) {
+          var ourHref = window.location.href;
+          var loc = ourHref.indexOf("?load=");
+          if (loc != -1) {
+            var compressed = ourHref.slice(loc+6);
+            var decompressed = LZString.decompressFromEncodedURIComponent(compressed);
+            app.ports.loadJson.send(decompressed);
+          }
+        });
+        app.ports.doUpload.subscribe(function(junk) {
+          fileSupport = window.File && window.FileReader && window.FileList && window.Blob;
+          if (!fileSupport) {
+            window.alert("Your browser doesn't support local file access! Try save to URL.");
+            return;
+          }
+          document.getElementById("fileops").selectedIndex = 0;
+          document.getElementById("filePrompt").click();
+        });
+        app.ports.alert.subscribe(function(msg) {
+          window.alert(msg);
+        });
+        app.ports.resetFileMenu.subscribe(function(msg) {
+          document.getElementById("fileops").selectedIndex = 0;
+        });
+      }
+      function filePicked() {
+        var theFile = document.getElementById("filePrompt").files[0];
+        if (!theFile) {
+          window.alert("Missing file. Your browser has some strange ideas about file dialogs..");
+          return;
+        }
+        var r = new FileReader();
+        r.onload = function(e) {
+          var contents = e.target.result;
+          app.ports.loadJson.send(contents);
+        }
+        r.onerror = function(e) {
+          window.alert("Error getting file contents.");
+        }
+        r.readAsText(theFile);
       }
   </script>
 </head>
 <body onload="loaded()">
   <div id="main"> </div>
+  <input id="filePrompt" type="file" style="display: none;" onChange="filePicked()"></input>
 </body>
 </html>

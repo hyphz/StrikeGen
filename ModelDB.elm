@@ -9,8 +9,7 @@ import Result exposing (withDefault)
 import Task exposing (perform)
 import String exposing (toInt)
 import Result exposing (Result)
-import List
-
+import Ports exposing (dbLoaded)
 
 type Msg =
     SkillChanged String Bool
@@ -22,7 +21,9 @@ type Msg =
   | FormFieldUpdated String String
   | FormAddClicked String
   | TextsLoaded String
-  | DoSave
+  | FileCommand String
+  | LoadJson String
+
 
 {-| The model in memory. Character holds the active character, Database holds the
 current database read from the data files. -}
@@ -244,8 +245,8 @@ unpackTexts str model = updateDatabase ( \d -> {d | texts = splitTexts str} ) mo
 
 dbUpdate : Msg -> Model -> (Model, Cmd Msg)
 dbUpdate msg model = case msg of
-    HTTPLoadError e -> (httpError model, Cmd.none)
+    HTTPLoadError e -> (httpError model, Ports.alert "Database load error! Check internet or local data/ path.")
     BackgroundsLoaded bgs -> (unpackBackgrounds bgs model, getJsonFileCommand "data/origins.json" OriginsLoaded)
     OriginsLoaded ogs -> (unpackOrigins ogs model, getJsonFileCommand "data/texts.md" TextsLoaded)
-    TextsLoaded txs -> (unpackTexts txs model, Cmd.none)
+    TextsLoaded txs -> (unpackTexts txs model, Ports.dbLoaded 0)
     _ -> (model, Cmd.none)

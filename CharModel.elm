@@ -12,8 +12,9 @@ import ModelDB exposing (..)
 import Dict exposing (Dict, insert)
 import String exposing (toInt)
 import FormsModel exposing (..)
-import Ports exposing (download)
+import Ports exposing (download, saveURL)
 import Json.Encode exposing (encode)
+import Json.Decode
 import TacticalModel exposing (classes, roles, tacticalForms)
 
 {-| ELM Architecture Initialization Function. -}
@@ -237,10 +238,30 @@ encodeChar model =
   |> Json.Encode.object
   |> Json.Encode.encode 2
 
+handleFileCommand : String -> Model -> (Model, Cmd Msg)
+handleFileCommand x m = case x of
+  "download" -> (m, Ports.download ("character.json",encodeChar m))
+  "upload" -> (m, Ports.doUpload 0)
+  "seturl" -> (m, Ports.saveURL (encodeChar m))
+  "reset" -> ({m | character = blankCharacter},Ports.resetFileMenu 0)
+  _ -> (m, Ports.alert ("Invalid message " ++ x ++ " from file menu"))
+
+
+importChar : String -> Model -> (Model, Cmd Msg)
+importChar x m =
+  let
+    newChar = Json.Decode.decodeString (Json.Decode.dict Json.Decode.string) x
+  in
+    case newChar of
+      Ok chardata -> ({ m | character = chardata }, Cmd.none)
+      Err string -> (m, Ports.alert "Error decoding character file.")
+
+
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model = case msg of
     FormFieldUpdated k s -> (updateFieldResponse k s model, Cmd.none)
     FormAddClicked f -> (updateExtendForm f model, Cmd.none)
-    DoSave -> (model, Ports.download ("character.json", encodeChar model))
+    FileCommand x -> handleFileCommand x model
+    LoadJson x -> importChar x model
     _ -> dbUpdate msg model

@@ -179,7 +179,12 @@ powerCards model =
     div [Html.Attributes.class "powercards"] (List.map powerCard (List.sortBy powerOrder (getPowers model)))
 
 fileops : Html Msg
-fileops = button [onClick DoSave] [text "Download"]
+fileops = select [(Html.Events.on "change" (targetAndWrap FileCommand)),Html.Attributes.id "fileops"]
+           [(option [selected True, value "nil"] [text "File..."]),
+            (option [selected False, value "download"] [text "Download to local file"]),
+            (option [selected False, value "upload"] [text "Upload from local file"]),
+            (option [selected False, value "seturl"] [text "Save to URL (bookmark to store)"]),
+            (option [selected False, value "reset"] [text "Clear character (no confirm - save first!)"])]
 
 formsDisplay : Model -> Html Msg
 formsDisplay model = div [] ([fileops] ++ (List.map (formDisplay model) (getForms model)))
