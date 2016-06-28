@@ -178,9 +178,13 @@ fieldChanged field m =
     "basics-level" -> validateLevel m
     _ -> m
 
+{-| Creates the form entry for the Xth learned skill. -}
+learnedSkillEntry : Model -> Int -> Field
 learnedSkillEntry m x = FreeformField{name="Skill",del=True,key="ls-"++(toString x)}
 
-learnedSkillsForm m = Form True "Learned Skills" (map (learnedSkillEntry m) [1..(getResponseInt m "ls-count" 0)])
+learnedSkillsForm : Model -> Form
+learnedSkillsForm m = Form True "Learned Skills"
+                (map (learnedSkillEntry m) [1..(getResponseInt m "ls-count" 0)])
 
 
 {-| Form with the most basic common parts of a character. -}
@@ -225,11 +229,39 @@ updateFieldResponse : String -> String -> Model -> Model
 updateFieldResponse key value model =
   fieldChanged key (setResponse model key value)
 
+{-| Called when an add button on an addable form is pressed. -}
+updateExtendForm : String -> Model -> Model
 updateExtendForm key model =
   case key of
     "Learned Skills" -> setResponse model "ls-count" (toString ((getResponseInt model "ls-count" 0) + 1))
     _ -> model
 
+
+updateDeleteField : String -> Model -> Model
+updateDeleteField key model =
+  let
+    keyhyphenindex = String.indexes "-" key
+    realKeyHyphenIndex = case (List.head keyhyphenindex) of
+      Nothing -> Debug.crash "Missing hyphen in expandable form deletion process"
+      Just x -> x
+    keyPrehyphen = (String.slice 0 realKeyHyphenIndex key) ++ "-"
+    countName = Debug.log "name of the count variable:" (keyPrehyphen ++ "count")
+    removeResponse = Debug.log "remove the deleted item:" (killResponse model key)
+    reduceCount = Debug.log "reduce the count:" (setResponse removeResponse countName (toString ((getResponseInt removeResponse countName 0) - 1)))
+    checkInteg value m = if value >= ((getResponseInt m countName 0)) then Debug.log "Completing.." m else
+      let
+        active = Debug.log "active" (keyPrehyphen ++ (toString value))
+        next = Debug.log "next" (keyPrehyphen ++ (toString (value+1)))
+      in case (Dict.get active m.character) of
+        Just x -> Debug.log ("Active is ok so moving on to " ++ (toString (value+1))) (checkInteg (value+1) m)
+        Nothing -> case (Dict.get next m.character) of
+          Just higher -> Debug.log ("Active is missing, bubbling" ++ next ++" to " ++ active) (checkInteg (value) (setResponse (killResponse m next) active higher))
+          Nothing -> Debug.crash ("More than one form item deleted at once? " ++ active ++ " unset, so is " ++ next ++ ", deleted key is " ++ key)
+  in checkInteg 1 reduceCount
+
+
+
+{-| Encodes the character hash as a Json string. -}
 encodeChar : Model -> String
 encodeChar model =
   model.character
@@ -238,6 +270,7 @@ encodeChar model =
   |> Json.Encode.object
   |> Json.Encode.encode 2
 
+{-| Deal with clicks on the "file menu". Most of these have to go to JS. -}
 handleFileCommand : String -> Model -> (Model, Cmd Msg)
 handleFileCommand x m = case x of
   "download" -> (m, Ports.download ("character.json",encodeChar m))
@@ -248,6 +281,7 @@ handleFileCommand x m = case x of
   _ -> (m, Ports.alert ("Invalid message " ++ x ++ " from file menu"))
 
 
+{-| Decode a character hash from a JSON string. -}
 importChar : String -> Model -> (Model, Cmd Msg)
 importChar x m =
   let
@@ -258,13 +292,20 @@ importChar x m =
       Err string -> (m, Ports.alert "Error decoding character file.")
 
 
+{-| Add spaces at carriage returns in a string, used to format markdown
+strings from the database for plain text viewing. -}
+tidyEdges : String -> String
 tidyEdges s = s |> String.split "\n" |> String.join " "
 
+{-| Return all parts of a string EXCEPT the selected area. -}
+unSlice : Int -> Int -> String -> String
 unSlice start end str =
   (String.slice 0 start str) ++ (String.slice end -1 str)
 
 
-
+{-| Select a headed paragraph from the markdown text in the text database, and
+extract it, removing the paragraph header. Returns the extracted paragraph and
+the text with the extracted paragraph eliminated. -}
 textExtract : String -> String -> (Maybe String, String)
 textExtract section text =
   let
@@ -281,12 +322,16 @@ textExtract section text =
         Nothing -> (Nothing, text)
         Just en -> (Just (tidyEdges (String.slice (s+offset) en text)), unSlice s en text)
 
-
+{-| Perform textExtract and create a roll20 macro component if the named section was
+found, or a blank string if it wasn't. -}
+extractToMacroPart : String -> String -> (String, String)
 extractToMacroPart name string =
   case textExtract name string of
     (Nothing, x) -> ("",x)
     (Just text, x) -> ("{{" ++ name ++"=" ++ text ++ "}}",x)
 
+{-| Export a power as a Roll20 macro. -}
+powerMacro : Power -> String
 powerMacro power =
   let
     rangeDesc = case power.slot of
@@ -294,7 +339,7 @@ powerMacro power =
                  else if power.range > 0 then ("{{Range=Ranged " ++ toString power.range++"}}")
                  else ("{{Range=Melee or Ranged " ++ toString power.range++"}}")
       _ -> if power.range > 0 then ("{{Range=Ranged " ++ toString power.range ++"}}")
-           else if power.range < 0 then ("{{Range=Adjacent or ranged " ++ toString power.range++"}}")
+           else if power.range < 0 then ("{{Range=Adjacent or ranged " ++ toString (-power.range)++"}}")
            else ""
     typeDesc = case power.slot of
             Attack -> "{{Type=Attack}}"
@@ -331,6 +376,8 @@ powerMacro power =
                        marconDesc ++
                          restText ++ "\r\n\r\n"
 
+{-| Create the power macro data file for export. -}
+powerMacros : Model -> String
 powerMacros model =
   String.concat (List.map powerMacro (TacticalModel.getPowers model))
 
@@ -340,6 +387,7 @@ update : Msg -> Model -> (Model, Cmd Msg)
 update msg model = case msg of
     FormFieldUpdated k s -> (updateFieldResponse k s model, Cmd.none)
     FormAddClicked f -> (updateExtendForm f model, Cmd.none)
+    FieldDeleteClicked f -> (updateDeleteField f model, Cmd.none)
     FileCommand x -> handleFileCommand x model
     LoadJson x -> importChar x model
     _ -> dbUpdate msg model

@@ -8,8 +8,6 @@ import Html.Events exposing (..)
 import List exposing (map, head, length, filter, sortBy)
 import Html.App as Html
 import Json.Decode exposing (Decoder, decodeString, (:=), object4, string, list, int, at)
-import Http exposing (getString, Error)
-import Task exposing (perform)
 import Result exposing (withDefault)
 import ModelDB exposing (..)
 import Dict exposing (..)
@@ -55,6 +53,7 @@ skillTable m =
 targetAndWrap : (String -> Msg) -> Decoder Msg
 targetAndWrap f = Json.Decode.map f targetValue
 
+dropdownFieldOption : Model -> String -> String -> Html Msg
 dropdownFieldOption model key opt =
   let isSelected = case (Dict.get key model.character) of
     Just x -> opt == x
@@ -72,7 +71,8 @@ formFieldDisplay model field =
       True -> [(Html.Attributes.colspan 1)]
       False -> [(Html.Attributes.colspan 2)]
     delCol = case (fieldDel field) of
-      True -> [td [Html.Attributes.width 20] [useIcon delete 20]]
+      True -> [td [Html.Attributes.width 20,
+                  Html.Events.onClick (FieldDeleteClicked (fieldKey field))] [useIcon delete 20]]
       False -> []
   in case field of
   FreeformField ff -> tr [] ([td [] [(text ff.name)], td colSpanForDel
@@ -112,6 +112,7 @@ mdOptions : Markdown.Options
 mdOptions = { githubFlavored = Nothing, defaultHighlighting = Nothing,
               sanitize = True, smartypants = False }
 
+powerCard : Power -> Html Msg
 powerCard power =
   let
     cardCssClass = case power.styl of
@@ -167,6 +168,7 @@ powerCard power =
     div [class "powertext"] [Markdown.toHtmlWith mdOptions [] power.text]
   ]
 
+powerOrder : Power -> Int
 powerOrder power =
   case power.styl of
     White -> 0
@@ -176,6 +178,7 @@ powerOrder power =
     Red -> 4
     Yellow -> 5
 
+powerCards : Model -> Html Msg
 powerCards model =
     div [Html.Attributes.class "powercards"] (List.map powerCard (List.sortBy powerOrder (TacticalModel.getPowers model)))
 

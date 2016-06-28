@@ -19,11 +19,13 @@ type Field =
   | NumberField { name: String, key: String, min: Int, max: Int, del: Bool }
 
 -- We have to do this because we're using tagged types instead of aliases.
+fieldKey : Field -> String
 fieldKey x = case x of
   DropdownField df -> df.key
   FreeformField ff -> ff.key
   NumberField nf -> nf.key
 
+fieldDel : Field -> Bool 
 fieldDel x = case x of
   DropdownField df -> df.del
   FreeformField ff -> ff.del

@@ -23,7 +23,9 @@ type Msg =
   | TextsLoaded String
   | FileCommand String
   | LoadJson String
+  | FieldDeleteClicked String
 
+  
 
 {-| The model in memory. Character holds the active character, Database holds the
 current database read from the data files. -}
