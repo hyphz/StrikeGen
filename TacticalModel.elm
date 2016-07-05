@@ -5,6 +5,7 @@ import Duelist exposing (classDuelist)
 import MartialArtist exposing (classMA)
 import Simplified exposing (classSimplified)
 import Warlord exposing (classWarlord)
+import Magician exposing (classMagician)
 
 import ModelDB exposing (..)
 import FormsModel exposing (..)
@@ -15,6 +16,7 @@ classes : Dict String Class
 classes = Dict.fromList [("Archer",classArcher),
                          ("Duelist",classDuelist),
                          ("Martial Artist",classMA),
+                         ("Magician",classMagician),
                          ("Necromancer",classNecro),
                          ("Simplified",classSimplified),
                          ("Warlord",classWarlord)]

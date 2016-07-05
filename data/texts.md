@@ -632,3 +632,97 @@ may shift 1 square.
 @@Ultimatum
 Target one creature within 5 squares. The target must make a Saving Throw. If it fails, it
 is immediately Taken Out. If it succeeds, you may make an attack against it.
+@@StarMagic1+
+Each Encounter Spell, once used, may not be used again in the following two combats. You
+may use at most 2 Encounter Spells in any given combat.
+
+You gain your Reserve spell when you Rally.
+@@StarMagic5+
+Each Encounter Spell, once used, may not be used again in the following two combats. You
+may use at most 2 Encounter Spells in any given combat. Major Spells count as Encounter
+spells for all restrictions.
+
+You gain your Reserve spell when you Rally.
+@@StarMagic7+
+Each Encounter Spell, once used, may not be used again in the following two combats. You
+may use at most 3 Encounter Spells in any given combat. Major Spells count as Encounter
+spells for all restrictions.
+
+You gain your Reserve spell when you Rally.
+@@ChaosMagic1+
+At the start of each combat, number your Encounter Spells from one to three and roll a
+die to find out which one you have available for this encounter.
+
+When you roll a 6 on an attack, you get a Chaos Surge: apply an effect line from a
+randomly chosen Encounter Spell you don't know instead of doing extra damage.
+@@ChaosMagic3+
+At the start of each combat, number your Encounter Spells from one to six and roll two  
+dice to find out which ones you have available for this encounter. If you roll doubles,
+you get the power you rolled and a free choice.
+
+When you roll a 6 on an attack, you get a Chaos Surge: apply an effect line from a
+randomly chosen Encounter Spell you don't know instead of doing extra damage.
+@@ChaosMagic5+
+At the start of each combat, number your Encounter and/or Major Spells from one to
+six and roll two dice to find out which ones you have available for this encounter.
+If you roll doubles, you get the power you rolled and a free choice.
+
+When you roll a 6 on an attack, you get a Chaos Surge: apply an effect line from a
+randomly chosen Encounter Spell you don't know, as well as the extra damage.
+@@ChaosMagic7+
+At the start of each combat, number your Encounter and/or Major Spells from one to
+six and roll three dice to find out which ones you have available for this encounter.
+Repeated numbers represent free choices.
+
+When you roll a 6 on an attack, you get a Chaos Surge: apply an effect line from a
+randomly chosen Encounter Spell you don't know, as well as the extra damage.
+@@ChaosMagic9+
+At the start of each combat, number your Encounter and/or Major Spells from one to
+six and roll three dice to find out which ones you have available for this encounter.
+Repeated numbers represent free choices.
+
+When you roll a 6 on an attack, you get a Chaos Surge: apply an effect line from a
+randomly chosen Major Spell you don't know, as well as the extra damage.
+@@BloodMagic1+
+You may not use any Encounter Spells until after you have taken damage.
+
+After choosing an attack, but before rolling, you may inflict 2 damage on yourself
+to gain Potency. This damage cannot be resisted or reduced. If you hit with your attack,
+one target that was hit takes 2 extra damage from Potency. If your attack power
+does not require a roll, deal 1 extra damage instead.
+@@BloodMagic5+
+You may not use any Encounter Spells until after you have taken damage.
+
+When you are Taken Out, you may use your Blood Curse. This does not require an action
+and ignores any Statuses you have that would hinder the attack.
+
+After choosing an attack, but before rolling, you may inflict 2 damage on yourself
+to gain Potency. This damage cannot be resisted or reduced. If you hit with your attack,
+one target that was hit takes 4 extra damage from Potency. If your attack power
+does not require a roll, deal 2 extra damage instead.
+@@BloodMagic7+
+You may not use any Encounter Spells until after you have taken damage.
+
+You may not use a Major Spell until the sum of your self-inflicted damage and the
+round of combat total 5.
+
+When you are Taken Out, you may use your Blood Curse. This does not require an action
+and ignores any Statuses you have that would hinder the attack.
+
+After choosing an attack, but before rolling, you may inflict 2 damage on yourself
+to gain Potency. This damage cannot be resisted or reduced. If you hit with your attack,
+one target that was hit takes 4 extra damage from Potency. If your attack power
+does not require a roll, deal 2 extra damage instead.
+@@BloodMagic9+
+You may not use any Encounter Spells until after you have taken damage.
+
+You may not use a Major Spell until the sum of your self-inflicted damage and the
+round of combat total 5.
+
+When you are Taken Out, you may use your Blood Curse. This does not require an action
+and ignores any Statuses you have that would hinder the attack.
+
+After choosing an attack, but before rolling, you may inflict 2 damage on yourself
+to gain Potency. This damage cannot be resisted or reduced. If you hit with your attack,
+one target that was hit takes 6 extra damage from Potency. If your attack power
+does not require a roll, deal 3 extra damage instead.
