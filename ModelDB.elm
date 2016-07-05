@@ -88,7 +88,7 @@ type alias Class =
 type alias Role =
   { name : String,
     rolePowerList : (Model -> List Power),
-    roleForms : (Model -> List Power)}
+    roleForms : (Model -> List Form)}
 
 type Slot = RoleSlot | Attack | Misc | Special | Reaction
 type Freq = AtWill | Encounter | None

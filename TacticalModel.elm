@@ -6,7 +6,9 @@ import MartialArtist exposing (classMA)
 import Simplified exposing (classSimplified)
 import Warlord exposing (classWarlord)
 import Magician exposing (classMagician)
-
+import Striker exposing (roleStriker)
+import Leader exposing (roleLeader)
+import Defender exposing (roleDefender)
 import ModelDB exposing (..)
 import FormsModel exposing (..)
 import Dict exposing (Dict)
@@ -21,7 +23,7 @@ classes = Dict.fromList [("Archer",classArcher),
                          ("Simplified",classSimplified),
                          ("Warlord",classWarlord)]
 
-roles = Dict.fromList []
+roles = Dict.fromList [("Defender",roleDefender),("Leader",roleLeader),("Striker",roleStriker)]
 
 
 
@@ -101,8 +103,11 @@ basicPowers m = [pmeleeBasic m, prangedBasic m, pcharge m, pRally m, pAssess]
 classPowers : Model -> List Power
 classPowers m = indirectLookup m "basics-class" classes (\x -> x.classPowerList m) [] []
 
+rolePowers m = indirectLookup m "basics-role" roles (\x -> x.rolePowerList m) [] []
+
 tacticalForms : Model -> List Form
-tacticalForms m = indirectLookup m "basics-class" classes (\x -> x.classForms m) [] []
+tacticalForms m = (indirectLookup m "basics-class" classes (\x -> x.classForms m) [] []) ++
+                  (indirectLookup m "basics-role" roles (\x -> x.roleForms m) [] [])
 
 getPowers : Model -> List Power
-getPowers m = basicPowers m ++ classPowers m
+getPowers m = basicPowers m ++ classPowers m ++ rolePowers m

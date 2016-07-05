@@ -726,3 +726,187 @@ After choosing an attack, but before rolling, you may inflict 2 damage on yourse
 to gain Potency. This damage cannot be resisted or reduced. If you hit with your attack,
 one target that was hit takes 6 extra damage from Potency. If your attack power
 does not require a roll, deal 3 extra damage instead.
+@@DamageBoost
+When you roll a 2-5 on an attack, deal 1 extra damage to the target. When you roll a 6,
+deal 2 extra damage.
+@@ImprovedDamageBoost
+When you roll a 2-5 on an attack, deal 2 extra damage to the target. When you roll a 6,
+deal 4 extra damage.
+@@SuperDamageBoost
+When you roll a 2-5 on an attack, deal 3 extra damage to the target. When you roll a 6,
+deal 6 extra damage.
+@@QuickShift1+
+You may shift 1 square.
+@@QuickShift8+
+You may shift 2 squares.
+@@DrawABead1+
+Pick one enemy within 5 squares you can attack. If you attack that enemy this
+turn, you may ignore concealment or Low Cover on that attack.
+@@DrawABead4+
+Pick one enemy within 5 squares you can attack. If you attack that enemy this
+turn, you may ignore concealment or cover on that attack.
+@@DrawABead8+
+Pick one enemy within 5 squares you can attack. If an enemy is Invisible, you are
+able to attack it. If you attack that enemy this turn, you may ignore concealment
+or cover on that attack.
+@@StrikeBack
+**Trigger:** An enemy hits you with an attack.
+
+Spend an Action Point. Make an attack against the triggering enemy.
+@@LightningStrikes
+Gain an Attack Action and use it immediately. Do not get your Damage Boost on it.
+@@StrikeandDodge1+
+Deal 2 damage to each enemy adjacent to you and shift 1 square.
+@@StrikeandDodge6+
+Deal 3 damage to each enemy adjacent to you and shift 1 square.
+@@StrikeandDodge10+
+Deal 4 damage to each enemy adjacent to you and shift 1 square.
+@@WindUpStrike
+This power's text is in the source code of Striker.elm because it's recalculated every level.
+This text is ignored.
+@@MomentaryWeakness
+Pick two creatures. Your next attack against each of them has advantage.
+@@DodgeandStrikeBack
+**Trigger:** An enemy hits you with an attack.
+
+Spend an Action Point. The attack misses and you make an attack against the triggering enemy.
+@@LightningStrikesTwice
+Gain two Attack Actions and use them immediately. Do not get your Damage Boost on them.
+@@StrikeandRun
+Deal 6 damage to each enemy adjacent to you and shift your speed.
+@@PowerUpStrike
+Deal 15 extra damage if you hit with your next attack.
+@@PersistentWeakness
+Pick two creatures. Your attacks against them have Advantage and deal 2 extra damage until
+the end of the combat.
+@@HitHim!
+One ally may make an attack. They do not get the benefit of their role's boosts.
+@@HitHimHarder!
+Two allies may make attacks. They do not get the benefit of their roles' boosts.
+@@Walkitoff!
+You or an ally may make a Saving Throw against an effect, even one that does not normally end
+on a save.
+@@Walkitoffharder!
+You or an ally may end one effect.
+@@MassHeal
+Create a 3x3 zone centered within 10 squares. Each creature in the zone regains 2 HP.
+@@FreshStart
+Create a 5x5 zone centered within 10 squares. All creatures in the zone regain HP equal to
+half their maximum rounded down.
+@@KeepWalking!
+**Trigger:** You or an ally fail a Saving Throw.
+
+Reroll it.
+@@You'reFine!
+**Trigger:** You or an ally fail a Saving Throw.
+
+The Saving Throw succeeds instead. You and any other ally suffering from the same Status
+immediately roll a Saving Throw to end it.
+@@RevealWeakness
+Target one creature. All attacks against it have Advantage until the end of its next turn.
+@@RevealWeakPoint
+Target one creature. All attacks against it have Advantage and roll an extra die, taking the
+best result (save ends).
+@@Tryagain!
+**Trigger:** An ally makes an attack and dislikes the result.
+
+Spend an action point. The ally may reroll the attack.
+@@Tryharder!
+**Trigger:** An ally makes an attack and dislikes the result.
+
+Spend an action point. The attack hits as though the ally rolled a 6.
+@@Tactics1+
+One ally of your choice may spend a Move Action immediately. when you roll a 5 or 6 on
+an attack, you gain an additional use of this power.
+@@Tactics4+
+One ally of your choice may spend a Move Action immediately. when you roll a 3-6 on
+an attack, you gain an additional use of this power.
+@@Tactics8+
+Two allies of your choice may spend a Move Action immediately. when you roll a 3-6 on
+an attack, you gain an additional use of this power.
+@@Heal1+
+Target may regain HP equal to half its maximum (rounded down) and pick one of the following options:
+
+* If the target is Prone, they may stand up.
+* If the target was brought to full health, they may have Advantage on their next attack.
+* Enemies have Disadvantage to attack the target until the end of the target's next turn.
+* The target may make a Saving Throw against one status that allows one.
+* The target may attempt to escape a Grab.
+@@Heal4+
+Target may regain HP equal to half its maximum (rounded down) and pick one of the following options:
+
+* If the target is Prone, they may stand up.
+* If the target was brought to full health, they may have Advantage on their next attack.
+* Enemies have Disadvantage to attack the target until the end of the target's next turn.
+* The target may make a Saving Throw against one status that allows one.
+* The target may attempt to escape a Grab.
+
+You may use this power twice per combat.
+@@Heal8+
+Target may regain HP equal to half its maximum (rounded down) and pick two of the following options:
+
+* If the target is Prone, they may stand up.
+* If the target was brought to full health, they may have Advantage on their next attack.
+* Enemies have Disadvantage to attack the target until the end of the target's next turn.
+* The target may make a Saving Throw against one status that allows one.
+* The target may attempt to escape a Grab.
+* The target may remove one Strike against them.
+
+You may use this power twice per combat.
+@@DefenseBoost
+When you take 3 or more damage, Resist 1. When you roll a 3-6 on an attack, regain 1 HP.
+@@ImprovedDefenseBoost
+You Resist 1 all. When you roll a 3-6 on an attack, regain 1 HP.
+@@SuperDefenseBoost
+You Resist 1 all. When you roll a 3-6 on an attack, regain 2 HP.
+@@StickinessBoost
+When an enemy grants you an Opportunity, it takes 1 additional damage.
+@@ImprovedStickinessBoost
+When an enemy enters a square adjacent to you, it loses the rest of its squares of movement for
+that action. When an enemy grants you an Opportunity, it takes 1 additional damage.
+@@SuperStickinessBoost
+When an enemy enters a square adjacent to you, it loses the rest of its squares of movement for
+that action. When an enemy grants you an Opportunity, it takes 2 additional damage.
+@@Mark1+
+Target is Marked by you until the end of its next turn.
+@@Mark4+
+Two targets in range are Marked by you until the end of their next turns.
+@@Mark8+
+Three targets in range are Marked by you until the end of their next turns.
+@@Callthatapunch?
+**Trigger:** An enemy hits you with an attack.
+
+Spend an Action Point. The attack misses instead.
+@@THISisapunch!
+**Trigger:** An enemy hits you with an attack.
+
+Spend an Action Point. The attack misses and grants you an Opportunity.
+@@Idon'tthinkso!
+**Trigger:** An enemy grants you an Opportunity.
+
+In addition to taking damage, the enemy loses the action that caused it to grant you the
+Opportunity.
+@@Ireallydon'tthinkso!
+**Trigger:** An enemy grants you an Opportunity.
+
+In addition to taking damage, the enemy loses the action that caused it to grant you the
+Opportunity and must end its turn immediately. It grants Advantage to attacks against it
+until the end of its next turn.
+@@ComeandGetIt!
+Pull every enemy in the zone to a square adjacent to you. Mark any or all of them
+until the end of your next turn.
+@@ComeandGetSeconds!
+Pull every enemy in the zone to a square adjacent to you. Then every enemy adjacent to
+you is Immobilized (save ends). Mark any or all of them until the end of your next turn.
+@@You'reMine!
+The target has Disadvantage to any attack that doesn't include you as a target (save ends).
+This effect ends if you are Taken Out.
+@@You'reAllMine!
+Every enemy has Disadvantage to any attack that doesn't include you as a target (save ends).
+You may exclude specific enemies. This effect ends if you are Taken Out.
+@@I'llCoverYou!
+One ally adjacent to you has cover from melee attacks while adjacent to you, until they
+fail to end their turn adjacent to you. This effect ends if you are Incapacitated.
+@@I'llCoverYouAll!
+All allies adjacent to you have cover from melee attacks while adjacent to you, until they
+fail to end their turn adjacent to you. This effect ends if you are Incapacitated.

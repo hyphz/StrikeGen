@@ -132,9 +132,9 @@ powerCard power =
       AtWill -> "At-Will"
       Encounter -> "Encounter"
       None -> ""
-    attackTypeIcon = case power.slot of
-      Attack -> case power.range of
-        0 -> if (power.area == 0) then
+    attackTypeIcon = if (power.slot == Attack || power.slot == RoleSlot) then
+      case power.range of
+        0 -> if ((power.area == 0) && (power.slot == Attack)) then
                [img [src "icons/melee.svg", height 16, width 16] []]
              else []
         x -> if (x > 0) then
@@ -145,7 +145,7 @@ powerCard power =
                 text("/"),
                img [src "icons/range.svg", height 16, width 16] [],
                 (text (toString (-power.range)))]
-      _ -> []
+      else []
     areaIcon = case power.area of
       0 -> []
       x -> [img [src "icons/area.svg", height 16, width 16] [],

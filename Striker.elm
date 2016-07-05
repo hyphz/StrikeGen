@@ -8,85 +8,82 @@ import PowerUtilities exposing (..)
 
 roleStriker : Role
 roleStriker = { name = "Striker",
-               classPowerList = powers,
-               classForms = forms }
+               rolePowerList = powers,
+               roleForms = forms }
 
 
-damageBoost m = if (getLevel m) < 4 then [quickSpecial "Damage Boost"]
-            else if (getLevel m) < 8 then [quickSpecial "Improved Damage Boost"]
-              else quickSpecial ["Super Damage Boost"]
+damageBoost m = if (getLevel m) < 4 then [quickSpecial "Damage Boost" m]
+            else if (getLevel m) < 8 then [quickSpecial "Improved Damage Boost" m]
+              else [quickSpecial "Super Damage Boost" m]
 
-quickShift = quickPower "Quick Shift" Encounter Role 0 0 0 Blue
-
-mobilityBoost = if (getLevel m) < 4 then [] else []
-
+quickShift = levelTextPower "Quick Shift" RoleSlot Encounter 0 0 0 Blue [1,8]
+drawABead = levelTextPower "Draw a Bead" RoleSlot AtWill 0 0 0 Blue [1,4,8]
 
 
+actionTrigger m = if (getLevel m) < 6 then [quickPower "Strike Back" Reaction Encounter 0 0 0 Yellow m]
+                                      else [quickPower "Dodge and Strike Back" Reaction Encounter 0 0 0 Yellow m]
 
-aim = quickPower "Aim" Attack AtWill 0 0 0 Green
-flare m = (quickPower "Flare" Attack AtWill (sniperDouble m 10) 0 (atWillDamage m) Green) m
-pinDown m = {name = "Pin Down",
-           text = if (getLevel m) < 5 then overtext m "PinDown" else
-                  if (getLevel m) < 9 then overtext m "PinDown5+" else
-                    overtext m "PinDown9+",
-          slot=Attack, freq=AtWill,
-          range=(sniperDouble m 10), area=0, damage=(atWillDamage m), styl=Green}
-
-areaDenial m = {name = "Area Denial",
-           text = if (getLevel m) < 5 then overtext m "AreaDenial" else
-                  if (getLevel m) < 9 then overtext m "AreaDenial5+" else
-                    overtext m "AreaDenial9+",
-          slot=Attack, freq=AtWill,
-          range=(sniperDouble m 10), area=0, damage=(atWillDamage m), styl=Green}
-
-trickArrow m = (quickPower "Trick Arrow" Attack Encounter (sniperDouble m 10) 0 3 Purple) m
-
-bullseye = (quickPower "Bullseye" Attack Encounter 0 0 0 Purple)
-
-extraTrickArrow m = (quickSpecial "Extra Trick Arrow" m)
-legShot m = (quickPower "Leg Shot" Attack Encounter (sniperDouble m 10) 0 3 Purple) m
-surprisingShot m = (quickPower "Surprising Shot" Attack Encounter (sniperDouble m 10) 0 3 Purple) m
-splitTheirArrow = quickPower "Split Their Arrow" Reaction Encounter 0 0 0 Purple
-
-
-youCantHide = quickPower "You Can't Hide" Attack Encounter 0 0 0 Purple
-superTrickArrow m = (quickPower "Super Trick Arrow" Attack Encounter (sniperDouble m 10) 0 4 Purple) m
-
-l1encounters m = powerDict m [trickArrow, bullseye]
-l1encpower m = powerlookup m "archer-enc1" l1encounters
-
-l3encounters m = powerDict m [extraTrickArrow, legShot, surprisingShot, splitTheirArrow]
-l3encpower m = powerlookup m "archer-enc3" l3encounters
-
-l7encounters m = powerDict m [youCantHide, superTrickArrow]
-l7encpower m = powerlookup m "archer-enc7" l7encounters
-
-specials m = case (getResponse m "archer-feature") of
-  Just "Sniper" -> [quickSpecial "Sniper" m] ++
-                   atLevel m 5 (quickSpecial "Steady Sniper" m) ++
-                   atLevel m 9 (quickSpecial "Sharpshooting Sniper" m)
-  Just "Blitzer" -> [quickSpecial "Blitzer" m] ++
-                   atLevel m 5 (quickSpecial "Bloody Blitzer" m) ++
-                   atLevel m 9 (quickSpecial "Lightning Blitzer" m)
-  Just "Sentinel" -> if (getLevel m < 5) then [quickSpecial "Sentinel" m] else [] ++
-                   atLevel m 5 (quickSpecial "Sharp Sentinel" m) ++
-                   atLevel m 9 (quickSpecial "Snapshot Sentinel" m)
-
+otherBoost m = case (getResponse m "striker-boost") of
+  Just "Mobility" -> [quickShift m]
+  Just "Accuracy" -> [drawABead m]
   _ -> []
 
 
+lightning = quickPower "Lightning Strikes" RoleSlot Encounter 0 0 0 Red
+strikedodge = levelTextPower "Strike and Dodge" RoleSlot Encounter 0 0 0 Red [1,6,10]
+windUpStrike m = let
+  extraDamage = truncate (((toFloat (getLevel m)) / 2) + 3)
+  in
+    {
+      name = "Wind Up Strike",
+      slot = RoleSlot,
+      freq = Encounter,
+      range = 0,
+      area = 0,
+      damage = 0,
+      styl = Red,
+      text = "Deal " ++ (toString extraDamage) ++ " extra damage if you hit with your next attack. If you next attack hits multiple targets, apply this damage to only one of them."}
+momentaryWeakness = quickPower "Momentary Weakness" RoleSlot Encounter 0 0 0 Red
 
-powers m = specials m ++ [aim m, flare m, pinDown m, areaDenial m]
-           ++ l1encpower m
-           ++ (atLevelList m 3 (l3encpower m))
-           ++ (atLevelList m 7 (l7encpower m))
+
+
+upgraded x m = case x of
+   "Lightning Strikes" -> [quickPower "Lightning Strikes Twice" RoleSlot Encounter 0 0 0 Red m]
+   "Strike and Dodge" -> [quickPower "Strike and Run" RoleSlot Encounter 0 0 0 Red m]
+   "Wind Up Strike" -> [quickPower "Power Up Strike" RoleSlot Encounter 0 0 0 Red m]
+   "Momentary Weakness" -> [quickPower "Persistent Weakness" RoleSlot Encounter 0 0 0 Red m]
+   _ -> []
+
+
+
+checkUpgrade m p =
+  if ((getLevel m) < 10) then p else
+  case (List.head p) of
+    Nothing -> p
+    Just rp -> case (getResponse m "striker-upgrade") of
+      Nothing -> p
+      Just x -> if (x == rp.name) then upgraded rp.name m else p
+
+
+encounters m = powerDict m [lightning, strikedodge, windUpStrike, momentaryWeakness]
+l2encchosen m = checkUpgrade m (powerlookup m "striker-enc1" encounters)
+l6encchosen m = checkUpgrade m (powerlookup m "striker-enc2" encounters)
+
+upgradable m = [""] ++ (List.map .name (powerlookup m "striker-enc1" encounters  ++
+                                        powerlookup m "striker-enc2" encounters))
+
+
+powers m = damageBoost m ++ otherBoost m ++ actionTrigger m ++
+  atLevelList m 2 (l2encchosen m) ++
+  atLevelList m 6 (l6encchosen m)
 
 
 
 
-forms m = [Form False "Archer" ([
-  DropdownField { name="Feature", del=False, key="archer-feature", choices=["","Sniper","Blitzer","Sentinel"] },
-  powerChoiceField m "Encounter:" "archer-enc1" l1encounters]
-  ++ (atLevel m 3 (powerChoiceField m "Encounter:" "archer-enc3" l3encounters))
-  ++ (atLevel m 7 (powerChoiceField m "Encounter:" "archer-enc7" l7encounters))
+
+forms m = [Form False "Striker" ([
+  DropdownField { name="Boost:", del=False, key="striker-boost", choices=["","Mobility","Accuracy"] }]
+  ++ atLevel m 2 (powerChoiceField m "Encounter:" "striker-enc1" encounters)
+  ++ atLevel m 6 (powerChoiceField m "Encounter:" "striker-enc2" encounters)
+  ++ atLevel m 10 (DropdownField { name="Upgrade:",del=False,key="striker-upgrade",choices=(upgradable m)})
   )]
