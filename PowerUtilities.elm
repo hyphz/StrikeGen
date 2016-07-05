@@ -56,9 +56,33 @@ variableTextPower name slot freq range area damage col textfunc m =
          styl = col
        }
 
+levelTextPower : String -> Slot -> Freq -> Int -> Int -> Int -> PowerStyle ->
+  List Int -> Model -> Power
+levelTextPower name slot freq range area damage col thresholds model =
+  let
+    levelLookUp m = let
+      charLevel = getLevel m
+      findThreshold t l = case (List.head t) of
+        Nothing -> l
+        Just x -> if (charLevel >= x) then
+                    case (List.tail t) of
+                      Nothing -> l
+                      Just tail -> findThreshold tail x
+                  else
+                    l
+      nearestThreshold = findThreshold thresholds 1
+      textKey = (String.filter (\x -> (x /= ' ')) name) ++ (toString nearestThreshold) ++ "+"
+      in
+        overtext m (textKey)
+  in
+    variableTextPower name slot freq range area damage col (levelLookUp) model
+
 {-| Shorthand for a special ability, ie a power with no stats. -}
 quickSpecial : String -> Model -> Power
 quickSpecial name m = quickPower name Special None 0 0 0 White m
+
+levelTextSpecial name thresholds m = levelTextPower name Special None 0 0 0 White thresholds m
+
 
 atLevel : Model -> Int -> a -> List a
 atLevel m level ab = if ((getLevel m) >= level) then [ab] else []

@@ -229,12 +229,42 @@ updateFieldResponse : String -> String -> Model -> Model
 updateFieldResponse key value model =
   fieldChanged key (setResponse model key value)
 
+extendForm : String -> Model -> Model
+extendForm prefix model =
+  let
+    oldCount = (getResponseInt model (prefix ++ "count") 0)
+    newCount = (toString (oldCount + 1))
+    countUpdated = setResponse model (prefix ++ "count") newCount
+    newMemberKey = prefix ++ newCount
+  in
+    setResponse countUpdated newMemberKey ""
+
+
 {-| Called when an add button on an addable form is pressed. -}
 updateExtendForm : String -> Model -> Model
 updateExtendForm key model =
   case key of
-    "Learned Skills" -> setResponse model "ls-count" (toString ((getResponseInt model "ls-count" 0) + 1))
+    "Learned Skills" -> extendForm "ls-" model
     _ -> model
+
+
+
+closeGaps' : String -> Int -> Int -> Model -> Model
+closeGaps' prefix current total m =
+  let
+    addPrefix t = prefix ++ (toString t)
+  in
+    if current > total then
+      m
+    else
+      case (Dict.get (addPrefix current) m.character) of
+        Just _ -> closeGaps' prefix (current+1) total m
+        Nothing -> case (Dict.get (addPrefix (current+1)) m.character) of
+          Just _ -> closeGaps' prefix current total (moveResponse m (addPrefix (current+1)) (addPrefix current))
+          Nothing -> Debug.crash ("Two missing items in CLosegaps', current is " ++ (toString current) ++ "prefix is" ++ prefix ++ "total is" ++ (toString total))
+
+closeGaps : String -> Int -> Model -> Model
+closeGaps prefix total m = closeGaps' prefix 1 total m
 
 
 updateDeleteField : String -> Model -> Model
@@ -246,18 +276,12 @@ updateDeleteField key model =
       Just x -> x
     keyPrehyphen = (String.slice 0 realKeyHyphenIndex key) ++ "-"
     countName = Debug.log "name of the count variable:" (keyPrehyphen ++ "count")
-    removeResponse = Debug.log "remove the deleted item:" (killResponse model key)
-    reduceCount = Debug.log "reduce the count:" (setResponse removeResponse countName (toString ((getResponseInt removeResponse countName 0) - 1)))
-    checkInteg value m = if value >= ((getResponseInt m countName 0)) then Debug.log "Completing.." m else
-      let
-        active = Debug.log "active" (keyPrehyphen ++ (toString value))
-        next = Debug.log "next" (keyPrehyphen ++ (toString (value+1)))
-      in case (Dict.get active m.character) of
-        Just x -> Debug.log ("Active is ok so moving on to " ++ (toString (value+1))) (checkInteg (value+1) m)
-        Nothing -> case (Dict.get next m.character) of
-          Just higher -> Debug.log ("Active is missing, bubbling" ++ next ++" to " ++ active) (checkInteg (value) (setResponse (killResponse m next) active higher))
-          Nothing -> Debug.crash ("More than one form item deleted at once? " ++ active ++ " unset, so is " ++ next ++ ", deleted key is " ++ key)
-  in checkInteg 1 reduceCount
+    removeResponse = killResponse model key
+    checkResponseRemoved = case (Dict.get key removeResponse.character) of
+      Nothing -> removeResponse
+      Just _ -> Debug.crash ("RemoveResponse didn't work!???")
+    reduceCount = Debug.log "reduce the count:" (setResponse checkResponseRemoved countName (toString ((getResponseInt checkResponseRemoved countName 0) - 1)))
+      in closeGaps keyPrehyphen (getResponseInt reduceCount countName 0) reduceCount
 
 
 

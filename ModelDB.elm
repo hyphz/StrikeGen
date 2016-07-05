@@ -25,7 +25,7 @@ type Msg =
   | LoadJson String
   | FieldDeleteClicked String
 
-  
+
 
 {-| The model in memory. Character holds the active character, Database holds the
 current database read from the data files. -}
@@ -138,6 +138,14 @@ getResponse : Model -> String -> Maybe String
 getResponse model key =
   Dict.get key model.character
 
+{-| Moves a form response from one key to another. -}
+moveResponse : Model -> String -> String -> Model
+moveResponse m src dest =
+  case (getResponse m src) of
+    Nothing -> killResponse m dest -- Move the "nothing" by deleting the destination
+    Just r -> setResponse (killResponse m src) dest r
+
+
 {-| Gets a form response from the character store, and runs a function on it
 if it exists; otherwise, returns the default value. -}
 ifResponse : Model -> String -> a -> (String -> a) -> a
@@ -176,7 +184,7 @@ indirectLookup model key db func default error =
 {-| Looks up the given key in the text database and returns the text if found,
 otherwise returns the default. -}
 overtext : Model -> String -> String
-overtext model key = Maybe.withDefault "(Text not available)" (get key model.database.texts)
+overtext model key = Maybe.withDefault ("(Text not available " ++ key ++")") (get key model.database.texts)
 
 
 {-| Updates the database part of the model.-}

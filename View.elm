@@ -152,6 +152,8 @@ powerCard power =
              (text (toString power.area))]
     damageIcon = case power.damage of
       0 -> []
+      (-1) -> [img [src "icons/damage.svg", height 16, width 16] [],
+             (text "S")]
       x -> [img [src "icons/damage.svg", height 16, width 16] [],
              (text (toString power.damage))]
     iconblock = attackTypeIcon ++ areaIcon ++ damageIcon

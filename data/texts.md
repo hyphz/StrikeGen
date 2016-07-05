@@ -518,3 +518,117 @@ No action. You may only use this on your turn, but you may use at any point
 in your turn, even while Incapacitated, Dominated, or under any other Status. Spend
 an Action Point. Regain 4 Hit Points and regain the use of one Encounter Power from your
 Class (not a Role Action) you have expended.
+@@SupportTokens1+
+When you hit with a power that deals S damage, take a Support Token but deal no
+damage. When you roll a 6 on such a power, take an additional Support Token. When you
+miss with any power, take a Support Token. At the end of each combat, you may
+spend up to one Support Token per ally to reduce their personal Strikes by one. This
+does not reduce the number of total Strikes for the team.
+@@SupportTokens5+
+When you hit with a power that deals S damage, take a Support Token but deal no
+damage. When you roll a 6 on such a power, take an additional Support Token. When you
+miss with any power, take a Support Token. At the end of each combat, you may
+spend up to one Support Token per ally to reduce their personal Strikes by one. This
+does not reduce the number of total Strikes for the team.
+
+Start each combat with one Support Token.
+@@SupportTokens9+
+When you hit with a power that deals S damage, take a Support Token but deal no
+damage. When you roll a 6 on such a power, take an additional Support Token. When you
+miss with any power, take a Support Token. At the end of each combat, you may
+spend up to one Support Token per ally to reduce their personal Strikes by one. This
+does not reduce the number of total Strikes for the team. You may also spend up to two
+Support Tokens to reduce team Strikes by one per token spent.
+
+Start each combat with three Support Tokens.
+@@Rousing
+Spend a Support Token when an ally starts their turn to give them 2 Buffer Points. You
+cannot spend more than one in this way per turn. Gain a Support Token whenever a
+teammate within 5 squares of you takes a Strike or fails a Saving Throw.
+@@Enabling
+Spend a Support Token when an ally starts their turn to give them an extra 3 squares
+of movement which is not considered to come from a Move Action. You cannot spend more
+than one in this way per turn. Gain a Support Token whenever you give an ally Advantage
+on an attack by flanking.
+@@Incisive
+Spend a Support Token when an ally starts their turn to give them extra damage on their
+next attack roll equal to the attack's damage line if they hit. You cannot spend more than
+one in this way per turn. Gain a Support Token whenever you use the Assess power. You may
+spend a Move action to use the Assess power.
+@@HitThisGuy1+
+One willing ally within 10 squares makes a Melee or Ranged Basic Attack.
+@@HitThisGuy5+
+One willing ally within 10 squares makes a Melee or Ranged Basic Attack and deals 1 extra
+damage if they hit.
+@@HitThisGuy9+
+One willing ally within 10 squares makes a Melee or Ranged Basic Attack and deals 2 extra
+damage if they hit.
+@@Alley-Oop1+
+**Effect:** Slide the target 1 square and a willing ally makes a Melee Basic Attack against
+it. They do not get their Role Boost on this attack.
+@@Alley-Oop5+
+**Effect:** Slide the target 1 square and a willing ally makes a Melee Basic Attack against
+it, dealing 1 extra damage if they hit. They do not get their Role Boost on this attack.
+@@Alley-Oop9+
+**Effect:** Slide the target 1 square and a willing ally makes a Melee Basic Attack against
+it, dealing 2 extra damage if they hit. They do not get their Role Boost on this attack.
+@@Morale-BoostingPunchingBag1+
+**Effect:** The next ally to hit the target regains 2 Hit Points.
+@@Morale-BoostingPunchingBag5+
+**Effect:** The next ally to hit the target chooses to regain 2 Hit Points, or make a Saving
+Throw.
+@@Morale-BoostingPunchingBag9+
+**Effect:** The next ally to hit the target regains 2 Hit Points and makes a Saving Throw.
+@@EnumerateitsWeaknesses1+
+**Effect:** The next ally to attack the target with Advantage rolls 3 dice and takes the
+best.
+@@EnumerateitsWeaknesses9+
+**Effect:** Until the start of your next turn, any ally that attacks the target with
+Advantage rolls 3 dice and takes the best.
+@@KnockHimOffBalance1+
+**Effect:** The next ally to attack the target has Advantage.
+@@KnockHimOffBalance9+
+**Effect:** The next ally to attack the target has Advantage and deals 1 extra damage if they
+hit.
+@@ComeHelpMeWithThisGuy1+
+One ally within 5 squares may shift 1 square. Then you make a Melee Basic Attack against
+the target.
+@@ComeHelpMeWithThisGuy5+
+One ally within 5 squares may shift 1 square. Then you make a Melee Basic Attack against
+the target and deal 1 extra damage if you hit.
+@@ComeHelpMeWithThisGuy9+
+One ally within 5 squares may shift 1 square. Then you make a Melee Basic Attack against
+the target and deal 2 extra damage if you hit.
+@@YouHitLikeMyGrandmother
+**Effect:** Target is Weakened (save ends).
+@@ThePerfectChance
+One ally within 10 squares makes an attack with Advantage.
+@@DefensiveTactics
+One ally within 10 squares has Resist 2 damage until the end of your next turn.
+@@Don'tGiveUp
+**Trigger:** One ally within 5 squares drops to 0 HP or below.
+
+The ally instead stays standing with 1 HP.
+@@NeverSurrender
+Target one ally within 5 squares that has been Taken Out or is at or below 0 HP. The
+ally may re-enter the fight with 5 HP.
+@@ChancetoRecover
+You and each ally may make a Saving Throw.
+@@LeaveHimExposed
+**Effect:** If the next attack against the target hits, it deals an extra 5 damage.
+@@RousingBattlecry
+Spend a Support token when an ally gets a 1 on any roll to let them reroll it.
+@@EnablingBattlecry
+Spend two Support tokens when an ally makes an attack to give them Advantage.
+@@IncisiveBattlecry
+Spend a Support token when an ally makes any roll other than an attack to give them Advantage.
+@@BiggerPunchingBag
+**Effect:** The next time each ally attacks the target, they have Advantage and regain 2 HP.
+@@LeadTheCharge
+You and two allies make a Charge attack.
+@@AlwaysinPosition
+**Effect:** Until the end of the encounter, whenever the target starts its turn each ally
+may shift 1 square.
+@@Ultimatum
+Target one creature within 5 squares. The target must make a Saving Throw. If it fails, it
+is immediately Taken Out. If it succeeds, you may make an attack against it.
