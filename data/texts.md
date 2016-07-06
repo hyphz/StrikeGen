@@ -726,6 +726,81 @@ After choosing an attack, but before rolling, you may inflict 2 damage on yourse
 to gain Potency. This damage cannot be resisted or reduced. If you hit with your attack,
 one target that was hit takes 6 extra damage from Potency. If your attack power
 does not require a roll, deal 3 extra damage instead.
+@@TheInstantRepulsion
+**Effect:** The target and each creature adjacent to you are pushed 3 squares.
+@@Liscato'sBountifulLubrication
+**Effect:** If the target attempts to move on its next turn, it must make a Saving Throw.
+If it fails, it falls Prone.
+@@Margul'sToxicMissile1+
+**Effect:** Target takes 1 Ongoing Damage and loses one point of Resistance if it has
+any (save ends).
+@@Margul'sToxicMissile5+
+**Effect:** On a failed save, the target is Vulnerable 1 until the end of the encounter.
+@@TheExcellentPrismaticSpray1+
+Deal 2 damage to the target with no attack roll. You may gain the benefit of your Boosts
+as though you had rolled a 5 on the attack.
+@@TheExcellentPrismaticSpray5+
+Deal 3 damage to the target with no attack roll. You may gain the benefit of your Boosts
+as though you had rolled a 5 on the attack.
+@@WordofInstantFriendship
+**Effect:** Pick one creature. The target cannot attack you or the designated creature on
+its next turn.
+@@MomentaryEncystment
+**Effect:** Target is removed from existence until the end of your next turn. For the
+duration it does not take a turn and may not be targeted by any powers. It does not
+suffer nor benefit from any effects.
+@@Furz'sUndeniableCommand
+**Effect:** Immediately spend an Attack Action for the target. Only At-Will powers may be
+used.
+@@SoporificDecree
+**Effect:** Target must make a Saving Throw. If it fails, it is asleep (Incapacitated)
+until it takes damage or until an ally spends an Attack Action to wake it while adjacent.
+@@Parvel'sTotalConstriction
+**Effect:** Target is Restrained (escape ends).
+@@RadiantMotesoftheOverworld
+**Effect:** Target is Blinded until the end of its next turn.
+@@Hura'sHastyRipening
+**Effect:** All of the target's attacks have their damage reduced by 2 (save ends).
+@@Hozrul'sEfficaciousCantrip
+**Effect:** Teleport two squares, making note of the square you used this power in.
+When any creature enters that square, it and all creatures adjacent to the square take
+4 damage.
+@@TheCantofInexplicableLust
+**Effect:** Pick a creature. If possible, the target must attempt to move adjacent to
+that creature on its next turn.
+@@PracticalDomeofPreservation
+Use this power when a creature hits with an attack against you. The creature instead misses.
+@@Mudge'sLocalizedInferno
+Create a 7x7 zone centered within 10 squares. Each creature in the zone takes 3 damage.
+@@Horwell'sOffensiveAmalgam
+**Special:** On a 3, the target is subject to one of the four effects below. On a 4 the
+target is subject to two of the lines. On a 5 the target is subject to three of the
+lines. On a 6, as a 5 plus 3 damage.
+
+* 3 damage.
+* Target is Immobilized (save ends)
+* Target takes Ongoing 2 Damage (save ends)
+* Target is Panicked on its next turn
+@@TheOtherworldlyEncasement
+**Effect:** Each time the target starts its turn until the end of the encounter, it must
+make a Saving Throw. If it fails it is knocked Prone and Restrained (escape ends). If it
+fails such a Saving Throw while already Restrained by this effect, it takes 4 damage.
+@@Thanatin'sMalediction
+**Effect:** Target must make a Saving Throw. If it fails it is immediately Taken Out.
+If it succeeds it is Dazed (save ends).
+@@FayZu'sLesserSubjugation
+**Effect:** Target is Dominated (save ends).
+@@TheDomeofManyColors
+**Effect:** A sphere encloses you and all creatures adjacent to you. All creatures inside
+are protected from attacks originating outside the sphere. The shield may absorb 7 HP of
+damage before it fails. Creatures may exit the sphere but may not re-enter it.
+@@IncantationofVulnerability
+**Effect:** Until the end of the encounter, all attacks against the target have Advantage.
+@@Renalai'sSlowMoment
+**Effect:** Immediately take a new turn. All other creatures are considered Stunned during
+this turn.
+**Special:** If you use this spell on multiple targets, you get only one extra turn no
+matter how many times the effect is applied. 
 @@DamageBoost
 When you roll a 2-5 on an attack, deal 1 extra damage to the target. When you roll a 6,
 deal 2 extra damage.

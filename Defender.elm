@@ -70,7 +70,7 @@ powers m = boosts m ++ actionTrigger m ++
 
 
 
-forms m = [Form False "Leader" (
+forms m = [Form False "Defender" (
     atLevel m 2 (powerChoiceField m "Encounter:" "defender-enc1" encounters)
   ++ atLevel m 6 (powerChoiceField m "Encounter:" "defender-enc2" encounters)
   ++ atLevel m 10 (DropdownField { name="Upgrade:",del=False,key="defender-upgrade",choices=(upgradable m)})
