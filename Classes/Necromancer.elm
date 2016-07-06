@@ -1,4 +1,4 @@
-module Necromancer exposing (classNecro)
+module Classes.Necromancer exposing (classNecro)
 
 import ModelDB exposing (..)
 import FormsModel exposing (..)

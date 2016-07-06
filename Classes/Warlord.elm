@@ -1,4 +1,4 @@
-module Warlord exposing (classWarlord)
+module Classes.Warlord exposing (classWarlord)
 
 import ModelDB exposing (..)
 import FormsModel exposing (..)

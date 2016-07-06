@@ -1,4 +1,4 @@
-module Magician exposing (classMagician)
+module Classes.Magician exposing (classMagician)
 
 import ModelDB exposing (..)
 import FormsModel exposing (..)

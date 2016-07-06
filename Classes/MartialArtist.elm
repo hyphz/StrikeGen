@@ -1,4 +1,4 @@
-module MartialArtist exposing (classMA)
+module Classes.MartialArtist exposing (classMA)
 
 import ModelDB exposing (..)
 import FormsModel exposing (..)

@@ -1,4 +1,4 @@
-module Duelist exposing (classDuelist)
+module Classes.Duelist exposing (classDuelist)
 
 import ModelDB exposing (..)
 import FormsModel exposing (..)

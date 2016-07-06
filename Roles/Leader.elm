@@ -1,4 +1,4 @@
-module Leader exposing (roleLeader)
+module Roles.Leader exposing (roleLeader)
 
 import ModelDB exposing (..)
 import FormsModel exposing (..)

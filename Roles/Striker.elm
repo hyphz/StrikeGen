@@ -1,4 +1,4 @@
-module Striker exposing (roleStriker)
+module Roles.Striker exposing (roleStriker)
 
 import ModelDB exposing (..)
 import FormsModel exposing (..)

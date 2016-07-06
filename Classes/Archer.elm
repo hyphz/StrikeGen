@@ -1,4 +1,4 @@
-module Archer exposing (classArcher)
+module Classes.Archer exposing (classArcher)
 
 import ModelDB exposing (..)
 import FormsModel exposing (..)

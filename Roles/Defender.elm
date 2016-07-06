@@ -1,4 +1,4 @@
-module Defender exposing (roleDefender)
+module Roles.Defender exposing (roleDefender)
 
 import ModelDB exposing (..)
 import FormsModel exposing (..)
