@@ -178,6 +178,7 @@ fieldChanged field m =
 learnedSkillEntry : Model -> Int -> Field
 learnedSkillEntry m x = FreeformField{name="Skill",del=True,key="ls-"++(toString x)}
 
+{-| Creates the form for learned skills. -}
 learnedSkillsForm : Model -> Form
 learnedSkillsForm m = Form True "Learned Skills"
                 (map (learnedSkillEntry m) [1..(getResponseInt m "ls-count" 0)])
@@ -225,6 +226,7 @@ updateFieldResponse : String -> String -> Model -> Model
 updateFieldResponse key value model =
   fieldChanged key (setResponse model key value)
 
+{-| Add a new entry to a variable length form. -}
 extendForm : String -> Model -> Model
 extendForm prefix model =
   let
@@ -235,7 +237,6 @@ extendForm prefix model =
   in
     setResponse countUpdated newMemberKey ""
 
-
 {-| Called when an add button on an addable form is pressed. -}
 updateExtendForm : String -> Model -> Model
 updateExtendForm key model =
@@ -244,7 +245,8 @@ updateExtendForm key model =
     _ -> model
 
 
-
+{-| Closes gaps in the numbering order when an item on an addable form is
+deleted. -}
 closeGaps' : String -> Int -> Int -> Model -> Model
 closeGaps' prefix current total m =
   let
@@ -262,7 +264,7 @@ closeGaps' prefix current total m =
 closeGaps : String -> Int -> Model -> Model
 closeGaps prefix total m = closeGaps' prefix 1 total m
 
-
+{-| Called when the delete button on an addable form is pressed. -}
 updateDeleteField : String -> Model -> Model
 updateDeleteField key model =
   let
@@ -271,12 +273,12 @@ updateDeleteField key model =
       Nothing -> Debug.crash "Missing hyphen in expandable form deletion process"
       Just x -> x
     keyPrehyphen = (String.slice 0 realKeyHyphenIndex key) ++ "-"
-    countName = Debug.log "name of the count variable:" (keyPrehyphen ++ "count")
+    countName = keyPrehyphen ++ "count"
     removeResponse = killResponse model key
     checkResponseRemoved = case (Dict.get key removeResponse.character) of
       Nothing -> removeResponse
       Just _ -> Debug.crash ("RemoveResponse didn't work!???")
-    reduceCount = Debug.log "reduce the count:" (setResponse checkResponseRemoved countName (toString ((getResponseInt checkResponseRemoved countName 0) - 1)))
+    reduceCount = (setResponse checkResponseRemoved countName (toString ((getResponseInt checkResponseRemoved countName 0) - 1)))
       in closeGaps keyPrehyphen (getResponseInt reduceCount countName 0) reduceCount
 
 

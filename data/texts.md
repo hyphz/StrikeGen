@@ -1291,3 +1291,220 @@ their turn in the zone or entering it take 3 damage.
 Friendly Ammo. This ammo does no damage. Do not roll an attack when using this ammo; it always
 applies its effect. Creatures starting their turn in the zone or entering it may make a
 Basic Attack as a Free Action when they do so.
+@@MagicianRally
+No action. You may only use this on your turn, but you may use at any point
+in your turn, even while Incapacitated, Dominated, or under any other Status. Spend
+an Action Point. Regain 4 Hit Points and gain the use of your Reserve Spell.
+@@OneFormShaperRally
+No action. You may only use this on your turn, but you may use at any point
+in your turn, even while Incapacitated, Dominated, or under any other Status. Spend
+an Action Point. Regain 4 Hit Points and regain the use of one Encounter Power from your
+Class (not a Role Action) you have expended, including your Transformation Power.
+@@MultiFormShaperRally
+No action. You may only use this on your turn, but you may use at any point
+in your turn, even while Incapacitated, Dominated, or under any other Status. Spend
+an Action Point. Regain 4 Hit Points and regain the use of one Encounter Power from your
+Class (not a Role Action) you have expended, or the Transformation Power of a different
+Form.
+@@MultiFormShaper
+Each combat you may use one Transformation Power. Once you have done so and taken a
+Form, you may spend a Move Action to change back and forth to or from this form
+only. When you Rally or sacrifice a level 3 or 7 Encounter Power, you may choose to
+gain the use of another Transformation Power.
+
+Once you have transformed into two or more forms, you may spend a Move Action to
+change between any of the forms you have taken on, for the rest of the combat. You
+may use only one level 3 encounter power and one level 7 encounter power per combat,
+no matter how many forms you take on.
+@@OneFormShaper
+Each combat you may use one Transformation Power. Once you have done so and taken a
+Form, you may spend a Move Action to change back and forth to or from this form
+only. When you Rally or sacrifice a level 3 or 7 Encounter Power, you may choose to
+regain your Transformation Power.
+
+When you use your Transformation Power for a second time, you may add one of the
+following benefits to your transformed Form for the rest of the combat:
+
+* Plus one size.
+* Plus 1 reach.
+* Plus 4 speed.
+* All your melee attacks become "melee or ranged 5".
+@@BlurredForm
+**Effect:** Shift 2 squares.
+@@PrimalCompulsion
+**Effect:** Slide the target 2 squares.
+@@FormoftheTortoise1+
+While in Tortoise form, you resist 1 damage.
+@@FormoftheTortoise5+
+While in Tortoise form, you resist 1 damage. When an enemy deals damage to you with a
+melee attack, it takes damage equal to the amount you resist.
+@@FormoftheTortoise9+
+While in Tortoise form, you resist 1 damage. When an enemy hits or misses you with a
+melee attack, it takes damage equal to the amount you resist (or would have resisted)
+plus 1.
+@@Tortoise'sTransformation
+**Effect:** Target cannot target you with an attack on its next turn.
+@@TotalDefense
+Use in Tortoise form. You have cover from all attacks until the start of your next turn.
+@@Shield
+Use in Tortoise form. **Effect:** Until the start of your next turn, you are Guarded.
+@@PerfectFortress
+Use in Tortoise form. Level 3. **Effect:** You Resist all damage until the start of your next turn.
+@@ShieldForAll
+Use in Tortoise form. Level 7. **Effect:** Gain Resist 2 damage until the start of your next turn. Allies also Resist
+2 damage while adjacent to you until the start of your next turn.
+@@FormoftheBull1+
+While in Bull form, all your Bull powers except **Nimble Charge** may be used in place of a basic melee attack while charging. Gain resist 1 to damage taken from Opportunities granted by
+movement as part of a Charge.
+@@FormoftheBull5+
+While in Bull form, all your Bull powers except **Nimble Charge** may be used in place of a basic melee attack while charging. Gain resist 1 to damage taken from Opportunities granted by
+movement as part of a Charge. You may charge through enemy squares. Any enemy you charge
+through falls Prone unless it forgoes its Opportunity against you.
+@@FormoftheBull9+
+While in Bull form, all your Bull powers except **Nimble Charge** may be used in place of a basic melee attack while charging. Gain resist 1 to damage taken from Opportunities granted by
+movement as part of a Charge. Any enemy that takes an opportunity against you while you are
+Charging takes 3 damage. You may charge through enemy squares. Any enemy you charge
+through falls Prone unless it forgoes its Opportunity against you.
+@@Bull'sTransformation
+**Special:** You must Charge at least 2 squares and make this attack instead of a Basic Melee
+Attack.
+
+**Effect:** Target is knocked Prone and is Distracted until the end of its next turn.
+@@BullRush
+Use in Bull form. **Effect:** Push the target a number of squares equal to the distance you
+Charged to make this attack.
+@@NimbleCharge
+Use in Bull form. Shift 1 square and Charge in either order. Do not replace the Melee Basic
+Attack with any other power.
+@@ShoveandFollow
+Use in Bull form. Level 3. Push the target 3 squares and knock it prone, then Charge it.
+@@CrashTest
+Use in Bull form. Level 7. **Special:** Grab a creature within reach, then Charge another creature,
+taking the first creature with you. Then make this attack against the creature you charged
+instead of a Basic Melee Attack.
+
+**Effect:** 4 damage to the creature you have grabbed.
+@@FormoftheHawk1+
+While in Hawk form, you may gain the Flying status as part of any Move action.
+@@FormoftheHawk5+
+While in Hawk form, you may gain the Flying status as part of any Move action. Whenever you
+gain the Flying status, pick one creature. While you have the Flying status, that creature
+has Disadvantage to hit you with ranged attacks unless it spends its Move action to aim at
+you.
+@@FormoftheHawk9+
+While in Hawk form, you may gain the Flying status as part of any Move action. Whenever you
+gain the Flying status, pick one creature. While you have the Flying status, that creature
+cannot hit you with ranged attacks unless it spends its Move action to aim at
+you. All other creatures have Disadvantage to hit you with ranged attacks unless they spend
+their Move action to aim at you.
+@@Hawk'sTransformation
+**Effect:** You fly into the sky. You cannot be seen nor targeted. You gain Flying status.
+At the start of your next turn, you may fly down to any square on the map.
+@@Fly
+Use in Hawk form. **Effect:** Gain the Flying Status without granting an Opportunity to
+adjacent creatures.
+@@DivingFeint
+Use in Hawk form. **Special:** You must be Flying. When you use this power, you stop Flying.
+
+**Effect:** The next attack against the target has Advantage.
+@@DustBath
+Use in Hawk form. Level 3. **Effect:** Target is Blinded until the end of its next turn.
+@@LiveBomb
+Use in Hawk form. Level 7. **Effect:** Grab the target and pick them up. Fly up to your speed, then drop them. Gain the
+Flying status. Normally, dropping the enemy deals 3 damage to it and 3 damage to whatever it
+lands on.
+@@FormoftheMammoth1+
+While in Mammoth form, if an enemy within your reach attempts to stand from Prone they grant
+you an Opportunity.
+@@FormoftheMammoth5+
+While in Mammoth form, if an enemy within your reach attempts to stand from Prone they grant
+you an Opportunity. Your reach is increased by 1.
+@@Mammoth'sTransformation1+
+**Special:** Push all adjacent creatures one square. Increase your size by one, then make this
+attack.
+
+**Effect:** Target is knocked prone.
+@@Mammoth'sTransformation9+
+**Special:** Push all adjacent creatures two squares. Increase your size by two, then make this
+attack.
+
+**Effect:** Target is knocked prone.
+@@Pushy1+
+Use in Mammoth form. **Effect:** Throw the target 2 squares. If an obstacle cuts short this movement, the target falls Prone.
+@@Pushy5+
+Use in Mammoth form. **Effect:** Throw the target 3 squares. If an obstacle cuts short this movement, the target falls Prone.
+@@Pushy9+
+Use in Mammoth form. **Effect:** Throw the target 4 squares. If an obstacle cuts short this movement, the target falls Prone.
+@@Stompy1+
+Use in Mammoth form. **Effect:** 2 additional damage if the target is Prone.
+@@Stompy5+
+Use in Mammoth form. **Effect:** 3 additional damage if the target is Prone.
+@@Stompy9+
+Use in Mammoth form. **Effect:** 4 additional damage if the target is Prone.
+@@FastballSpecial
+Use in Mammoth form. Level 3. Throw one willing ally within reach 6 squares. One enemy adjacent
+to the destination takes 2 damage and is knocked Prone.
+@@FastballDeluxe
+Use in Mammoth form. Level 7. Throw the target 6 squares and knock it Prone. Any enemies adjacent
+to its destination take 2 damage and fall Prone.
+@@FormoftheViper1+
+While in Viper form, when you deal Opportunity damage, the recipient also takes Ongoing 1 damage
+(save ends).
+@@FormoftheViper5+
+While in Viper form, when you deal Opportunity damage, the recipient also takes Ongoing 2 damage
+(save ends).
+@@FormoftheViper9+
+While in Viper form, when you deal Opportunity damage, the recipient also takes Ongoing 2 damage
+(save ends). When an enemy willingly enters a square adjacent to you without shifting, it takes
+Ongoing 2 damage (save ends).
+@@Viper'sTransformation
+**Effect:** Ongoing 2 damage (save ends). At the end of each of the target's turns, if it fails
+its Saving Throw, the Ongoing Damage is doubled.
+@@Venom1+
+Use in Viper form. **Effect:** Ongoing 1 damage (save ends).
+@@Venom5+
+Use in Viper form. **Effect:** Ongoing 2 damage (save ends).
+@@Enervation
+Use in Viper form. **Effect:** Target deals 1 less damage on its attacks until the end of its next turn.
+@@SpitPoison
+Use in Viper form. Level 3. **Effect:** Target is Blinded until the end of its next turn.
+@@InescapableVenom
+Use in Viper form. Level 7. **Effect:** Target takes Ongoing 2 Damage (save ends) and
+must make a Saving Throw. If it fails, it is also Incapacitated.
+@@FormoftheKraken1+
+While in Kraken form, you may have any number of targets grabbed. While you have an enemy
+Grabbed, you are Guarded.
+
+Your Encounter Powers have Statuses that worsen if the target does not escape. If the target
+is suffering from a Status that denies it any chance of escape, it instead gets a Saving Throw
+to avoid the worsening status, although even if it succeeds it will still be grabbed and have the
+original status.
+@@FormoftheKraken5+
+While in Kraken form, you may have any number of targets grabbed. While you have an enemy
+Grabbed, you are Guarded. Creatures Grabbed by you take Ongoing 1 damage.
+
+Your Encounter Powers have Statuses that worsen if the target does not escape. If the target
+is suffering from a Status that denies it any chance of escape, it instead gets a Saving Throw
+to avoid the worsening status, although even if it succeeds it will still be grabbed and have the
+original status.
+@@FormoftheKraken9+
+While in Kraken form, you may have any number of targets grabbed. While you have an enemy
+Grabbed, you are Guarded. Creatures Grabbed by you take Ongoing 3 damage.
+
+Your Encounter Powers have Statuses that worsen if the target does not escape. If the target
+is suffering from a Status that denies it any chance of escape, it instead gets a Saving Throw
+to avoid the worsening status, although even if it succeeds it will still be grabbed and have the
+original status.
+@@Grab
+Use in Kraken form. **Effect:** Target is Grabbed.
+@@Crush
+Use in Kraken form. Deal 2 damage to each creature you have Grabbed.
+@@ChokeOut
+Use in Kraken form. Level 3. **Effect:** Target is Grabbed and Weakened while it remains
+Grabbed. If it does not escape on its next turn, it is Incapacitated (save ends).
+@@DeathGrip
+Use in Kraken form. Level 7. **Effect:** Target is Grabbed. If it does not escape on its next
+turn, it is Taken Out.
+@@Kraken'sTransformation
+**Effect:** Target is Grabbed. If it does not escape on its next turn, it is also Restrained
+until it escapes the Grab.

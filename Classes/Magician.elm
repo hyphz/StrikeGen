@@ -12,7 +12,7 @@ classMagician = { name = "Magician",
                classForms = forms,
                modifyBasicMelee = Just modifyBasicMelee,
                modifyBasicRange = Just modifyBasicRange,
-               modifyRally = Nothing,
+               modifyRally = Just modifyRally,
                modifyCharge = Nothing }
 
 
@@ -25,6 +25,8 @@ modifyBasicMelee m p = {p | damage = atWillDamage m}
 modifyBasicRange : Model -> Power -> Power
 modifyBasicRange m p = {p | damage = atWillDamage m, range = 10 }
 
+modifyRally : Model -> Power -> Power
+modifyRally m p = {p | text = overtext m "MagicianRally" }
 
 
 repulsion m = quickPower "The Instant Repulsion" Attack AtWill 0 0 (atWillDamage m) Green m

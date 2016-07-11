@@ -7,6 +7,7 @@ import Classes.Simplified exposing (classSimplified)
 import Classes.Warlord exposing (classWarlord)
 import Classes.Magician exposing (classMagician)
 import Classes.Bombardier exposing (classBombardier)
+import Classes.Shapechanger exposing (classShapechanger)
 import Roles.Striker exposing (roleStriker)
 import Roles.Leader exposing (roleLeader)
 import Roles.Defender exposing (roleDefender)
@@ -24,15 +25,20 @@ classes = Dict.fromList [("Archer",classArcher),
                          ("Martial Artist",classMA),
                          ("Magician",classMagician),
                          ("Necromancer",classNecro),
+                         ("Shapechanger",classShapechanger),
                          ("Simplified",classSimplified),
                          ("Warlord",classWarlord)
                          ]
 
+{-| Returns the list of available implemented roles. -}
 roles : Dict String Role
 roles = Dict.fromList [("Blaster",roleBlaster),("Controller",roleController),
                      ("Defender",roleDefender),("Leader",roleLeader),("Striker",roleStriker)]
 
 
+{-| Looks up the current class and applies a function (probably a field extractor) to it.
+That function is expected to return another function or Nothing. If it returns a function,
+apply it to the given value. -}
 applyClassModifier : Model -> (Class -> Maybe (Model -> a -> a)) -> a -> a
 applyClassModifier m extractor value =
   let c = indirectLookup m "basics-class" classes (\x -> (extractor x)) Nothing Nothing in
