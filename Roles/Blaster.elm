@@ -19,13 +19,18 @@ blasterBombardier m = case (getResponse m "basics-class") of
   Just "Bombardier" -> [quickSpecial "Blaster Bombardier" m]
   _ -> []
 
-precision m = [levelTextPower "Precision" RoleSlot AtWill 0 0 0 Blue [1,4,8] m]
-terrain m = [levelTextPower "Terrain" RoleSlot AtWill 0 0 0 Blue [1,4,8] m]
+
+
+precision m = levelTextPower "Precision" RoleSlot AtWill 0 0 0 Blue [1,4,8] m
+terrain m = levelTextPower "Terrain" RoleSlot AtWill 0 0 0 Blue [1,4,8] m
+
+boostchoices m = powerDict m [precision, terrain]
+cboost m = powerlookup m "blaster-boost" boostchoices
 
 actionTrigger m = if (getLevel m) < 6 then [quickPower "Consistent Attack" Reaction Encounter 0 0 0 Yellow m]
                                       else [quickPower "Dependable" Reaction Encounter 0 0 0 Yellow m]
 
-boosts m = multiBoost m ++ precision m ++ terrain m ++ blasterBombardier m
+boosts m = multiBoost m ++ cboost m ++ blasterBombardier m
 
 
 
@@ -71,6 +76,7 @@ powers m = boosts m ++ actionTrigger m ++
 
 
 forms m = [Form False "Blaster" (
+    [powerChoiceField m "Boost:" "blaster-boost" boostchoices] ++
     atLevel m 2 (powerChoiceField m "Encounter:" "blaster-enc1" encounters)
   ++ atLevel m 6 (powerChoiceField m "Encounter:" "blaster-enc2" encounters)
   ++ atLevel m 10 (DropdownField { name="Upgrade:",del=False,key="blaster-upgrade",choices=(upgradable m)})
