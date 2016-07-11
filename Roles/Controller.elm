@@ -2,7 +2,6 @@ module Roles.Controller exposing (roleController)
 
 import ModelDB exposing (..)
 import FormsModel exposing (..)
-import Dict exposing (..)
 import PowerUtilities exposing (..)
 
 

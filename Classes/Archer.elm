@@ -2,7 +2,6 @@ module Classes.Archer exposing (classArcher)
 
 import ModelDB exposing (..)
 import FormsModel exposing (..)
-import Dict exposing (..)
 import PowerUtilities exposing (..)
 
 

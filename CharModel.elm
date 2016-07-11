@@ -1,12 +1,6 @@
 module CharModel exposing (..)
 
-import Html exposing (..)
-import Html.Attributes exposing (..)
-import Html.Events exposing (..)
 import List exposing (map, head, length, filter, sortBy)
-import Html.App as Html
-import Http exposing (getString, Error)
-import Task exposing (perform)
 import Result exposing (withDefault)
 import ModelDB exposing (..)
 import Dict exposing (Dict, insert)
@@ -18,6 +12,7 @@ import Json.Decode
 import TacticalModel exposing (classes, roles, tacticalForms)
 
 {-| ELM Architecture Initialization Function. -}
+init : (Model, Cmd Msg)
 init = ({character = blankCharacter,
          database = blankDatabase},
          getJsonFileCommand "data/backgrounds.json" BackgroundsLoaded)
@@ -127,6 +122,7 @@ customBackgroundForm m =
 
 
 {-| Returns the skill choices for the background, allowing for it being custom.  -}
+resolvedBackgroundSkills : Model -> List String
 resolvedBackgroundSkills m = case getResponse m "basics-bg" of
   Nothing -> []
   Just "<Custom>" -> (mayList <| getResponse m "bg-custom-s1") ++

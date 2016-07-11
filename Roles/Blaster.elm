@@ -2,7 +2,6 @@ module Roles.Blaster exposing (roleBlaster)
 
 import ModelDB exposing (..)
 import FormsModel exposing (..)
-import Dict exposing (..)
 import PowerUtilities exposing (..)
 
 

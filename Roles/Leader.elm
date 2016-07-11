@@ -2,7 +2,6 @@ module Roles.Leader exposing (roleLeader)
 
 import ModelDB exposing (..)
 import FormsModel exposing (..)
-import Dict exposing (..)
 import PowerUtilities exposing (..)
 
 

@@ -2,7 +2,6 @@ module Classes.MartialArtist exposing (classMA)
 
 import ModelDB exposing (..)
 import FormsModel exposing (..)
-import Dict exposing (..)
 import PowerUtilities exposing (..)
 
 

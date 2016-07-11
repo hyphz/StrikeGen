@@ -6,9 +6,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import List exposing (map, head, length, filter, sortBy)
-import Html.App as Html
 import Json.Decode exposing (Decoder, decodeString, (:=), object4, string, list, int, at)
-import Result exposing (withDefault)
 import ModelDB exposing (..)
 import Dict exposing (..)
 import Maybe exposing (..)
@@ -16,7 +14,6 @@ import CharModel exposing (getSkills, getForms)
 import TacticalModel exposing (getPowers)
 import FormsModel exposing (..)
 import Color
-import String
 import Svg exposing (svg)
 import Material.Icons.Action exposing (delete)
 import Material.Icons.Content exposing (add_box)

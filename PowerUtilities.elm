@@ -81,6 +81,7 @@ levelTextPower name slot freq range area damage col thresholds model =
 quickSpecial : String -> Model -> Power
 quickSpecial name m = quickPower name Special None 0 0 0 White m
 
+levelTextSpecial : String -> List Int -> Model -> Power
 levelTextSpecial name thresholds m = levelTextPower name Special None 0 0 0 White thresholds m
 
 

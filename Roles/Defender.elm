@@ -2,7 +2,6 @@ module Roles.Defender exposing (roleDefender)
 
 import ModelDB exposing (..)
 import FormsModel exposing (..)
-import Dict exposing (..)
 import PowerUtilities exposing (..)
 
 

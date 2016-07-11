@@ -2,8 +2,6 @@ module Classes.Simplified exposing (classSimplified)
 
 import ModelDB exposing (..)
 import FormsModel exposing (..)
-import Dict exposing (..)
-import PowerUtilities exposing (..)
 
 
 classSimplified : Class

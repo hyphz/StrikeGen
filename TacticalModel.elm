@@ -25,11 +25,12 @@ classes = Dict.fromList [("Archer",classArcher),
                          ("Simplified",classSimplified),
                          ("Warlord",classWarlord)]
 
+roles : Dict String Role
 roles = Dict.fromList [("Defender",roleDefender),("Leader",roleLeader),("Striker",roleStriker),
                       ("Controller",roleController),("Blaster",roleBlaster)]
 
 
-
+applyClassModifier : Model -> (Class -> Maybe (Model -> a -> a)) -> a -> a
 applyClassModifier m extractor value =
   let c = indirectLookup m "basics-class" classes (\x -> (extractor x)) Nothing Nothing in
   case c of
@@ -106,6 +107,7 @@ basicPowers m = [pmeleeBasic m, prangedBasic m, pcharge m, pRally m, pAssess]
 classPowers : Model -> List Power
 classPowers m = indirectLookup m "basics-class" classes (\x -> x.classPowerList m) [] []
 
+rolePowers : Model -> List Power
 rolePowers m = indirectLookup m "basics-role" roles (\x -> x.rolePowerList m) [] []
 
 tacticalForms : Model -> List Form
