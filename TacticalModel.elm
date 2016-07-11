@@ -9,6 +9,8 @@ import Classes.Magician exposing (classMagician)
 import Roles.Striker exposing (roleStriker)
 import Roles.Leader exposing (roleLeader)
 import Roles.Defender exposing (roleDefender)
+import Roles.Controller exposing (roleController)
+import Roles.Blaster exposing (roleBlaster)
 import ModelDB exposing (..)
 import FormsModel exposing (..)
 import Dict exposing (Dict)
@@ -23,7 +25,8 @@ classes = Dict.fromList [("Archer",classArcher),
                          ("Simplified",classSimplified),
                          ("Warlord",classWarlord)]
 
-roles = Dict.fromList [("Defender",roleDefender),("Leader",roleLeader),("Striker",roleStriker)]
+roles = Dict.fromList [("Defender",roleDefender),("Leader",roleLeader),("Striker",roleStriker),
+                      ("Controller",roleController),("Blaster",roleBlaster)]
 
 
 

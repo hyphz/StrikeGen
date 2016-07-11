@@ -25,7 +25,7 @@ fieldKey x = case x of
   FreeformField ff -> ff.key
   NumberField nf -> nf.key
 
-fieldDel : Field -> Bool 
+fieldDel : Field -> Bool
 fieldDel x = case x of
   DropdownField df -> df.del
   FreeformField ff -> ff.del

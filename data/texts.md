@@ -800,7 +800,7 @@ damage before it fails. Creatures may exit the sphere but may not re-enter it.
 **Effect:** Immediately take a new turn. All other creatures are considered Stunned during
 this turn.
 **Special:** If you use this spell on multiple targets, you get only one extra turn no
-matter how many times the effect is applied. 
+matter how many times the effect is applied.
 @@DamageBoost
 When you roll a 2-5 on an attack, deal 1 extra damage to the target. When you roll a 6,
 deal 2 extra damage.
@@ -985,3 +985,182 @@ fail to end their turn adjacent to you. This effect ends if you are Incapacitate
 @@I'llCoverYouAll!
 All allies adjacent to you have cover from melee attacks while adjacent to you, until they
 fail to end their turn adjacent to you. This effect ends if you are Incapacitated.
+@@ControlBoost
+When you roll a 3-6 on an attack, you may choose to either Slow the target until the end of
+its next turn, or to slide the target 3 squares.
+@@ImprovedControlBoost
+When you roll a 3-6 on an attack, you may choose to either knock the target Prone, or to
+slide the target 6 squares.
+@@SuperControlBoost
+When you roll a 3-6 on an attack, you may choose to either knock the target Prone and it
+cannot stand up (save ends), or to slide the target 10 squares.
+@@SapStrength1+
+Target is Weakened until the end of its next turn.
+@@SapStrength4+
+Target is Weakened (save ends).
+@@SapStrength8+
+Two targets in range are Weakened (save ends).
+@@Freeze!
+**Trigger:** An enemy moves.
+
+Spend an Action Point. Replace the enemy where it started its movement. Its Move Action is
+still expended.
+@@Slide!
+**Trigger:** An enemy moves.
+
+Spend an Action Point. Replace the enemy where it started its movement, then slide it its
+speed and knock it Prone. Its Move Action is still expended.
+@@SaveorSuck
+The target must make a Saving Throw. If it fails, it is Stunned until the end of its next
+turn. If it succeeds, it is Distracted instead.
+@@SaveorDie
+The target must make a Saving Throw. If it fails, it is Taken Out. If it succeeds it is
+Dazed until the end of its next turn.
+@@StandStill
+The target is Immobilized and Vulnerable 1 until the end of its next turn.
+@@AllTiedUp
+The target is Restrained and Vulnerable 2 (save ends).
+@@BattlefieldRepositioning
+Slide each enemy in the zone 5 squares to another square in the zone.
+@@WarzoneRepositioning
+Slide each creature in the zone 10 squares to another square in the zone.
+@@Flash
+The target must make a Saving Throw. If it fails, it is Blinded until the end of its next
+turn. If it succeeds, it is Distracted instead.
+@@Solarbeam
+The target is Blinded until the end of its next turn.
+@@MultitargetBoost
+When you attack, choose one of these benefits:
+
+* When you roll a 3-4 on a ranged or melee attack, deal 2 damage to one additional target
+within range. When you roll a 5-6 on a ranged or melee attack, deal either the power's
+effect *or* 2 damage to one additional target within range. You may use your existing squares
+of movement during the resolution of a Melee attack to acquire new targets. The movement
+grants Opportunities as usual.
+* Make a power with range X into a Burst 1 centered within X targeting all creatures in
+the zone. This still grants Opportunities as though it was Range X. Or, make a melee
+attack into a Burst 1 targeting all creatures in the zone. You may move the center of
+the zone one square for each square of reach you have.
+
+You never hit yourself with Burst attacks.
+
+When a creature is included in the same effect multiple times from the same power, it only
+suffers once.
+
+When making a Burst attack, only the first attack roll may generate a Strike or lead to a
+Miss Trigger. You must roll your attack against the most powerful enemy first.
+@@ImprovedMultitargetBoost
+When you attack, choose one of these benefits:
+
+* When you roll a 3-4 on a ranged or melee attack, deal 2 damage to two additional targets
+within range. When you roll a 5-6 on a ranged or melee attack, deal either the power's
+effect to one additional target *or* 2 damage to two additional targets within range.
+You may use your existing squares of movement during the resolution of a Melee attack to acquire new targets. The movement grants Opportunities as usual.
+* Make a power with range X into a Burst 1 centered within X targeting all creatures in
+the zone. This still grants Opportunities as though it was Range X. Or, make a melee
+attack into a Burst 1 targeting all creatures in the zone. You may move the center of
+the zone one square for each square of reach you have. In both cases, you may extend the
+zone to a 4x4 square.
+
+You never hit yourself with Burst attacks.
+
+When a creature is included in the same effect multiple times from the same power, it only
+suffers once.
+
+When making a Burst attack, only the first attack roll may generate a Strike or lead to a
+Miss Trigger. You must roll your attack against the most powerful enemy first.
+@@SuperMultitargetBoost
+When you attack, choose one of these benefits:
+
+* When you roll a 3-4 on a ranged or melee attack, deal 2 damage to three additional targets
+within range. When you roll a 5-6 on a ranged or melee attack, deal the power's
+effect to one additional target *and* 2 damage to three additional targets within range.
+You may use your existing squares of movement during the resolution of a Melee attack to acquire new targets. The movement grants Opportunities as usual.
+* Make a power with range X into a Burst 1 or 2 centered within X targeting all creatures in
+the zone. This still grants Opportunities as though it was Range X. Or, make a melee
+attack into a Burst 1 or 2 targeting all creatures in the zone. You may move the center of
+the zone one square for each square of reach you have.
+
+You never hit yourself with Burst attacks.
+
+When a creature is included in the same effect multiple times from the same power, it only
+suffers once.
+
+When making a Burst attack, only the first attack roll may generate a Strike or lead to a
+Miss Trigger. You must roll your attack against the most powerful enemy first.
+@@Precision1+
+Your next Burst attack may target one additional creature adjacent to the zone, if that
+creature is within range 5.
+@@Precision4+
+Choose one:
+
+* Your next Burst attack may target one additional creature adjacent to the zone, if that
+creature is within range 5.
+
+* Your next Burst attack may exclude one creature in the zone.
+@@Precision8+
+Your next Burst attack may target one additional creature adjacent to the zone, if that
+creature is within range 5; and may exclude one creature in the zone.
+@@Terrain1+
+Pick one of the following three options, centered within range 5:
+
+* Choose a 3x3 area. The affected zone becomes Difficult Terrain until the end of the
+encounter. You may optionally remove any Low Cover in the area.
+* Choose a 3x3 area. It becomes obscured until the end of your next turn.
+* Choose one square. It becomes Low Cover.
+@@Terrain4+
+Pick one of the following three options, centered within range 5:
+
+* Choose a 5x5 area. The affected zone becomes Difficult Terrain until the end of the
+encounter. You may optionally remove any Low Cover in the area.
+* Choose a 5x5 area. It becomes obscured until the end of your next turn.
+* Choose one square. It becomes Full Cover.
+@@Terrain8+
+Pick one of the following three options, centered within range 5:
+
+* Choose a 5x5 area. The affected zone becomes Difficult Terrain until the end of the
+encounter. Your allies ignore this Difficult Terrain.
+You may optionally remove any Low Cover in the area.
+* Choose a 5x5 area. It becomes obscured until the end of your next turn. Your allies
+ignore this obscuring.
+* Choose two squares within range. They become Full Cover.
+@@ConsistentAttack
+**Trigger:** You miss an enemy with an attack.
+
+Spend an Action Point. Apply 2 damage and the attack's Effect to another enemy in range.
+@@Dependable
+**Trigger:** You miss an enemy with an attack.
+
+Spend an Action Point. Apply 3 damage and the attack's Effect to another enemy in range, or
+to the one you missed.
+@@ThatWasn'tThereBefore
+Create a wall of 8 squares of blocking terrain within 10 squares. The entire wall must be
+within 10 squares of you and must be contiguous. It is 2 squares high. Anyone can
+break a square of this wall by dealing 3 damage to it. Attacking the wall always hits
+as though the attacker rolled a 5.
+@@WhereDidHeComeFrom?
+Create a wall of 8 squares of within 10 squares. The entire wall must be
+within 10 squares of you and must be contiguous. The wall is blocking terrain and blocks
+line of sight for enemies, but allies may ignore both these features. It is 2 squares high. Anyone can
+break a square of this wall by dealing 5 damage to it. Attacking the wall always hits
+as though the attacker rolled a 5.
+@@LikeMapleSyrup
+All enemies in the zone are Slowed until the end of their next turns.
+@@LikeConcrete
+All enemies in the zone are Immobilized until the end of their next turns.
+@@TheFriendZone
+Create a 3x3 zone centered within 10 squares. Enemies are Vulnerable 1 while inside. The
+zone lasts until the end of the combat.
+@@TheFriendswithBenefitsZone
+Create a 5x5 zone centered within 10 squares. Enemies are Vulnerable 1 while inside. Allies
+add 1 damage to the damage line of all their attacks while in the zone. The zone lasts
+until the end of the combat.
+@@TheNotSoFriendlyZone1+
+Create a 5x5 zone centered within 10 squares. Any creature that starts its turn in or enters
+the zone takes 1 damage. This zone lasts until the end of the encounter.
+@@TheNotSoFriendlyZone6+
+Create a 5x5 zone centered within 10 squares. Any creature that starts its turn in or enters
+the zone takes 2 damage. This zone lasts until the end of the encounter.
+@@TheDownrightUnfriendlyZone
+Create a 7x7 zone centered within 10 squares. Any creature that starts its turn in or enters
+the zone takes 4 damage. This zone lasts until the end of the encounter.
