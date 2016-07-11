@@ -15,13 +15,17 @@ multiBoost m = if (getLevel m) < 4 then [quickSpecial "Multitarget Boost" m]
             else if (getLevel m) < 8 then [quickSpecial "Improved Multitarget Boost" m]
               else [quickSpecial "Super Multitarget Boost" m]
 
+blasterBombardier m = case (getResponse m "basics-class") of
+  Just "Bombardier" -> [quickSpecial "Blaster Bombardier" m]
+  _ -> []
+
 precision m = [levelTextPower "Precision" RoleSlot AtWill 0 0 0 Blue [1,4,8] m]
 terrain m = [levelTextPower "Terrain" RoleSlot AtWill 0 0 0 Blue [1,4,8] m]
 
 actionTrigger m = if (getLevel m) < 6 then [quickPower "Consistent Attack" Reaction Encounter 0 0 0 Yellow m]
                                       else [quickPower "Dependable" Reaction Encounter 0 0 0 Yellow m]
 
-boosts m = multiBoost m ++ precision m ++ terrain m
+boosts m = multiBoost m ++ precision m ++ terrain m ++ blasterBombardier m
 
 
 

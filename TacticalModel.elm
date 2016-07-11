@@ -6,6 +6,7 @@ import Classes.MartialArtist exposing (classMA)
 import Classes.Simplified exposing (classSimplified)
 import Classes.Warlord exposing (classWarlord)
 import Classes.Magician exposing (classMagician)
+import Classes.Bombardier exposing (classBombardier)
 import Roles.Striker exposing (roleStriker)
 import Roles.Leader exposing (roleLeader)
 import Roles.Defender exposing (roleDefender)
@@ -18,16 +19,18 @@ import Dict exposing (Dict)
 {-| Returns the list of available implemented classes. -}
 classes : Dict String Class
 classes = Dict.fromList [("Archer",classArcher),
+                         ("Bombardier",classBombardier),
                          ("Duelist",classDuelist),
                          ("Martial Artist",classMA),
                          ("Magician",classMagician),
                          ("Necromancer",classNecro),
                          ("Simplified",classSimplified),
-                         ("Warlord",classWarlord)]
+                         ("Warlord",classWarlord)
+                         ]
 
 roles : Dict String Role
-roles = Dict.fromList [("Defender",roleDefender),("Leader",roleLeader),("Striker",roleStriker),
-                      ("Controller",roleController),("Blaster",roleBlaster)]
+roles = Dict.fromList [("Blaster",roleBlaster),("Controller",roleController),
+                     ("Defender",roleDefender),("Leader",roleLeader),("Striker",roleStriker)]
 
 
 applyClassModifier : Model -> (Class -> Maybe (Model -> a -> a)) -> a -> a

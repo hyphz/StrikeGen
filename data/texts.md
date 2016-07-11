@@ -1164,3 +1164,130 @@ the zone takes 2 damage. This zone lasts until the end of the encounter.
 @@TheDownrightUnfriendlyZone
 Create a 7x7 zone centered within 10 squares. Any creature that starts its turn in or enters
 the zone takes 4 damage. This zone lasts until the end of the encounter.
+@@ShapedBlasts(Square)1+
+You may make your blast a 3x3 square.
+@@ShapedBlasts(Square)5+
+You may make your blast a 3x3 square or a 5x5 square.
+@@ShapedBlasts(Ring)1+
+You may make your blast a ring including all tiles exactly 1 or 2 (only one of these, your
+choice when you fire) away from the center.
+@@ShapedBlasts(Ring)5+
+You may make your blast a ring including all tiles exactly 1, 2 or 3 (only one of these, your
+choice when you fire) away from the center.
+@@ShapedBlasts(Cross)1+
+You may make your blast a cross or X extending 2 squares in four directions from the central
+square.
+@@ShapedBlasts(Cross)5+
+You may make your blast a cross or X extending 2 or 5 squares in four directions from the central
+square.
+@@ShapedBlasts(Cone)1+
+You may make your blast a pyramid of 1, 3, then 5 squares.
+@@ShapedBlasts(Cone)5+
+You may make your blast a pyramid of 1, 3, then 5 squares; or a pyramid of 1, 3, 5, 7, then
+9 squares.
+@@Misfire!1+
+When you roll a 1 on any attack, do not take a Strike. Instead take 2 damage and the zone
+your bomb creates is a 3x3 square centered on you.
+@@Misfire!5+
+When you roll a 1 on any attack, do not take a Strike. Instead take 2 damage and the zone
+your bomb creates is a 5x5 square centered on you.
+@@LastingBlasting1+
+If you choose, your zones last one extra round. You must make this choice when you fire.
+@@LastingBlasting9+
+When you make an attack, you choose how many rounds the zone will last.
+@@DelayedFuse1+
+**Special:** Choose a type of Ammo before you roll this attack.
+
+**Effect:** Select and mark two squares within 10. You throw mines onto these squares.
+After the start of your next turn, you
+may choose to use up one of these marked squares to create a zone including it. This
+requires no action, happens as an Interrupt, and the zone lasts until the end of your
+following turn. The effects depend on the Ammo. Decide on the shape and exact position of
+the zone when you detonate it.
+@@DelayedFuse9+
+**Special:** Choose a type of Ammo before you roll this attack.
+
+**Effect:** Select and mark three squares within 10. You throw mines onto these squares.
+After the start of your next turn, you
+may choose to use up one of these marked squares to create a zone including it. This
+requires no action, happens as an Interrupt, and the zone lasts until the end of your
+following turn. The effects depend on the Ammo. Decide on the shape and exact position of
+the zone when you detonate it.
+@@BombingRun1+
+**Special:** Choose a type of Ammo before you roll this attack.
+
+**Effect:** Move you speed and drop bombs within your reach at any two points along your
+movement. At the end of your turn, create two zones, each including one of those squares.
+The zones last until the end of your following turn and have effects based on the Ammo
+type.
+@@BombingRun9+
+**Special:** Choose a type of Ammo before you roll this attack.
+
+**Effect:** Move you speed and drop bombs within your reach at any three points along your
+movement. At the end of your turn, create three zones, each including one of those squares.
+The zones last until the end of your following turn and have effects based on the Ammo
+type.
+@@BlasterBombardier
+Even by using your Blaster role boosts, you may not apply the effect line of your powers
+that create explosions twice. Instead, you may combine any two blast shapes.
+@@Grenade
+**Special:** Choose a type of Ammo before you roll this attack.
+
+**Effect:** Create a zone including your target based on the Ammo you chose. The zone will
+last until the start of your next turn.
+@@Kaboom
+Ammo. Creatures starting their turn in the zone or entering it take 1 damage.
+@@SonicBomb
+Ammo. All creatures in the zone are pushed 2 squares away from the bomb. Entering the zone
+costs an extra 2 squares of movement.
+@@ToxicBomb
+Ammo. Creatures starting their turn in the zone or entering it must make a Saving Throw.
+If they fail, they take Ongoing 2 damage (save ends).
+@@SlimeBomb
+Ammo. Leaving any square in the zone costs 3 squares of movement.
+@@HotBomb
+Ammo. Creatures must leave the burning zone. If they take any action in the zone that doesn't
+result in them leaving it, or if they end their turn in the zone, they take 3 damage.
+@@EnergizingBomb
+Friendly Ammo. This ammo does no damage. Do not roll an attack when using this ammo; it always
+applies its effect. Creatures starting their turn in the zone or entering it gain an extra
+Move action.
+@@SmokeBomb
+Ammo. Increase the damage line of the power that uses this Ammo to 3. The zone is totally
+obscured.
+@@StickyBomb
+Ammo. Increase the damage line of the power that uses this Ammo to 3. Creatures starting
+their turn in the zone or entering it are Slowed (save ends).
+@@HealingBomb
+Friendly Ammo. This ammo does no damage. Do not roll an attack when using this ammo; it always
+applies its effect. Creatures starting their turn in the zone or entering it gain 2 Buffer
+Points.
+@@IckyStickyBomb
+Ammo. Increase the damage line of the power that uses this Ammo to 3. Creatures starting
+their turn in the zone or entering it must make a Saving Throw. If they fail, they are
+Immobilized (save ends). If they succeed, they are Slowed (save ends).
+@@WeakeningBomb
+Ammo. Increase the damage line of the power that uses this Ammo to 3. Creatures starting
+their turn in the zone or entering it are Vulnerable 1 (save ends).
+@@ConcussiveBomb
+Ammo. Increase the damage line of the power that uses this Ammo to 3. Creatures starting
+their turn in the zone or entering it must make a Saving Throw. If they fail, they are
+Dazed (save ends).
+@@GetawayBomb
+**Trigger:** An enemy enters a square adjacent to you.
+
+Create a 5x5 zone centered on your original square. Shift to any square adjacent to that
+area, then deal 2 damage to all creatures in the area.
+@@FlatteningBomb
+Ammo. Increase the damage line of the power that uses this Ammo to 4. Creatures starting
+their turn in the zone or entering it are knocked Prone.
+@@FlashBomb
+Ammo. Increase the damage line of the power that uses this Ammo to 4. Creatures starting
+their turn in the zone or entering it have Disadvantage on their attacks (save ends).
+@@BigKaboom
+Ammo. Increase the damage line of the power that uses this Ammo to 4. Creatures starting
+their turn in the zone or entering it take 3 damage.
+@@InvigoratingBomb
+Friendly Ammo. This ammo does no damage. Do not roll an attack when using this ammo; it always
+applies its effect. Creatures starting their turn in the zone or entering it may make a
+Basic Attack as a Free Action when they do so.
