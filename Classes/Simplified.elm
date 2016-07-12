@@ -31,11 +31,13 @@ meleeSpecial = "\n\n**Special**: Treat any 2s rolled on the dice as though they 
 simpleBasicMelee m p = case (getResponse m "simple-type") of
   Just "Melee" -> {p | text = simpleDamageEffect m ++ meleeSpecial, damage = simpleDamageValue m}
   Just "None" -> {p | text = simpleDamageEffect m, damage = simpleDamageValue m}
+  Nothing -> {p | text = simpleDamageEffect m, damage = simpleDamageValue m}
   _ -> p
 
 simpleBasicRange m p = case (getResponse m "simple-type") of
   Just "Ranged" -> {p | text = simpleDamageEffect m, damage = simpleDamageValue m, range = 20}
   Just "None" -> {p | text = simpleDamageEffect m, damage = simpleDamageValue m, range = 10}
+  Nothing -> {p | text = simpleDamageEffect m, damage = simpleDamageValue m, range = 10}
   _ -> p
 
 
