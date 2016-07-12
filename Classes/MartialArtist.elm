@@ -3,7 +3,7 @@ module Classes.MartialArtist exposing (classMA)
 import ModelDB exposing (..)
 import FormsModel exposing (..)
 import PowerUtilities exposing (..)
-
+import String
 
 classMA : Class
 classMA = { name = "Duelist",
@@ -55,10 +55,18 @@ l7encpower m = powerlookup m "ma-enc7" l7encounters
 
 mamaster m = quickSpecial "Master Martial Artist" m
 
+eggpower m = case (getResponse m "basics-name") of
+  Nothing -> []
+  Just x -> if ((String.toLower x) == "daniel-san") then
+    [Power "I've been your servant" "**Effect:** Choose one: remove all wax from target vehicle, sand target floor or fence, paint target house." Attack AtWill 0 0 0 Green]
+  else []
+
+
 powers m = genStances m ++ [startStance m, changeStance m, focusedAttack m]
            ++ (atLevelList m 3 (l3encpower m))
            ++ (atLevelList m 7 (l7encpower m))
            ++ (atLevel m 9 (mamaster m))
+           ++ eggpower m
 
 forms m = [Form False "Martial Artist" ([
   DropdownField { name = "Stance:", key="ma-s1", choices=[""] ++ stanceList, del=False },

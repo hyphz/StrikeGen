@@ -3,6 +3,7 @@ module Classes.Warlord exposing (classWarlord)
 import ModelDB exposing (..)
 import FormsModel exposing (..)
 import PowerUtilities exposing (..)
+import String
 
 
 classWarlord : Class
@@ -66,10 +67,18 @@ ultimatum m = quickPower "Ultimatum" Attack Encounter 0 0 0 Purple m
 l7encounters m = powerDict m [biggerBag, leadCharge, alwaysInPosition, ultimatum]
 l7echosen m = powerlookup m "warlord-enc7" l7encounters
 
+eggpower m = case (getResponse m "basics-name") of
+  Nothing -> []
+  Just x -> if ((String.toLower x) == "master mike") then
+    [Power "Wallace's Shout" "Shout at target creature. Its hand grows back." Attack AtWill 5 0 0 Green]
+  else []
+
+
 powers m = [support m] ++ (cspecial m) ++ (l1awchosen m) ++ (l1echosen m)
            ++ (atLevelList m 3 (l3echosen m))
            ++ (atLevelList m 5 (battlecry m))
            ++ (atLevelList m 7 (l7echosen m))
+           ++ eggpower m
 
 forms m = [Form False "Warlord" ([
   powerChoiceField m "Feature:" "warlord-special" specials,

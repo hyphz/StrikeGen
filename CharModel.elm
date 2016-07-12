@@ -187,11 +187,12 @@ learnedSkillsForm m = Form True "Learned Skills"
 {-| Form with the most basic common parts of a character. -}
 basicsForm : Model -> Form
 basicsForm model = Form False "The Basics" [
-  DropdownField {name="Background", del=False, key="basics-bg", choices=(["<Custom>"] ++ (Dict.keys model.database.backgrounds))},
-  DropdownField {name="Origin", del=False, key="basics-origin", choices=(Dict.keys model.database.origins)},
-  NumberField {name="Level", del=False, key="basics-level", min=1, max=10},
-  DropdownField {name="Class", del=False, key="basics-class", choices=([""] ++ Dict.keys classes)},
-  DropdownField {name="Role", del=False, key="basics-role", choices=([""] ++ Dict.keys roles)},
+  FreeformField {name="Name:",del=False, key="basics-name"},
+  DropdownField {name="Background:", del=False, key="basics-bg", choices=(["<Custom>"] ++ (Dict.keys model.database.backgrounds))},
+  DropdownField {name="Origin:", del=False, key="basics-origin", choices=(Dict.keys model.database.origins)},
+  NumberField {name="Level:", del=False, key="basics-level", min=1, max=10},
+  DropdownField {name="Class:", del=False, key="basics-class", choices=([""] ++ Dict.keys classes)},
+  DropdownField {name="Role:", del=False, key="basics-role", choices=([""] ++ Dict.keys roles)},
   FreeformField {name="Custom Skill:", del=False, key="basics-skill"},
   FreeformField {name="Custom Trick:", del=False, key="basics-trick"},
   FreeformField {name="Complication:", del=False, key="basics-comp"}]

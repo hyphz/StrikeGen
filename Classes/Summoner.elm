@@ -5,6 +5,7 @@ import FormsModel exposing (..)
 import PowerUtilities exposing (..)
 import Dict
 import List
+import String
 
 type SummonType = Elemental | Fey | Angel | Demon | Greater
 
@@ -157,9 +158,16 @@ classSummoner = { name = "Summoner",
 modifyRally : Model -> Power -> Power
 modifyRally m p = {p | text = overtext m "SummonerRally"}
 
+eggpower m = case (getResponse m "basics-name") of
+  Nothing -> []
+  Just x -> if ((String.toLower x) == "bmx bandit") then
+    [Power "BMX Bandit" "You are quite good on your BMX." Misc None 0 0 0 White]
+  else []
+
 
 powers m = [quickPower "Blurred Form" Attack AtWill 0 0 2 Green m,
             quickPower "Primal Compulsion" Attack AtWill 10 0 2 Green m] ++
+            eggpower m ++
             case (getResponse m "shaper-type") of
               Just "One-Form" -> [quickSpecial "One Form Shaper" m]
               Just "Multi-Form" -> [quickSpecial "Multi Form Shaper" m]

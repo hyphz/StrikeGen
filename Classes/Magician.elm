@@ -4,6 +4,7 @@ import ModelDB exposing (..)
 import FormsModel exposing (..)
 import Dict exposing (..)
 import PowerUtilities exposing (..)
+import String
 
 
 classMagician : Class
@@ -173,12 +174,18 @@ bloodForm m =
   ++ atLevelList m 7 [powerChoiceField m "Major:" "mage-maj1" majspells]
   ++ [powerChoiceField m "Reserve:" "mage-res" encspells]
 
+eggpower m = case (getResponse m "basics-name") of
+  Nothing -> []
+  Just x -> if ((String.toLower x) == "master mike") then
+    [Power "Game Balance" "All your enemies are immediately Taken Out. All team and individual Strikes accumulated by your allies are removed. After using this power, you fall asleep for 8 hours." Attack Encounter 0 0 0 Purple]
+  else []
+
 
 powers m = chosenaws m ++ (case (getResponse m "mage-source") of
                              Just "Star" -> starPowers m
                              Just "Chaos" -> chaosPowers m
                              Just "Blood" -> bloodPowers m
-                             _ -> [])
+                             _ -> []) ++ eggpower m
 
 
 
