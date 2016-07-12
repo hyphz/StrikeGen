@@ -10,6 +10,7 @@ classBombardier : Class
 classBombardier = { name = "Bombardier",
                classPowerList = powers,
                classForms = forms,
+               classPowerBlocks = \m -> [],
                modifyBasicMelee = Just modifyBasicMelee,
                modifyBasicRange = Just modifyBasicRange,
                modifyRally = Nothing,
@@ -53,7 +54,7 @@ l1atwills m = powerDict m [
     (quickPower "Slime Bomb" Misc AtWill 0 0 0 Green),
     (quickPower "Hot Bomb" Misc AtWill 0 0 0 Green)]
 
-l1awchosen m = [quickPower "Grenade" Attack AtWill 10 0 (atWillDamage m) Green m] ++ 
+l1awchosen m = [quickPower "Grenade" Attack AtWill 10 0 (atWillDamage m) Green m] ++
  powerlookup m "bombard-aw1" l1atwills ++ powerlookup m "bombard-aw2" l1atwills
 
 l1encounters m = powerDict m [

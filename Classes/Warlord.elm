@@ -9,6 +9,7 @@ classWarlord : Class
 classWarlord = { name = "Warlord",
                classPowerList = powers,
                classForms = forms,
+               classPowerBlocks = \m -> [],
                modifyBasicMelee = Just modifyBasicMelee,
                modifyBasicRange = Just modifyBasicRange,
                modifyRally = Nothing,

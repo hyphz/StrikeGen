@@ -9,6 +9,7 @@ classDuelist : Class
 classDuelist = { name = "Duelist",
                classPowerList = powers,
                classForms = forms,
+               classPowerBlocks = \m -> [],
                modifyBasicMelee = Just modifyBasicMelee,
                modifyBasicRange = Just modifyBasicRange,
                modifyRally = Nothing,

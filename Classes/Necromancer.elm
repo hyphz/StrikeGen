@@ -10,6 +10,7 @@ classNecro : Class
 classNecro = { name = "Necromancer",
                classPowerList = necroPowers,
                classForms = necroForms,
+               classPowerBlocks = \m -> [],
                modifyBasicMelee = Just necroBasicMelee,
                modifyBasicRange = Just necroBasicRange,
                modifyCharge = Nothing,

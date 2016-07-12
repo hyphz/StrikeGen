@@ -181,6 +181,15 @@ powerCards : Model -> Html Msg
 powerCards model =
     div [Html.Attributes.class "powercards"] (List.map powerCard (List.sortBy powerOrder (TacticalModel.getPowers model)))
 
+powerBlock : PowerBlock -> Html Msg
+powerBlock block =
+  div [Html.Attributes.class "powerblock"]
+  [div [Html.Attributes.class "powerblocktitle"] [text block.name],
+  div [Html.Attributes.class "powercards"] (List.map powerCard block.powers)]
+
+powerBlocks : Model -> Html Msg
+powerBlocks m = div [Html.Attributes.class "powerblocks"] (List.map powerBlock (TacticalModel.getPowerBlocks m))
+
 
 fileops : Html Msg
 fileops = select [(Html.Events.on "change" (targetAndWrap FileCommand)),Html.Attributes.id "fileops"]
@@ -196,4 +205,4 @@ formsDisplay model = div [] ([fileops] ++ (List.map (formDisplay model) (getForm
 
 view : Model -> Html Msg
 view model = div [] [div [Html.Attributes.class "forms"] [formsDisplay model],
-                     div [Html.Attributes.class "sheet"] [skillTable model, powerCards model]]
+                     div [Html.Attributes.class "sheet"] [skillTable model, powerCards model, powerBlocks model]]

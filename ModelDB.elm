@@ -76,10 +76,16 @@ type alias Power =
     damage : Int,
     styl : PowerStyle }
 
+
+type alias PowerBlock =
+  { name : String,
+    powers : List Power }
+
 type alias Class =
   { name : String,
     classPowerList : (Model -> List Power),
     classForms : (Model -> List Form),
+    classPowerBlocks : (Model -> List PowerBlock),
     modifyBasicMelee : Maybe (Model -> Power -> Power),
     modifyBasicRange : Maybe (Model -> Power -> Power),
     modifyCharge : Maybe (Model -> Power -> Power),

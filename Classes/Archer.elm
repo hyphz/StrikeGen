@@ -9,6 +9,7 @@ classArcher : Class
 classArcher = { name = "Archer",
                classPowerList = powers,
                classForms = forms,
+               classPowerBlocks = \m -> [],
                modifyBasicMelee = Just archerBasicMelee,
                modifyBasicRange = Just archerBasicRange,
                modifyRally = Nothing,

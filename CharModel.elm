@@ -401,7 +401,7 @@ powerMacro power =
 {-| Create the power macro data file for export. -}
 powerMacros : Model -> String
 powerMacros model =
-  String.concat (List.map powerMacro (TacticalModel.getPowers model))
+  String.concat (List.map powerMacro (TacticalModel.getAllPowers model))
 
 
 

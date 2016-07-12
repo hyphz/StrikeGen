@@ -761,7 +761,7 @@ until it takes damage or until an ally spends an Attack Action to wake it while 
 **Effect:** Target is Blinded until the end of its next turn.
 @@Hura'sHastyRipening
 **Effect:** All of the target's attacks have their damage reduced by 2 (save ends).
-@@Hozrul'sEfficaciousCantrip
+@@Hozrul'sEfficaciousCaltrop
 **Effect:** Teleport two squares, making note of the square you used this power in.
 When any creature enters that square, it and all creatures adjacent to the square take
 4 damage.

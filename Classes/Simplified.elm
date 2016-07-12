@@ -8,6 +8,7 @@ classSimplified : Class
 classSimplified = { name = "Simplified Class",
                classPowerList = powers,
                classForms = forms,
+               classPowerBlocks = \m -> [],
                modifyBasicMelee = Just simpleBasicMelee,
                modifyBasicRange = Just simpleBasicRange,
                modifyRally = Nothing,

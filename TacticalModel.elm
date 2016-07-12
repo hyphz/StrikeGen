@@ -116,6 +116,12 @@ basicPowers m = [pmeleeBasic m, prangedBasic m, pcharge m, pRally m, pAssess]
 classPowers : Model -> List Power
 classPowers m = indirectLookup m "basics-class" classes (\x -> x.classPowerList m) [] []
 
+classPowerBlocks : Model -> List PowerBlock
+classPowerBlocks m = indirectLookup m "basics-class" classes (\x -> x.classPowerBlocks m) [] []
+
+allClassPowers : Model -> List Power
+allClassPowers m = classPowers m ++ List.concatMap .powers (classPowerBlocks m)
+
 rolePowers : Model -> List Power
 rolePowers m = indirectLookup m "basics-role" roles (\x -> x.rolePowerList m) [] []
 
@@ -125,3 +131,9 @@ tacticalForms m = (indirectLookup m "basics-class" classes (\x -> x.classForms m
 
 getPowers : Model -> List Power
 getPowers m = basicPowers m ++ classPowers m ++ rolePowers m
+
+getPowerBlocks : Model -> List PowerBlock
+getPowerBlocks m = classPowerBlocks m
+
+getAllPowers : Model -> List Power
+getAllPowers m = basicPowers m ++ allClassPowers m ++ rolePowers m

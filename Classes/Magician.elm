@@ -10,6 +10,7 @@ classMagician : Class
 classMagician = { name = "Magician",
                classPowerList = powers,
                classForms = forms,
+               classPowerBlocks = powerBlocks,
                modifyBasicMelee = Just modifyBasicMelee,
                modifyBasicRange = Just modifyBasicRange,
                modifyRally = Just modifyRally,
@@ -73,10 +74,6 @@ starPowers m =
     ++ atLevelList m 5 (majlookup m "mage-maj1")
     ++ atLevelList m 7 (enclookup m "mage-enc7" ++ majlookup m "mage-maj2")
     ++ atLevelList m 9 (majlookup m "mage-maj3")
-    ++ (if ((getLevel m) >= 9) then
-          List.map (decorate "Reserve") (majlookup m "mage-mres")
-        else
-          List.map (decorate "Reserve") (enclookup m "mage-res"))
 
 
 chaosEncounterKeys m =
@@ -88,6 +85,18 @@ chaosMajorKeys m =
     ++ atLevel m 7 "mage-maj2"
     ++ atLevel m 9 "mage-maj3"
 
+reserveBlock m =
+  if (((getResponse m "mage-source") == Just "Star") && ((getLevel m) >= 9)) then
+    {name="Reserve Spell",powers=majlookup m "mage-mres"}
+  else
+    {name="Reserve Spell",powers=enclookup m "mage-res"}
+
+
+powerBlocks m =
+  [reserveBlock m] ++
+    (if (getResponse m "mage-source") == Just "Chaos" then [chaosSurgeBlock m] else []) ++
+    (if (getResponse m "mage-source") == Just "Blood" then bloodCurseBlock m else [])
+
 chaosSurges m chosenkeys mainlist =
   let
     slist = Dict.keys mainlist
@@ -95,26 +104,30 @@ chaosSurges m chosenkeys mainlist =
     unpickedkeys = List.filter (\x -> not (List.member (Just x) choices)) slist
     unpickedspells = List.concatMap (\x -> (mayList (Dict.get x mainlist))) unpickedkeys
   in
-    List.map (decorate "Surge") unpickedspells
+    unpickedspells
 
+chaosSurgeBlock m =
+       if ((getLevel m) < 9) then
+         {name="Chaos Surges", powers=chaosSurges m ((chaosEncounterKeys m) ++ ["mage-res"]) (encspells m)}
+       else
+         {name="Chaos Surges", powers=chaosSurges m (chaosMajorKeys m) (majspells m)}
 
 chaosPowers m =
     [levelTextSpecial "Chaos Magic" [1, 3, 5, 7, 9] m] ++
     List.concatMap (enclookup m) ((chaosEncounterKeys m)) ++
-    List.concatMap (majlookup m) (chaosMajorKeys m) ++
-    List.map (decorate "Reserve") (enclookup m "mage-res")
-    ++ (if ((getLevel m) < 9) then
-          chaosSurges m ((chaosEncounterKeys m) ++ ["mage-res"]) (encspells m)
-        else
-          chaosSurges m (chaosMajorKeys m) (majspells m))
+    List.concatMap (majlookup m) (chaosMajorKeys m)
+
+bloodCurseBlock m =
+  if ((getLevel m) < 5) then []
+    else [{name="Blood Curse",powers=majlookup m "mage-bc"}]
+
+
 
 bloodPowers m =
     [levelTextSpecial "Blood Magic" [1, 5, 7, 9] m] ++
     enclookup m "mage-enc1"
     ++ atLevelList m 3 (enclookup m "mage-enc2")
-    ++ atLevelList m 5 (List.map (decorate "Blood Curse") (majlookup m "mage-bc"))
     ++ atLevelList m 7 (enclookup m "mage-maj1")
-    ++ List.map (decorate "Reserve") (enclookup m "mage-res")
 
 
 

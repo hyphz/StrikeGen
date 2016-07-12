@@ -73,14 +73,14 @@ shapes =
   in
     Dict.fromList (List.map shapepair [tortoise, bull, hawk, mammoth, viper, kraken])
 
-shapePowers m k =
+shapePowerBlock m k =
   case (getResponse m k) of
     Nothing -> []
     Just shapeName -> case (Dict.get shapeName shapes) of
-      Nothing -> [quickSpecial "Undefined Shape??" m]
-      Just shape -> [shape.transform m, shape.special m, shape.atwill1 m, shape.atwill2 m] ++
+      Nothing -> []
+      Just shape -> [{name=shapeName,powers = [shape.transform m, shape.special m, shape.atwill1 m, shape.atwill2 m] ++
         atLevel m 3 (shape.l3enc m) ++
-        atLevel m 7 (shape.l7enc m)
+        atLevel m 7 (shape.l7enc m)}]
 
 
 shapeChoiceField : Model -> String -> String -> (Dict.Dict String Shape) -> Field
@@ -88,9 +88,10 @@ shapeChoiceField m name key list =
   DropdownField { name=name, del=False, key=key, choices=[""] ++ (Dict.keys (list)) }
 
 classShapechanger : Class
-classShapechanger = { name = "Bombardier",
+classShapechanger = { name = "Shapechanger",
                classPowerList = powers,
                classForms = forms,
+               classPowerBlocks = powerBlocks,
                modifyBasicMelee = Just modifyBasicMelee,
                modifyBasicRange = Just modifyBasicRange,
                modifyRally = Just modifyRally,
@@ -112,11 +113,16 @@ modifyRally m p = case (getResponse m "shaper-type") of
 
 powers m = [quickPower "Blurred Form" Attack AtWill 0 0 2 Green m,
             quickPower "Primal Compulsion" Attack AtWill 10 0 2 Green m] ++
-               case (getResponse m "shaper-type") of
-                 Just "One-Form" -> [quickSpecial "One Form Shaper" m] ++ shapePowers m "shaper-shape1"
-                 Just "Multi-Form" -> [quickSpecial "Multi Form Shaper" m] ++
-                  shapePowers m "shaper-shape1" ++ shapePowers m "shaper-shape2" ++ shapePowers m "shaper-shape3"
-                 _ -> []
+            case (getResponse m "shaper-type") of
+              Just "One-Form" -> [quickSpecial "One Form Shaper" m]
+              Just "Multi-Form" -> [quickSpecial "Multi Form Shaper" m]
+              _ -> []
+
+
+powerBlocks m = case (getResponse m "shaper-type") of
+  Just "One-Form" -> shapePowerBlock m "shaper-shape1"
+  Just "Multi-Form" -> List.concatMap (\x -> shapePowerBlock m x) ["shaper-shape1", "shaper-shape2", "shaper-shape3"]
+  _ -> []
 
 forms m = [Form False "Shapechanger" ([
   DropdownField {name="Type:",key="shaper-type",del=False,choices=["","Multi-Form","One-Form"]}]
