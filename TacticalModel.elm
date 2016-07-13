@@ -9,6 +9,7 @@ import Classes.Magician exposing (classMagician)
 import Classes.Bombardier exposing (classBombardier)
 import Classes.Summoner exposing (classSummoner)
 import Classes.Shapechanger exposing (classShapechanger)
+import Classes.Buddies exposing (classBuddies)
 import Roles.Striker exposing (roleStriker)
 import Roles.Leader exposing (roleLeader)
 import Roles.Defender exposing (roleDefender)
@@ -22,6 +23,7 @@ import Dict exposing (Dict)
 classes : Dict String Class
 classes = Dict.fromList [("Archer",classArcher),
                          ("Bombardier",classBombardier),
+                         ("Buddies",classBuddies),
                          ("Duelist",classDuelist),
                          ("Martial Artist",classMA),
                          ("Magician",classMagician),
