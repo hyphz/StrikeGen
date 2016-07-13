@@ -1508,3 +1508,421 @@ turn, it is Taken Out.
 @@Kraken'sTransformation
 **Effect:** Target is Grabbed. If it does not escape on its next turn, it is also Restrained
 until it escapes the Grab.
+@@Summoning1+
+In each encounter you may summon one Elemental or Fey, one Angel or Daemon, and one Greater
+Being, regardless of how many such powers you know. You may spend a Move action to command
+all your summoned creatures to take a Move action. When you summon a creature, you gain
+access to its associated at-will power; when you use it, you treat the creature as the origin
+of the power. Summoned creatures have Basic Attacks, count as allies, and can take advantage
+of Opportunities. You gain your Role Boost when making attacks through the summoned creatures.
+When a summoned creature reaches 0 HP, it is Taken Out and you take one Strike.
+
+Your summoned creatures deal 2 damage with their basic attacks.
+@@Summoning5+
+In each encounter you may summon one Elemental or Fey, one Angel or Daemon, and one Greater
+Being, regardless of how many such powers you know. You may spend a Move action to command
+all your summoned creatures to take a Move action. When you summon a creature, you gain
+access to its associated at-will power; when you use it, you treat the creature as the origin
+of the power. Summoned creatures have Basic Attacks, count as allies, and can take advantage
+of Opportunities. You gain your Role Boost when making attacks through the summoned creatures.
+When a summoned creature reaches 0 HP, it is Taken Out and you take one Strike.
+
+Your summoned creatures deal 3 damage with their basic attacks.
+@@SummonerRally
+No action. You may only use this on your turn, but you may use at any point
+in your turn, even while Incapacitated, Dominated, or under any other Status. Spend
+an Action Point. Regain 4 Hit Points and choose one:
+
+* Restore 5 Hit Points to a summoned creature;
+* Change the Focus of your Angel or Daemon;
+* Spend an Attack Action to re-use the Summon power of an existing Elemental or Fey.
+The existing Elemental or Fey moves to the new location but does not restore its hit
+points.
+@@Punisher
+**Effect:** Conjure a spirit in a square adjacent to the target. It lasts until the end
+of your next turn. You can take advantage of enemy Opportunities as though you were in
+that square.
+@@Scout
+**Effect:** Conjure a spirit in a square adjacent to the target. It lasts
+until the end of your next turn. You can see as though you were
+in the spirit’s square. Any ally that enters its square may teleport
+4 squares.
+@@Trooper
+**Effect:** Conjure a spirit in a square adjacent to the target. It lasts
+until the end of your next turn. Any enemy that enters a square
+adjacent to the spirit or the spirit’s square takes 3 damage.
+@@Shadow
+**Effect:** Conjure a spirit in a square adjacent to the target. It lasts
+until the end of your next turn. Enemies may not occupy the
+same square as the spirit. Allies that share the square are concealed.
+@@SummonFireElemental
+**Special:** Summon a Fire Elemental within 10 squares. Make this
+attack using the Elemental as the source.
+**Effect:** 2 damage to each creature adjacent to the Elemental.
+@@ElementalFlare
+**Effect:** Ongoing 1 Damage (save ends).
+@@FireElemental1+
+5 HP, Speed 6.
+
+Any enemy that enters a square adjacent to the Elemental or that
+ends its turn there takes 1 damage. Any creature within 5 squares of
+the Fire Elemental that deals damage to it takes 1 damage.
+@@FireElemental5+
+5 HP, Speed 6.
+
+Any enemy that enters a square within 2 of the Elemental or that
+ends its turn in such a square takes 1 damage. Any creature within 5 squares of
+the Fire Elemental that deals damage to it takes 1 damage.
+@@FireElemental9+
+5 HP, Speed 6.
+
+Any enemy that enters a square within 3 of the Elemental or that
+ends its turn in such a square takes 1 damage. Any creature within 5 squares of
+the Fire Elemental that deals damage to it takes 1 damage.
+@@SummonWaterElemental
+**Special:** Summon a Water Elemental within 10 squares. Make
+this attack using the Elemental as the source.
+**Effect:** Target makes a Saving Throw. If it fails, it is Incapacitated
+until the end of its next turn.
+@@Drowning
+**Effect:** Target makes a Saving Throw. If it fails, it is Dazed (save
+ends).
+@@WaterElemental1+
+5 HP, Speed 6.
+
+The Elemental’s square and all adjacent squares are obscured.
+The Elemental’s attacks ignore the obscuring.
+
+If an attack misses the Elemental, it may shift one square.
+@@WaterElemental5+
+5 HP, Speed 6.
+
+The Elemental’s square and all squares within 2 are obscured.
+The Elemental’s attacks ignore the obscuring.
+
+If an attack misses the Elemental, it may shift one square.
+@@WaterElemental9+
+5 HP, Speed 6.
+
+The Elemental’s square and all squares within 3 are obscured.
+The Elemental’s attacks ignore the obscuring.
+
+If an attack misses the Elemental, it may shift one square.
+@@SummonAirElemental
+**Special:** Summon an Air Elemental within 10 squares. Make this
+attack using the Elemental as the source.
+**Effect:** Slide the target 6 squares.
+@@Whirlwind
+**Effect:** Pull each creature in Burst 2 to a square adjacent the Elemental.
+@@AirElemental1+
+5 HP, Speed 6.
+All squares within 2 of the Air Elemental are Difficult Terrain, even
+for Flying creatures, but not for the Elemental itself.
+
+The Air Elemental is Invisible. Its location is only revealed when it
+attacks.
+@@AirElemental5+
+5 HP, Speed 6.
+All squares within 3 of the Air Elemental are Difficult Terrain, even
+for Flying creatures, but not for the Elemental itself.
+
+The Air Elemental is Invisible. Its location is only revealed when it
+attacks.
+@@AirElemental9+
+5 HP, Speed 6.
+All squares within 4 of the Air Elemental are Difficult Terrain, even
+for Flying creatures, but not for the Elemental itself.
+
+The Air Elemental is Invisible. Its location is only revealed when it
+attacks.
+@@SummonEarthElemental
+**Special:** Summon an Earth Elemental within 10 squares. Make this attack
+using the Elemental as the source.
+
+**Effect:** Knock the target Prone.
+@@Quake
+**Effect:** Target is Slowed (save ends).
+@@EarthElemental1+
+5 HP, Speed 6.
+
+If a creature attempts to leave a square adjacent the Elemental it must make
+a saving throw. If it fails, it falls Prone.
+
+The Earth Elemental has Resist 1 damage.
+@@EarthElemental5+
+5 HP, Speed 6.
+
+If a creature attempts to leave a square within 2 of the Elemental it must make
+a saving throw. If it fails, it falls Prone.
+
+The Earth Elemental has Resist 1 damage.
+@@EarthElemental9+
+5 HP, Speed 6.
+
+If a creature attempts to leave a square within 3 of the Elemental it must make
+a saving throw. If it fails, it falls Prone.
+
+The Earth Elemental has Resist 1 damage.
+@@SummonNymph
+**Special:** Summon a Nymph within 10 squares. Make this attack using the Nymph as
+the source.
+**Effect:** On its next turn, the target may not make any movements that take it
+further from the Nymph.
+@@InnocentCharm
+**Effect:** If the target attacks the Nymph on its next turn, it takes 3 damage.
+@@Nymph1+
+5 HP, Speed 6.
+
+At the end of your turn, pick one creature within 10 squares of the Nymph.
+That creature is Marked by the Nymph until the end of its next turn.
+@@Nymph5+
+5 HP, Speed 6.
+
+At the end of your turn, pick two creatures within 10 squares of the Nymph.
+Those creatures are Marked by the Nymph until the end of their next turns.
+@@Nymph9+
+5 HP, Speed 6.
+
+At the end of your turn, pick three creatures within 10 squares of the Nymph.
+Those creatures are Marked by the Nymph until the end of their next turns.
+@@SummonFeegles
+**Special:** Summon ten Feegles within 10 squares. Make this attack using one
+Feegle as the source.
+
+**Effect:** Push each enemy a number of squares equal to the number of adjacent
+Feegles, in a direction away from any one of those adjacent Feegles.
+@@Crivens!
+**Effect:** 2 damage to each *different* enemy with at least four Feegles adjacent.
+@@Feegle1+
+1 HP, Speed 6.
+
+Feegles do not have Basic Attacks and cannot take Opportunities. You take a Strike
+only if all Feegles are taken out.
+
+At the end of your turn, pick one creature adjacent to at least one Feegle. That
+creature cannot shift and loses speed equal to the number of adjacent Feegles until
+the end of its next turn.
+@@Feegle5+
+1 HP, Speed 6.
+
+Feegles do not have Basic Attacks and cannot take Opportunities. You take a Strike
+only if all Feegles are taken out.
+
+At the end of your turn, pick two creatures each adjacent to at least one Feegle. Those
+creatures cannot shift and lose speed equal to the number of adjacent Feegles until
+the end of their next turns.
+@@Feegle9+
+1 HP, Speed 6.
+
+Feegles do not have Basic Attacks and cannot take Opportunities. You take a Strike
+only if all Feegles are taken out.
+
+At the end of your turn, pick three creatures each adjacent to at least one Feegle. Those
+creatures cannot shift and lose speed equal to the number of adjacent Feegles until
+the end of their next turns.
+@@SummonerRallyFeegles
+No action. You may only use this on your turn, but you may use at any point
+in your turn, even while Incapacitated, Dominated, or under any other Status. Spend
+an Action Point. Regain 4 Hit Points and choose one:
+
+* Restore 5 Hit Points to a summoned creature;
+* Revive 5 fallen Feegles;
+* Change the Focus of your Angel or Daemon;
+* Spend an Attack Action to re-use the Summon power of an existing Elemental or Fey.
+The existing Elemental or Fey moves to the new location but does not restore its hit
+points.
+@@SummonWisp
+**Special:** Summon a Wisp within 10 squares. Make this attack using the Wisp as a
+source.
+
+**Effect:** Pick one ally within 10 squares. The target cannot see that ally (save ends).
+@@Trick
+**Effect:** If the creature starts its turn adjacent to the Wisp, it takes 2 damage.
+@@Wisp1+
+5 HP, Speed 6.
+
+When the Wisp is hit by an attack, it teleports 6 squares as a Reaction.
+
+At the end of your turn, pick one creature within 5 squares of the Wisp. Pull
+that creature 3 squares.
+@@Wisp5+
+5 HP, Speed 6.
+
+When the Wisp is hit by an attack, it teleports 6 squares as a Reaction.
+
+At the end of your turn, pick two creatures within 5 squares of the Wisp. Pull
+those creatures 3 squares.
+@@Wisp9+
+5 HP, Speed 6.
+
+When the Wisp is hit by an attack, it teleports 6 squares as a Reaction.
+
+At the end of your turn, pick three creatures within 5 squares of the Wisp. Pull
+those creatures 3 squares.
+@@SummonRedCap
+**Special:** Summon a Red Cap within 10 squares. Make this attack using the Red
+Cap as the source.
+
+**Effect:** When the target is Taken Out, the Red Cap deals 3 damage to each adjacent
+creature.
+@@MarkedforDeath
+**Effect:** When the target is Taken Out, increase the damage the Red Cap does at
+the end of your turn by 1.
+@@RedCap1+
+When any enemy is Taken Out, the Red Cap gains 2 Buffer Points.
+
+At the end of your turn, pick one creature within 10 squares of the Red Cap. That
+creature takes 1 damage.
+@@RedCap5+
+When any enemy is Taken Out, the Red Cap gains 2 Buffer Points.
+
+At the end of your turn, pick two creatures within 10 squares of the Red Cap. Those  
+creatures take 1 damage.
+@@RedCap9+
+When any enemy is Taken Out, the Red Cap gains 2 Buffer Points.
+
+At the end of your turn, pick three creatures within 10 squares of the Red Cap. Those  
+creature take 1 damage.
+@@SummonAngelofProtection
+**Trigger:** You or an ally take damage.
+
+Summon an Angel of Protection adjacent to the triggering damaged character. That
+character becomes the Angel's Focus. They take no damage.
+@@SummonAngelofVengeance
+**Trigger:** You or an ally take damage from an enemy.
+
+Summon an Angel of Vengeance adjacent to the triggering damaged character. That
+character becomes the Angel's Focus. The triggering enemy takes 3 damage.
+@@SummonAngelofHealing
+**Trigger:** You or an ally take damage.
+
+Summon an Angel of Healing adjacent to the triggering damaged character. That
+character becomes the Angel's Focus. They gain 2 Buffer points.
+@@AngelofProtection
+5 HP, Speed 6.
+
+The Angel of Protection follows their Focus. When the Focus moves, the Angel shifts
+to a square adjacent. While the Angel is adjacent, the Focus has Resist 2 damage,
+but each time this resistance is triggered, the Angel takes 1 damage.
+@@AngelofVengeance
+5 HP, Speed 6.
+
+The Angel of Vengeance follows their Focus. When the Focus moves, the Angel shifts
+to a square adjacent. While the Angel is adjacent, whenever the Focus takes damage,
+the creature that damaged them takes 2 damage.
+@@AngelofHealing
+5 HP, Speed 6.
+
+The Angel of Healing follows their Focus. When the Focus moves, the Angel shifts
+to a square adjacent. While the Angel is adjacent, whenever the Focus starts their
+turn they gain 2 Buffer points.
+@@ProtectiveSmite
+**Effect:** Target has Disadvantage to attack the Focus (save ends).
+@@VengefulSmite
+**Effect:** Each time the target attacks the Focus, it takes 2 damage (save ends).
+@@HealingSmite
+**Effect:** The Focus regains 2 Hit Points.
+@@SummonDaemonofWrath
+**Trigger:** An enemy takes damage.
+
+Summon a Daemon of Wrath adjacent to the triggering enemy. That enemy becomes the
+Daemon's Focus. The Focus takes an additional 3 damage.
+@@SummonDaemonofSloth
+**Trigger:** An enemy moves.
+
+Summon a Daemon of Sloth adjacent to the triggering enemy. That enemy becomes the
+Daemon's Focus. The Focus is immobilized (save ends).
+@@SummonDaemonOfPride
+**Trigger:** An enemy makes an attack.
+
+Summon a Daemon of Pride adjacent to the triggering enemy. That enemy becomes the
+Daemon's Focus. The Focus has Disadvantage on the attack and grants an Opportunity
+to any adjacent creatures.
+@@DaemonofWrath
+5 HP, Speed 6.
+
+The Daemon of Wrath follows the Focus. When the Focus moves, the Daemon shifts to a
+square adjacent. When the Focus is Taken Out, you may choose a new Focus for the
+Daemon. While the Daemon is adjacent, the Focus has Vulnerable 1 damage.
+@@DaemonofSloth
+5 HP, Speed 6.
+
+The Daemon of Sloth follows the Focus. When the Focus moves, the Daemon shifts to a
+square adjacent. When the Focus is Taken Out, you may choose a new Focus for the
+Daemon. While the Daemon is adjacent, the Focus's speed is halved (round down) and
+it may not shift.
+@@DaemonofPride
+5 HP, Speed 6.
+
+The Daemon of Pride follows the Focus. When the Focus moves, the Daemon shifts to a
+square adjacent. When the Focus is Taken Out, you may choose a new Focus for the
+Daemon. While the Daemon is adjacent, the Focus' attacks grant Opportunities to all
+adjacent creatures.
+@@WrathfulClaw
+**Effect:** The next attack against the target has Advantage.
+@@SlothfulStupor
+**Effect:** Target is slowed (save ends).
+@@PridefulArrogance
+**Effect:** The target is Distracted until the end of its next turn.
+@@SummonTheMother
+**Special:** Summon The Mother within 10 squares. She spawns 5 Brats in adjacent
+squares. You do not control the Brats and they do not count as allies, but you may
+determine how they use their ability at the end of each of your turns.
+@@Spawn
+Spawn 3 Brats adjacent to the Mother.
+@@TheMother
+The Mother: 10 HP, 2x2, Speed 0. At the end of your turn, The Mother spawns 2 Brats
+in an adjacent square. They may use their ability immediately.
+
+Brats: 1 HP, Speed 8. At the end of your turn, each Brat moves up to its speed and
+attacks an adjacent enemy. Roll a die. On 3-6 it does 2 damage. Or 1-2 it does 1
+damage.
+@@SummonTheVoice
+**Special:** Summon The Voice. It does not occupy a space. Make this attack against
+any enemy you can see, using The Voice as the source.
+
+**Effect:** Target must make a Saving Throw. If it succeeds, it is Dazed (save ends).
+If it fails, it is Dominated (save ends).
+@@Confusion
+**Effect:** If the target has a Role Action, you may choose how it uses it on its next
+turn. You may choose how it uses its Miss Trigger. If the Miss Trigger affects you
+or your allies, it may be redirected onto enemies instead. It does not take
+Opportunities against its enemies, but it does against its allies. (Save ends all)
+@@TheVoice
+The Voice has no physical body and cannot be attacked. It is Taken Out when you are.
+
+At the end of your turn, pick one enemy. That enemy must make a Basic Attack or a
+Charge against another enemy.
+@@SummonTheStrangler
+**Special:** Summon the Strangler within 10 squares. Make this attack using the
+Strangler as the source. It has reach 2.
+
+**Effect:** Target is Grabbed and Restrained (by The Strangler) until it escapes.
+@@Constrict
+Reach 2.
+
+**Effect:** If the target is Grabbed by The Strangler, it takes 3 additional damage
+and has Disadvantage on its next Saving Throw to escape. Otherwise, the target is
+Grabbed.
+@@TheStrangler
+10 HP, Speed 4, Reach 2. The Strangler may maintain any number of Grabs.
+
+At the end of your turn, The Strangler may Grab one creature within its reach.
+@@SummonContagion
+**Special:** Summon Contagion within 10 squares. Make this attack using Contagion as
+the source.
+
+**Effect:** Target must make a Saving Throw. If it fails, it is Infected until the
+end of the encounter. If it succeeds, it is Infected (save ends).
+@@WorseningPlague
+**Effect:** The Ongoing Damage associated with your Infection increases by 1.
+@@Contagion
+10 HP, Speed 6.
+
+Infected creatures take Ongoing 2 Damage and are Weakened.
+
+When any enemy that is not Infected starts its turn adjacent to an Infected creature
+or to Contagion, it must make a Saving Throw. If it fails, it becomes Infected
+(save ends) but does not take the Ongoing Damage that turn.
+
+At the end of your turn, Contagion may infect one adjacent creature.

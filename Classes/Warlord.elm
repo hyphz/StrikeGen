@@ -69,7 +69,7 @@ l7echosen m = powerlookup m "warlord-enc7" l7encounters
 
 eggpower m = case (getResponse m "basics-name") of
   Nothing -> []
-  Just x -> if ((String.toLower x) == "master mike") then
+  Just x -> if ((String.toLower x) == "master mike!") then
     [Power "Wallace's Shout" "Shout at target creature. Its hand grows back." Attack AtWill 5 0 0 Green]
   else []
 

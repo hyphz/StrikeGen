@@ -7,6 +7,7 @@ import Classes.Simplified exposing (classSimplified)
 import Classes.Warlord exposing (classWarlord)
 import Classes.Magician exposing (classMagician)
 import Classes.Bombardier exposing (classBombardier)
+import Classes.Summoner exposing (classSummoner)
 import Classes.Shapechanger exposing (classShapechanger)
 import Roles.Striker exposing (roleStriker)
 import Roles.Leader exposing (roleLeader)
@@ -27,6 +28,7 @@ classes = Dict.fromList [("Archer",classArcher),
                          ("Necromancer",classNecro),
                          ("Shapechanger",classShapechanger),
                          ("Simplified",classSimplified),
+                         ("Summoner",classSummoner),
                          ("Warlord",classWarlord)
                          ]
 

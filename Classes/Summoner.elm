@@ -116,34 +116,51 @@ allSummons = [fire, water, air, earth, nymph, feegles, wisp, redcap, aprot, aven
 summonToPair : Summon -> (String, Summon)
 summonToPair s = (s.name, s)
 
-allSummonsDict = List.map summonToPair allSummons
+allSummonsDict = Dict.fromList (List.map summonToPair allSummons)
 
-typeSummonsDict k = List.map summonToPair (List.filter (\x -> x.kind == k) allSummons)
+typeSummonsDict k = Dict.fromList (List.map summonToPair (List.filter (\x -> x.kind == k) allSummons))
 
 summonTypeNames = Dict.fromList [("Elementals",Elemental),("Fey",Fey),("Angels",Angel),("Daemons",Demon)]
-
-summonPowerBlock m k =
-  case (getResponse m k) of
-    Nothing -> []
-    Just summonName -> case (Dict.get summonName allSummonsDict) of
-      Nothing -> []
-      Just summon -> [{name=summonName,
-        powers = [summon.summon m, summon.atwill m, summon.creature m]}]
 
 typePrefix t = case t of
   Elemental -> "summon-e"
   Fey -> "summon-f"
   Angel -> "summon-a"
   Demon -> "summon-d"
+  Greater -> "summon-g"
 
+singularName t = case t of
+  Elemental -> "Elemental:"
+  Fey -> "Faery:"
+  Angel -> "Angel:"
+  Demon -> "Daemon:"
+  Greater -> "Greater:"
+
+summonFieldName t ind = ((typePrefix t) ++ toString ind)
 
 summonChoiceField m typelookup index =
   case (getResponse m typelookup) of
     Nothing -> []
-    Just typeName -> case (Dict.get summonTypeNames typeName) of
+    Just typeName -> case (Dict.get typeName summonTypeNames) of
       Nothing -> []
-      Just summonType -> powerChoiceField m "Summon:" ((typePrefix summonType) ++ toString index) (typeSummonsDict summonType)
+      Just summonType -> summonChoiceFieldDirect m summonType index
 
+summonChoiceFieldDirect m summonType index =
+  [DropdownField {name=(singularName summonType),del=False,key=(summonFieldName summonType index),choices=[""] ++ (Dict.keys (typeSummonsDict summonType))}]
+
+summonPowerBlock m typelookup index =
+  case (getResponse m typelookup) of
+    Nothing -> []
+    Just typeName -> case (Dict.get typeName summonTypeNames) of
+      Nothing -> []
+      Just summonType -> summonPowerBlockDirect m summonType index
+
+summonPowerBlockDirect m summonType index =
+    case (getResponse m (summonFieldName summonType index)) of
+      Nothing -> []
+      Just summonName -> case (Dict.get summonName allSummonsDict) of
+        Nothing -> []
+        Just summon -> [PowerBlock summonName [summon.summon m, summon.atwill m, summon.creature m]]
 
 classSummoner : Class
 classSummoner = { name = "Summoner",
@@ -156,28 +173,44 @@ classSummoner = { name = "Summoner",
                modifyCharge = Nothing }
 
 modifyRally : Model -> Power -> Power
-modifyRally m p = {p | text = overtext m "SummonerRally"}
+modifyRally m p =
+  if ((getResponse m "summon-type1" == Just "Fey") &&
+     ((getResponse m "summon-f1" == Just "Feegles") ||
+      (getResponse m "summon-f2" == Just "Feegles") ||
+      (getResponse m "summon-f3" == Just "Feegles"))) then
+    {p | text = overtext m "SummonerRallyFeegles"}
+    else
+      {p | text = overtext m "SummonerRally"}
 
 eggpower m = case (getResponse m "basics-name") of
   Nothing -> []
-  Just x -> if ((String.toLower x) == "bmx bandit") then
-    [Power "BMX Bandit" "You are quite good on your BMX." Misc None 0 0 0 White]
+  Just x -> if ((String.toLower x) == "bmx bandit!") then
+    [Power "You're the BMX Bandit" "You are quite good on your BMX." Misc None 0 0 0 White]
   else []
 
+spirits m = powerDict m [
+    quickPower "Punisher" Attack AtWill 10 0 (atWillDamage m) Green,
+    quickPower "Scout" Attack AtWill 10 0 (atWillDamage m) Green,
+    quickPower "Trooper" Attack AtWill 10 0 (atWillDamage m) Green,
+    quickPower "Shadow" Attack AtWill 10 0 (atWillDamage m) Green]
 
-powers m = [quickPower "Blurred Form" Attack AtWill 0 0 2 Green m,
-            quickPower "Primal Compulsion" Attack AtWill 10 0 2 Green m] ++
+powers m = [levelTextSpecial "Summoning" [1,5] m] ++
             eggpower m ++
-            case (getResponse m "shaper-type") of
-              Just "One-Form" -> [quickSpecial "One Form Shaper" m]
-              Just "Multi-Form" -> [quickSpecial "Multi Form Shaper" m]
-              _ -> []
+            powerlookup m "summon-sp1" spirits
+
+greaterSummonPowerBlock = []
+greaterSummonChoiceField m i = []
 
 
-powerBlocks m = case (getResponse m "shaper-type") of
-  Just "One-Form" -> shapePowerBlock m "shaper-shape1"
-  Just "Multi-Form" -> List.concatMap (\x -> shapePowerBlock m x) ["shaper-shape1", "shaper-shape2", "shaper-shape3"]
-  _ -> []
+powerBlocks m = summonPowerBlock m "summon-type1" 1
+             ++ summonPowerBlock m "summon-type1" 2
+             ++ atLevelList m 5 (summonPowerBlock m "summon-type1" 3)
+             ++ atLevelList m 9 (summonPowerBlock m "summon-type1" 4)
+             ++ atLevelList m 3 (summonPowerBlock m "summon-type2" 1)
+             ++ atLevelList m 5 (summonPowerBlock m "summon-type2" 2)
+             ++ atLevelList m 9 (summonPowerBlock m "summon-type2" 3)
+             ++ atLevelList m 7 (summonPowerBlockDirect m Greater 1)
+             ++ atLevelList m 9 (summonPowerBlockDirect m Greater 2)
 
 forms m = [Form False "Summoner" ([
   powerChoiceField m "Spirit:" "summon-sp1" spirits,
@@ -192,9 +225,10 @@ forms m = [Form False "Summoner" ([
       summonChoiceField m "summon-type2" 2
     ) ++
     atLevelList m 7 (
-      greaterSummonChoiceField m 1
+      summonChoiceFieldDirect m Greater 1
     ) ++
     atLevelList m 9 (
       summonChoiceField m "summon-type1" 4 ++
-      summonChoiceField m "summon-type2" 3
+      summonChoiceField m "summon-type2" 3 ++
+      summonChoiceFieldDirect m Greater 2
     ))]

@@ -176,7 +176,7 @@ bloodForm m =
 
 eggpower m = case (getResponse m "basics-name") of
   Nothing -> []
-  Just x -> if ((String.toLower x) == "master mike") then
+  Just x -> if ((String.toLower x) == "master mike!") then
     [Power "Game Balance" "All your enemies are immediately Taken Out. All team and individual Strikes accumulated by your allies are removed. After using this power, you fall asleep for 8 hours." Attack Encounter 0 0 0 Purple]
   else []
 

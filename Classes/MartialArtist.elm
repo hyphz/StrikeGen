@@ -57,7 +57,7 @@ mamaster m = quickSpecial "Master Martial Artist" m
 
 eggpower m = case (getResponse m "basics-name") of
   Nothing -> []
-  Just x -> if ((String.toLower x) == "daniel-san") then
+  Just x -> if ((String.toLower x) == "daniel-san!") then
     [Power "I've been your servant" "**Effect:** Choose one: remove all wax from target vehicle, sand target floor or fence, paint target house." Attack AtWill 0 0 0 Green]
   else []
 
