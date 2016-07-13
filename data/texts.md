@@ -1926,3 +1926,58 @@ or to Contagion, it must make a Saving Throw. If it fails, it becomes Infected
 (save ends) but does not take the Ongoing Damage that turn.
 
 At the end of your turn, Contagion may infect one adjacent creature.
+@@BuddyBasics
+You control your own character and your Buddy. You and your Buddy each get a Move Action.
+Each time your Buddy is Taken Out, take one Strike. When your Buddy cannot take Attack actions,
+you cannot use Encounter Powers or your Buddy's active effects. When you cannot take Attack
+actions, you can make Attack Rolls with your Buddy as the source, doing 1 damage or one of
+your Buddy's active effects on a hit.
+@@BuddiesRally
+No action. You may only use this on your turn, but you may use at any point
+in your turn, even while Incapacitated, Dominated, or under any other Status. Spend
+an Action Point. You or your buddy regain 4 Hit Points. You may do this even if your
+buddy is Taken Out. Regain the use of one Encounter Power from your Class (not a
+Role Action) you have expended.
+@@DefenderBuddy
+Your Buddy is the source of your Defender Role Actions, not you. You cannot choose to disregard
+this.
+@@TeamAttack
+**Effect:** One enemy within reach of your Buddy suffers 1 damage or one of your Buddy's active
+Effects ("N" type). If this enemy is this power's target, you may do both.
+@@RecallBuddy
+Your Buddy shifts to an adjacent square and regains 2 HP, even if it was Taken Out.
+@@CoordinatedAttack
+Your buddy shifts 1 square before or after this. Make a Team Attack.
+@@WeAreOne
+Transfer 2 HP from yourself to your Buddy or vice versa, then make a Team Attack.
+@@CommandBuddy
+**Special:** This attack's origin is your Buddy. Role Boosts apply.
+
+**Effect:** One of your Buddy's active effects ("N" type).
+@@BoostedBuddy
+**Special:** This attack's origin is your Buddy. Role Boosts apply.
+
+**Effect:** One of your Buddy's active effects ("B" type).
+@@WrestlingCombo
+**Special:** Target must be within reach of your Buddy.
+
+**Effect:** Target is Restrained by you and your Buddy. When it escapes one, it remains
+Grabbed by the other.
+@@TripandStab
+**Special:** Target must be within reach of your Buddy.
+
+**Effect:** Knock Target Prone, then make a Melee Basic Attack against it.
+@@HoldStill
+**Special:** Target must be within reach of your Buddy.
+
+**Effect:** Target is Grabbed by your Buddy. Then make a Ranged Basic Attack against it
+with Advantage.
+@@FightBacktoBack
+**Special:** You and your Buddy must be adjacent.
+
+Until you or your Buddy move or are no longer adjacent, all attacks against either of you
+have Disadvantage.
+@@SuperBuddy
+**Special:** This attack's origin is your Buddy. Role Boosts apply.
+
+**Effect:** One of your Buddy's active effects ("S" type).
