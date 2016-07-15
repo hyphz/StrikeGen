@@ -2219,4 +2219,9 @@ Double your base damage when ranged attacking enemies with the Mob trait. When y
 use an Attack Action on your turn to attack an enemy with your Ranged Basic Attack
 (not when something else lets you make a Ranged Basic Attack)
 and the enemy is Taken Out, your Attack Action is refunded, but further attacks do
-not benefit from your Role Boosts. 
+not benefit from your Role Boosts.
+@@ReliableSummoner
+Whenever you do not hit with an Encounter Power, you still summon the creature, but do not
+expend the power. If you use a summoning power several times by this method, you do not
+resummon the creature; the existing summoned creature is the source. If the summoned
+creature is Taken Out, you cannot use the summoning power even if it is not expended.

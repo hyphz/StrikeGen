@@ -198,7 +198,9 @@ spirits m = powerDict m [
 
 powers m = [levelTextSpecial "Summoning" [1,5] m] ++
             eggpower m ++
-            powerlookup m "summon-sp1" spirits
+            powerlookup m "summon-sp1" spirits ++
+            if (hasFeat m "Reliable Summoner") then [quickSpecial "Reliable Summoner" m] else []
+            
 
 greaterSummonPowerBlock = []
 greaterSummonChoiceField m i = []
