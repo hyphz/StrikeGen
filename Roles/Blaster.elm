@@ -1,4 +1,4 @@
-module Roles.Blaster exposing (roleBlaster)
+module Roles.Blaster exposing (roleBlaster, precision, terrain)
 
 import ModelDB exposing (..)
 import FormsModel exposing (..)
@@ -8,12 +8,31 @@ import PowerUtilities exposing (..)
 roleBlaster : Role
 roleBlaster = { name = "Blaster",
                rolePowerList = powers,
-               roleForms = forms }
+               roleForms = forms,
+               modifySpeed = Nothing,
+               roleFeats = ["Beam Blaster","Boosted Blaster"] }
 
 
-multiBoost m = if (getLevel m) < 4 then [quickSpecial "Multitarget Boost" m]
-            else if (getLevel m) < 8 then [quickSpecial "Improved Multitarget Boost" m]
-              else [quickSpecial "Super Multitarget Boost" m]
+
+blastBoost m =  if (getLevel m) < 4 then [quickSpecial "Multitarget Blast Boost" m]
+            else if (getLevel m) < 8 then [quickSpecial "Improved Multitarget Blast Boost" m]
+              else [quickSpecial "Super Multitarget Blast Boost" m]
+
+beamBoost m =  if (getLevel m) < 4 then [quickSpecial "Multitarget Beam Boost" m]
+            else if (getLevel m) < 8 then [quickSpecial "Improved Multitarget Beam Boost" m]
+              else [quickSpecial "Super Multitarget Beam Boost" m]
+
+beamBlasterBoost m =  if (getLevel m) < 4 then [quickSpecial "Multitarget Beam Blaster" m]
+            else if (getLevel m) < 8 then [quickSpecial "Improved Multitarget Beam Blaster" m]
+              else [quickSpecial "Super Multitarget Beam Blaster" m]
+
+
+multiBoost m = if (hasFeat m "Beam Blaster") then beamBlasterBoost m else
+  case (getResponse m "blaster-type") of
+    Just "Beams" -> beamBoost m
+    _ -> blastBoost m
+
+
 
 blasterBombardier m = case (getResponse m "basics-class") of
   Just "Bombardier" -> [quickSpecial "Blaster Bombardier" m]
@@ -25,7 +44,7 @@ precision m = levelTextPower "Precision" RoleSlot AtWill 0 0 0 Blue [1,4,8] m
 terrain m = levelTextPower "Terrain" RoleSlot AtWill 0 0 0 Blue [1,4,8] m
 
 boostchoices m = powerDict m [precision, terrain]
-cboost m = powerlookup m "blaster-boost" boostchoices
+cboost m = if (hasFeat m "Boosted Blaster") then [precision m, terrain m] else powerlookup m "blaster-boost" boostchoices
 
 actionTrigger m = if (getLevel m) < 6 then [quickPower "Consistent Attack" Reaction Encounter 0 0 0 Yellow m]
                                       else [quickPower "Dependable" Reaction Encounter 0 0 0 Yellow m]
@@ -76,7 +95,8 @@ powers m = boosts m ++ actionTrigger m ++
 
 
 forms m = [Form False "Blaster" (
-    [powerChoiceField m "Boost:" "blaster-boost" boostchoices] ++
+    [DropdownField { name="Type:", del=False, key="blaster-type",choices=["","Blasts","Beams"] },
+     powerChoiceField m "Boost:" "blaster-boost" boostchoices] ++
     atLevel m 2 (powerChoiceField m "Encounter:" "blaster-enc1" encounters)
   ++ atLevel m 6 (powerChoiceField m "Encounter:" "blaster-enc2" encounters)
   ++ atLevel m 10 (DropdownField { name="Upgrade:",del=False,key="blaster-upgrade",choices=(upgradable m)})

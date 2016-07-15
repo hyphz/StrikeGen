@@ -13,7 +13,9 @@ classMA = { name = "Duelist",
                modifyBasicMelee = Just modifyBasicMelee,
                modifyBasicRange = Just modifyBasicRange,
                modifyRally = Nothing,
-               modifyCharge = Nothing }
+               modifyCharge = Nothing,
+               modifyHP = Nothing,
+               classFeats = ["Opportunistic Martial Artist"] }
 
 atWillDamage : Model -> Int
 atWillDamage m = if (getLevel m < 5) then 2 else 3
@@ -61,11 +63,22 @@ eggpower m = case (getResponse m "basics-name") of
     [Power "I've been your servant" "**Effect:** Choose one: remove all wax from target vehicle, sand target floor or fence, paint target house." Attack AtWill 0 0 0 Green]
   else []
 
+oppPower m =
+  let
+    stanceChoices = mayList (getResponse m "ma-s1") ++
+                    mayList (getResponse m "ma-s2") ++
+                    mayList (getResponse m "ma-s3")
+    oppText = "Apply the effects of your Style when you deal Opportunity damage." ++
+      (if (List.member "Python" stanceChoices) then " If you are in Python style, the enemy gets an immediate escape attempt for free to avoid your Grab." else "")
+  in
+    Power "Opportunistic Martial Artist" oppText Misc None 0 0 0 White
+
 
 powers m = genStances m ++ [startStance m, changeStance m, focusedAttack m]
            ++ (atLevelList m 3 (l3encpower m))
            ++ (atLevelList m 7 (l7encpower m))
            ++ (atLevel m 9 (mamaster m))
+           ++ (if (hasFeat m "Opportunistic Martial Artist") then [oppPower m] else [])
            ++ eggpower m
 
 forms m = [Form False "Martial Artist" ([

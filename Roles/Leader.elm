@@ -8,15 +8,19 @@ import String
 roleLeader : Role
 roleLeader = { name = "Leader",
                rolePowerList = powers,
-               roleForms = forms }
+               roleForms = forms,
+               modifySpeed = Nothing,
+              roleFeats = ["Limber Leader"] }
 
 
 actionTrigger m = if (getLevel m) < 6 then [quickPower "Try again!" Reaction Encounter 0 0 0 Yellow m]
                                       else [quickPower "Try harder!" Reaction Encounter 0 0 0 Yellow m]
 
-boosts m = [levelTextPower "Tactics" RoleSlot Encounter 0 0 0 Red [1, 4, 8] m,
+boosts m = case (hasFeat m "Limber Leader") of
+  False -> [levelTextPower "Tactics" RoleSlot Encounter 0 0 0 Red [1, 4, 8] m,
             levelTextPower "Heal" RoleSlot Encounter 5 0 0 Red [1, 4, 8] m]
-
+  True -> [levelTextPower "Limber Tactics" RoleSlot Encounter 0 0 0 Red [1, 4, 8] m,
+           levelTextPower "Heal" RoleSlot Encounter 5 0 0 Red [1, 4, 8] m]
 
 
 

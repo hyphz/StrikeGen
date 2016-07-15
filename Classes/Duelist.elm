@@ -13,7 +13,9 @@ classDuelist = { name = "Duelist",
                modifyBasicMelee = Just modifyBasicMelee,
                modifyBasicRange = Just modifyBasicRange,
                modifyRally = Nothing,
-               modifyCharge = Nothing }
+               modifyCharge = Nothing,
+               modifyHP = Nothing,
+               classFeats = [] }
 
 atWillDamage : Model -> Int
 atWillDamage m = if (getLevel m < 5) then 2 else 3

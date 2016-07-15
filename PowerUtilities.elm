@@ -90,3 +90,16 @@ atLevel m level ab = if ((getLevel m) >= level) then [ab] else []
 
 atLevelList : Model -> Int -> List a -> List a
 atLevelList m level ab = if ((getLevel m) >= level) then ab else []
+
+chosenFeats : Model -> List String
+chosenFeats m = mayList (getResponse m "feat-1")
+         ++ atLevelList m 3 (mayList (getResponse m "feat-2"))
+         ++ atLevelList m 5 (mayList (getResponse m "feat-3"))
+         ++ atLevelList m 7 (mayList (getResponse m "feat-4"))
+         ++ atLevelList m 9 (mayList (getResponse m "feat-5"))
+
+hasFeat : Model -> String -> Bool
+hasFeat m f = List.member f (chosenFeats m)
+
+lacksFeat : Model -> String -> Bool
+lacksFeat m f = not (hasFeat m f)

@@ -125,13 +125,14 @@ powerCard power =
       Misc -> "circle.svg"
       Special -> "circle.svg"
       Reaction -> "reaction.svg"
+      Move -> "move.svg"
     freqText = case power.freq of
       AtWill -> "At-Will"
       Encounter -> "Encounter"
       None -> ""
     attackTypeIcon = if (power.slot == Attack || power.slot == RoleSlot) then
       case power.range of
-        0 -> if ((power.area == 0) && (power.slot == Attack)) then
+        0 -> if ((power.area == 0) && (power.slot == Attack) && (power.damage /= 0)) then
                [img [src "icons/melee.svg", height 16, width 16] []]
              else []
         x -> if (x > 0) then

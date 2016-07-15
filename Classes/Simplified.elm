@@ -12,7 +12,9 @@ classSimplified = { name = "Simplified Class",
                modifyBasicMelee = Just simpleBasicMelee,
                modifyBasicRange = Just simpleBasicRange,
                modifyRally = Nothing,
-               modifyCharge = Nothing }
+               modifyCharge = Nothing,
+               modifyHP = Nothing,
+               classFeats = [] }
 
 
 powers m = []

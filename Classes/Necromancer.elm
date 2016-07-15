@@ -14,7 +14,9 @@ classNecro = { name = "Necromancer",
                modifyBasicMelee = Just necroBasicMelee,
                modifyBasicRange = Just necroBasicRange,
                modifyCharge = Nothing,
-               modifyRally = Nothing }
+               modifyRally = Nothing,
+               modifyHP = Nothing,
+               classFeats = [] }
 
 necroBasicMelee : Model -> Power -> Power
 necroBasicMelee m p = if (getLevel m < 5) then p else {p | damage = 3}

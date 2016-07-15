@@ -170,7 +170,9 @@ classSummoner = { name = "Summoner",
                modifyBasicMelee = Nothing,
                modifyBasicRange = Nothing,
                modifyRally = Just modifyRally,
-               modifyCharge = Nothing }
+               modifyCharge = Nothing,
+               modifyHP = Nothing,
+               classFeats = ["Reliable Summoner"] }
 
 modifyRally : Model -> Power -> Power
 modifyRally m p =

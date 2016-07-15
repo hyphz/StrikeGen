@@ -1,4 +1,4 @@
-module Roles.Defender exposing (roleDefender)
+module Roles.Defender exposing (roleDefender, mark)
 
 import ModelDB exposing (..)
 import FormsModel exposing (..)
@@ -8,7 +8,9 @@ import PowerUtilities exposing (..)
 roleDefender : Role
 roleDefender = { name = "Defender",
                rolePowerList = powers,
-               roleForms = forms }
+               roleForms = forms,
+               modifySpeed = Nothing,
+              roleFeats = ["Distant Defender"] }
 
 
 defenseBoost m = if (getLevel m) < 4 then [quickSpecial "Defense Boost" m]
@@ -19,26 +21,30 @@ stickyBoost m = if (getLevel m) < 4 then [quickSpecial "Stickiness Boost" m]
               else [quickSpecial "Super Stickiness Boost" m]
 
 
+defenderRangeModify m i =
+  if (hasFeat m "Distant Defender") then i+3 else i
 
 actionTrigger m = if (getLevel m) < 6 then [quickPower "Call that a punch?" Reaction Encounter 0 0 0 Yellow m]
                                       else [quickPower "THIS is a punch!" Reaction Encounter 0 0 0 Yellow m]
 
+mark m = levelTextPower "Mark" RoleSlot AtWill (defenderRangeModify m 5) 0 0 Blue [1, 4, 8] m
+
 boosts m = defenseBoost m ++ stickyBoost m ++
-           [levelTextPower "Mark" RoleSlot AtWill 5 0 0 Blue [1, 4, 8] m]
+           [mark m]
 
 
 
 
 encounters m = powerDict m [
   quickPower "I don't think so!" Reaction Encounter 0 0 0 Red,
-  quickPower "Come and Get It!" RoleSlot Encounter 0 2 0 Red,
+  quickPower "Come and Get It!" RoleSlot Encounter 0 (defenderRangeModify m 2) 0 Red,
   quickPower "You're Mine!" RoleSlot Encounter 0 0 0 Red,
   quickPower "I'll Cover You!" Reaction Encounter 0 0 0 Red]
 
 
 upgraded x m = case x of
   "I don't think so!" -> [quickPower "I really don't think so!" Reaction Encounter 0 0 0 Red m]
-  "Come and Get It!" -> [quickPower "Come and Get Seconds!" RoleSlot Encounter 0 3 0 Red m]
+  "Come and Get It!" -> [quickPower "Come and Get Seconds!" RoleSlot Encounter 0 (defenderRangeModify m 3) 0 Red m]
   "You're Mine!" -> [quickPower "You're All Mine!" RoleSlot Encounter 0 0 0 Red m]
   "I'll Cover You!" -> [quickPower "I'll Cover You All!" Reaction Encounter 0 0 0 Red m]
   _ -> []
@@ -63,7 +69,9 @@ upgradable m = [""] ++ (List.map .name (powerlookup m "defender-enc1" encounters
 
 powers m = boosts m ++ actionTrigger m ++
   atLevelList m 2 (l2encchosen m) ++
-  atLevelList m 6 (l6encchosen m)
+  atLevelList m 6 (l6encchosen m) ++
+  if (hasFeat m "Distant Defender") then [quickSpecial "Distant Defender" m] else []
+
 
 
 

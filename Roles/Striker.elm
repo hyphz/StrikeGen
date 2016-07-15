@@ -1,4 +1,4 @@
-module Roles.Striker exposing (roleStriker)
+module Roles.Striker exposing (roleStriker, quickShift, drawABead)
 
 import ModelDB exposing (..)
 import FormsModel exposing (..)
@@ -8,7 +8,9 @@ import PowerUtilities exposing (..)
 roleStriker : Role
 roleStriker = { name = "Striker",
                rolePowerList = powers,
-               roleForms = forms }
+               roleForms = forms,
+               modifySpeed = Just modifySpeed,
+               roleFeats = ["Savage Striker"] }
 
 
 damageBoost m = if (getLevel m) < 4 then [quickSpecial "Damage Boost" m]
@@ -17,6 +19,8 @@ damageBoost m = if (getLevel m) < 4 then [quickSpecial "Damage Boost" m]
 
 quickShift = levelTextPower "Quick Shift" RoleSlot Encounter 0 0 0 Blue [1,8]
 drawABead = levelTextPower "Draw a Bead" RoleSlot AtWill 0 0 0 Blue [1,4,8]
+
+modifySpeed m s = if (getLevel m >= 4) then s+4 else s
 
 
 actionTrigger m = if (getLevel m) < 6 then [quickPower "Strike Back" Reaction Encounter 0 0 0 Yellow m]
@@ -72,9 +76,19 @@ upgradable m = [""] ++ (List.map .name (powerlookup m "striker-enc1" encounters 
                                         powerlookup m "striker-enc2" encounters))
 
 
+ssLevel m = 1 + ceiling ((toFloat <| getLevel m) / 2)
+
+
+savageStriker m = Power "Savage Striker"
+  ("When your attack reduces an enemy's Hit Points to " ++ (toString (ssLevel m)) ++ " or less, they are Taken Out. This does not apply to Goons or Stooges.")
+  Misc None 0 0 0 White
+
+
 powers m = damageBoost m ++ otherBoost m ++ actionTrigger m ++
   atLevelList m 2 (l2encchosen m) ++
-  atLevelList m 6 (l6encchosen m)
+  atLevelList m 6 (l6encchosen m) ++
+  if (hasFeat m "Savage Striker") then [savageStriker m] else []
+
 
 
 

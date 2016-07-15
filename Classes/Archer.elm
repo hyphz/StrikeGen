@@ -13,7 +13,9 @@ classArcher = { name = "Archer",
                modifyBasicMelee = Just archerBasicMelee,
                modifyBasicRange = Just archerBasicRange,
                modifyRally = Nothing,
-               modifyCharge = Nothing }
+               modifyCharge = Nothing,
+               modifyHP = Nothing,
+               classFeats = ["Fast Archer"] }
 
 sniperDouble : Model -> Int -> Int
 sniperDouble m i = case (getResponse m "archer-feature") of
@@ -90,6 +92,7 @@ powers m = specials m ++ [aim m, flare m, pinDown m, areaDenial m]
            ++ l1encpower m
            ++ (atLevelList m 3 (l3encpower m))
            ++ (atLevelList m 7 (l7encpower m))
+           ++ if (hasFeat m "Fast Archer") then [quickSpecial "Fast Archer" m] else []
 
 
 

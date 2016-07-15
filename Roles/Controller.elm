@@ -1,4 +1,4 @@
-module Roles.Controller exposing (roleController)
+module Roles.Controller exposing (roleController, sapStrength)
 
 import ModelDB exposing (..)
 import FormsModel exposing (..)
@@ -8,19 +8,21 @@ import PowerUtilities exposing (..)
 roleController : Role
 roleController = { name = "Controller",
                rolePowerList = powers,
-               roleForms = forms }
+               roleForms = forms,
+               modifySpeed = Nothing,
+              roleFeats = ["Crafty Controller"] }
 
 
 controlBoost m = if (getLevel m) < 4 then [quickSpecial "Control Boost" m]
             else if (getLevel m) < 8 then [quickSpecial "Improved Control Boost" m]
               else [quickSpecial "Super Control Boost" m]
 
-sapStrength m = [levelTextPower "Sap Strength" RoleSlot AtWill 5 0 0 Blue [1,4,8] m]
+sapStrength m = levelTextPower "Sap Strength" RoleSlot AtWill 5 0 0 Blue [1,4,8] m
 
 actionTrigger m = if (getLevel m) < 6 then [quickPower "Freeze!" Reaction Encounter 0 0 0 Yellow m]
                                       else [quickPower "Slide!" Reaction Encounter 0 0 0 Yellow m]
 
-boosts m = controlBoost m ++ sapStrength m
+boosts m = controlBoost m ++ [sapStrength m]
 
 
 
@@ -59,7 +61,8 @@ upgradable m = [""] ++ (List.map .name (powerlookup m "controller-enc1" encounte
 
 powers m = boosts m ++ actionTrigger m ++
   atLevelList m 2 (l2encchosen m) ++
-  atLevelList m 6 (l6encchosen m)
+  atLevelList m 6 (l6encchosen m) ++
+    if (hasFeat m "Crafty Controller") then [quickSpecial "Crafty Controller" m] else []
 
 
 

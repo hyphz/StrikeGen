@@ -814,13 +814,13 @@ deal 6 extra damage.
 You may shift 1 square.
 @@QuickShift8+
 You may shift 2 squares.
-@@DrawABead1+
+@@DrawaBead1+
 Pick one enemy within 5 squares you can attack. If you attack that enemy this
 turn, you may ignore concealment or Low Cover on that attack.
-@@DrawABead4+
+@@DrawaBead4+
 Pick one enemy within 5 squares you can attack. If you attack that enemy this
 turn, you may ignore concealment or cover on that attack.
-@@DrawABead8+
+@@DrawaBead8+
 Pick one enemy within 5 squares you can attack. If an enemy is Invisible, you are
 able to attack it. If you attack that enemy this turn, you may ignore concealment
 or cover on that attack.
@@ -898,6 +898,15 @@ One ally of your choice may spend a Move Action immediately. when you roll a 3-6
 an attack, you gain an additional use of this power.
 @@Tactics8+
 Two allies of your choice may spend a Move Action immediately. when you roll a 3-6 on
+an attack, you gain an additional use of this power.
+@@LimberTactics1+
+You and one ally of your choice may spend Move Actions immediately. when you roll a 5 or 6 on
+an attack, you gain an additional use of this power.
+@@LimberTactics4+
+You and one ally of your choice may spend Move Actions immediately. when you roll a 3-6 on
+an attack, you gain an additional use of this power.
+@@LimberTactics8+
+You and two allies of your choice may spend Move Actions immediately. when you roll a 3-6 on
 an attack, you gain an additional use of this power.
 @@Heal1+
 Target may regain HP equal to half its maximum (rounded down) and pick one of the following options:
@@ -1029,7 +1038,7 @@ The target must make a Saving Throw. If it fails, it is Blinded until the end of
 turn. If it succeeds, it is Distracted instead.
 @@Solarbeam
 The target is Blinded until the end of its next turn.
-@@MultitargetBoost
+@@MultitargetBlastBoost
 When you attack, choose one of these benefits:
 
 * When you roll a 3-4 on a ranged or melee attack, deal 2 damage to one additional target
@@ -1049,7 +1058,50 @@ suffers once.
 
 When making a Burst attack, only the first attack roll may generate a Strike or lead to a
 Miss Trigger. You must roll your attack against the most powerful enemy first.
-@@ImprovedMultitargetBoost
+@@MultitargetBeamBoost
+When you attack, choose one of these benefits:
+
+* When you roll a 3-4 on a ranged or melee attack, deal 2 damage to one additional target
+within range. When you roll a 5-6 on a ranged or melee attack, deal either the power's
+effect *or* 2 damage to one additional target within range. You may use your existing squares
+of movement during the resolution of a Melee attack to acquire new targets. The movement
+grants Opportunities as usual.
+* Make a power with range X into a beam attack 5 squares long within X targeting all
+creatures in the zone. This still grants Opportunities as though it was Range X.
+Or, make a melee attack into a beam attack 5 squares long targeting all creatures in the
+zone. You may move the start of the beam one square for each square of reach you have.
+
+You never hit yourself with Burst or beam attacks.
+
+When a creature is included in the same effect multiple times from the same power, it only
+suffers once.
+
+When making a Burst or beam attack, only the first attack roll may generate a Strike or lead to a Miss Trigger. You must roll your attack against the most powerful enemy first.
+@@MultitargetBeamBlaster
+When you attack, choose one of these benefits:
+
+* When you roll a 3-4 on a ranged or melee attack, deal 2 damage to one additional target
+within range. When you roll a 5-6 on a ranged or melee attack, deal either the power's
+effect *or* 2 damage to one additional target within range. You may use your existing squares
+of movement during the resolution of a Melee attack to acquire new targets. The movement
+grants Opportunities as usual.
+* Make a power with range X into a beam attack 5 squares long within X targeting all
+creatures in the zone. This still grants Opportunities as though it was Range X.
+Or, make a melee attack into a beam attack 5 squares long targeting all creatures in the
+zone. You may move the start of the beam one square for each square of reach you have.
+* Make a power with range X into a Burst 1 centered within X targeting all creatures in
+the zone. This still grants Opportunities as though it was Range X. Or, make a melee
+attack into a Burst 1 targeting all creatures in the zone. You may move the center of
+the zone one square for each square of reach you have.
+
+You never hit yourself with Burst or beam attacks.
+
+When a creature is included in the same effect multiple times from the same power, it only
+suffers once.
+
+When making a Burst or beam attack, only the first attack roll may generate a Strike or lead to a Miss Trigger. You must roll your attack against the most powerful enemy first.
+
+@@ImprovedMultitargetBlastBoost
 When you attack, choose one of these benefits:
 
 * When you roll a 3-4 on a ranged or melee attack, deal 2 damage to two additional targets
@@ -1069,7 +1121,49 @@ suffers once.
 
 When making a Burst attack, only the first attack roll may generate a Strike or lead to a
 Miss Trigger. You must roll your attack against the most powerful enemy first.
-@@SuperMultitargetBoost
+@@ImprovedMultitargetBeamBoost
+When you attack, choose one of these benefits:
+
+* When you roll a 3-4 on a ranged or melee attack, deal 2 damage to two additional targets
+within range. When you roll a 5-6 on a ranged or melee attack, deal either the power's
+effect to one additional target *or* 2 damage to two additional targets within range.
+You may use your existing squares of movement during the resolution of a Melee attack to acquire new targets. The movement grants Opportunities as usual.
+* Make a power with range X into a beam attack 5 squares long and 2 squares wide within X targeting all
+creatures in the zone. This still grants Opportunities as though it was Range X.
+Or, make a melee attack into a beam attack 5 squares long and 2 squares wide targeting all creatures in the
+zone. You may move the start of the beam one square for each square of reach you have.
+
+You never hit yourself with Burst or beam attacks.
+
+When a creature is included in the same effect multiple times from the same power, it only
+suffers once.
+
+When making a Burst or beam attack, only the first attack roll may generate a Strike or lead to a Miss Trigger. You must roll your attack against the most powerful enemy first.
+@@ImprovedMultitargetBeamBlaster
+When you attack, choose one of these benefits:
+
+* When you roll a 3-4 on a ranged or melee attack, deal 2 damage to two additional targets
+within range. When you roll a 5-6 on a ranged or melee attack, deal either the power's
+effect to one additional target *or* 2 damage to two additional targets within range.
+You may use your existing squares of movement during the resolution of a Melee attack to acquire new targets. The movement grants Opportunities as usual.
+* Make a power with range X into a beam attack 5 squares long and 2 squares wide within X targeting all
+creatures in the zone. This still grants Opportunities as though it was Range X.
+Or, make a melee attack into a beam attack 5 squares long and 2 squares wide targeting all creatures in the
+zone. You may move the start of the beam one square for each square of reach you have.
+* Make a power with range X into a Burst 1 centered within X targeting all creatures in
+the zone. This still grants Opportunities as though it was Range X. Or, make a melee
+attack into a Burst 1 targeting all creatures in the zone. You may move the center of
+the zone one square for each square of reach you have. In both cases, you may extend the
+zone to a 4x4 square.
+
+You never hit yourself with Burst or beam attacks.
+
+When a creature is included in the same effect multiple times from the same power, it only
+suffers once.
+
+When making a Burst or beam attack, only the first attack roll may generate a Strike or lead to a Miss Trigger. You must roll your attack against the most powerful enemy first.
+
+@@SuperMultitargetBlastBoost
 When you attack, choose one of these benefits:
 
 * When you roll a 3-4 on a ranged or melee attack, deal 2 damage to three additional targets
@@ -1088,6 +1182,47 @@ suffers once.
 
 When making a Burst attack, only the first attack roll may generate a Strike or lead to a
 Miss Trigger. You must roll your attack against the most powerful enemy first.
+@@SuperMultitargetBeamBoost
+When you attack, choose one of these benefits:
+
+* When you roll a 3-4 on a ranged or melee attack, deal 2 damage to three additional targets
+within range. When you roll a 5-6 on a ranged or melee attack, deal the power's
+effect to one additional target *and* 2 damage to three additional targets within range.
+You may use your existing squares of movement during the resolution of a Melee attack to acquire new targets. The movement grants Opportunities as usual.
+* Make a power with range X into a beam attack 5 squares long and 3 squares wide within X targeting all
+creatures in the zone. This still grants Opportunities as though it was Range X.
+Or, make a melee attack into a beam attack 5 squares long and 3 squares wide targeting all creatures in the
+zone. You may move the start of the beam one square for each square of reach you have.
+
+You never hit yourself with Burst or beam attacks.
+
+When a creature is included in the same effect multiple times from the same power, it only
+suffers once.
+
+When making a Burst or beam attack, only the first attack roll may generate a Strike or lead to a Miss Trigger. You must roll your attack against the most powerful enemy first.
+@@SuperMultitargetBeamBlaster
+When you attack, choose one of these benefits:
+
+* When you roll a 3-4 on a ranged or melee attack, deal 2 damage to three additional targets
+within range. When you roll a 5-6 on a ranged or melee attack, deal the power's
+effect to one additional target *and* 2 damage to three additional targets within range.
+You may use your existing squares of movement during the resolution of a Melee attack to acquire new targets. The movement grants Opportunities as usual.
+* Make a power with range X into a beam attack 5 squares long and 3 squares wide within X targeting all
+creatures in the zone. This still grants Opportunities as though it was Range X.
+Or, make a melee attack into a beam attack 5 squares long and 3 squares wide targeting all creatures in the
+zone. You may move the start of the beam one square for each square of reach you have.
+* Make a power with range X into a Burst 1 or 2 centered within X targeting all creatures in
+the zone. This still grants Opportunities as though it was Range X. Or, make a melee
+attack into a Burst 1 or 2 targeting all creatures in the zone. You may move the center of
+the zone one square for each square of reach you have.
+
+You never hit yourself with Burst or beam attacks.
+
+When a creature is included in the same effect multiple times from the same power, it only
+suffers once.
+
+When making a Burst or beam attack, only the first attack roll may generate a Strike or lead to a Miss Trigger. You must roll your attack against the most powerful enemy first.
+
 @@Precision1+
 Your next Burst attack may target one additional creature adjacent to the zone, if that
 creature is within range 5.
@@ -1981,3 +2116,107 @@ have Disadvantage.
 **Special:** This attack's origin is your Buddy. Role Boosts apply.
 
 **Effect:** One of your Buddy's active effects ("S" type).
+@@LuckyDodger
+Force an enemy to reroll one attack against you.
+@@LuckyEscaper
+Reroll one Saving Throw, escape attempt, or Panic Roll.
+@@Reliable
+Whenever you do not hit with an Encounter Power, you do not expend it.
+@@MeleeShooter
+Your ranged attacks don't grant Opportunities. Deal 1 extra damage when you hit an
+adjacent foe with a ranged attack.
+@@Slippery
+Any time you shift, you may shift 1 extra square. Additionally, you may move through
+enemy squares, although you may not end your turn there. When you enter or leave an
+enemy's square, you do not grant them an Opportunity.
+@@Sprinter
+If you have unspent points of movement after your turn, you may spend them to move when
+it is not your turn. You may use this at any time. If you use it in response to another
+event, it resolves as a Reaction.
+@@FastReactions
+Instead of rolling for Initiative, you always get a 7. You may use your Action Trigger
+twice per encounter.
+@@Resilient
+You may use Rally twice per encounter. Whenever you Rally or are the target of a Leader's
+Heal power, regain an additional HP. A 3 counts as a pass on your Saving Throws.
+@@NothingFazesYou
+Make Saving Throws to end Statuses at the start of your turn instead of the end. When
+subject to Forced Movement, reduce its distance by 1. When Slowed, your speed is 3 instead
+of 2. When an enemy knocks you Prone, make a Saving Throw to stay upright.
+@@LikeaBull
+You may use any melee power while charging, not just a Basic Attack.
+@@Flyer
+You may gain the Flying Status as a Move Action. If you become Bloodied while Flying, you
+fall to the ground Prone.
+@@Wrestler
+You have advantage on Escape Rolls. Enemies have Disadvantage on rolls to escape your
+Grabs. When granted an Opportunity by an adjacent enemy, you may Grab it instead of dealing
+damage.
+@@LongReach
++1 Reach.
+@@LongReachKnockdown
+When an enemy moves adjacent to you, you may knock them prone.
+@@Cleave
+Double your base damage when melee attacking enemies with the Mob trait. When you hit an
+enemy with a melee attack and deal more damage to it than it has HP remaining, you may
+apply the excess damage plus one to another enemy within reach.
+@@Stealthy
+Enemies searching for you while you are Hidden have Disadvantage.
+@@Hide
+You must be out of sight when you use this power. Move up to your speed, ending at least
+2 squares away from your current location. You must remain out of sight during the movement
+and end in cover or concealment. You are Hidden.
+@@Toughness
+Attacks against you in the first round have Disadvantage. You Resist 1 in the first round.
+@@Huge
+Increase your Size by one. Your allies may treat you as terrain granting Full Cover.
+@@SuperClimbing
+You can climb walls at your usual speed and fight while climbing without penalty.
+@@SuperSwimming
+You can swim at your usual speed and fight while swimming without penalty.
+@@SuperLeaping
+You can leap up to your speed, ignoring Difficult Terrain and only granting Opportunities
+for moving during the first square of your movement.
+@@SuperSwapping
+You can spend a Move Action to teleport up to your speed to swap places with a
+willing creature you can see, or an Attack Action if they are unwilling.
+@@SuperPhasing
+You may move through solid objects, walls, and creatures, but must end your movement in
+an open square. When you enter or leave an enemy's square, you do not grant that enemy an
+Opportunity.
+@@MinorStriker1+
+When you hit with an attack, deal 2 extra damage.
+@@MinorStriker4+
+When you hit with an attack, deal 3 extra damage.
+@@MinorStriker8+
+When you hit with an attack, deal 4 extra damage.
+@@MinorLeaderSlide
+Slide an ally 3 squares as a free action.
+@@MinorLeaderHeal1+
+You or an ally regains 2 HP.
+@@MinorLeaderHeal4+
+You or an ally regains 3 HP.
+@@MinorLeaderHeal8+
+You or an ally regains 4 HP.
+@@MinorDefender
+You do an additional point of damage on Opportunities.
+@@MinorBlaster
+Turn a melee attack into a Blast 1, or a Range X attack into a Burst 1 centered with
+X, targeting all creatures in the zone.
+@@MinorController
+When you hit an enemy with an attack, ignore your Role Boost and instead
+slide the enemy 3 squares and it is Slowed until the end of its next turn.
+@@VersatileLeader
+Slide an ally 3 squares.
+@@DistantDefender
+When an enemy grants you an Opportunity, you may choose to Slow them until the
+end of their next turn instead of dealing damage.
+@@CraftyController
+Once per combat, when an enemy succeeds on a Saving Throw. You may make them reroll.
+If they succeed again, you may slide them 2 squares.
+@@FastArcher
+Double your base damage when ranged attacking enemies with the Mob trait. When you
+use an Attack Action on your turn to attack an enemy with your Ranged Basic Attack
+(not when something else lets you make a Ranged Basic Attack)
+and the enemy is Taken Out, your Attack Action is refunded, but further attacks do
+not benefit from your Role Boosts. 

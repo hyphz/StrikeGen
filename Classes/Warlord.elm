@@ -14,7 +14,9 @@ classWarlord = { name = "Warlord",
                modifyBasicMelee = Just modifyBasicMelee,
                modifyBasicRange = Just modifyBasicRange,
                modifyRally = Nothing,
-               modifyCharge = Nothing }
+               modifyCharge = Nothing,
+               modifyHP = Nothing,
+               classFeats = [] }
 
 modifyBasicMelee : Model -> Power -> Power
 modifyBasicMelee m p = p

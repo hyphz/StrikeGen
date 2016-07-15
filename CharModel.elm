@@ -9,7 +9,7 @@ import FormsModel exposing (..)
 import Ports exposing (download, saveURL)
 import Json.Encode exposing (encode)
 import Json.Decode
-import TacticalModel exposing (classes, roles, tacticalForms)
+import TacticalModel exposing (classes, roles, tacticalForms, availableFeats, featChoices)
 
 {-| ELM Architecture Initialization Function. -}
 init : (Model, Cmd Msg)
@@ -208,12 +208,26 @@ levelForm model = Form False "Advancement" (
   (if ((getLevel model) >= 10) then [FreeformField {name="Trick", del=False, key="adv-l10trick"}] else [])
   )
 
+featsForm : Model -> Form
+featsForm m = Form False "Feats" (
+  [DropdownField {name="Feat:", del=False, key="feat-1", choices=(availableFeats m)}] ++
+  (if ((getLevel m) >= 3) then [DropdownField {name="Feat:",del=False,key="feat-2",choices=(availableFeats m)}] else []) ++
+  (if ((getLevel m) >= 5) then [DropdownField {name="Feat:",del=False,key="feat-3",choices=(availableFeats m)}] else []) ++
+  (if ((getLevel m) >= 7) then [DropdownField {name="Feat:",del=False,key="feat-4",choices=(availableFeats m)}] else []) ++
+  (if ((getLevel m) >= 9) then [DropdownField {name="Feat:",del=False,key="feat-5",choices=(availableFeats m)}] else []) ++
+  featChoices m)
+
+
+
+
+
 {-| Get the active forms. -}
 getForms : Model -> List Form
 getForms model =
    [basicsForm model] ++
    [learnedSkillsForm model] ++
    (if ((getLevel model) >= 2) then [levelForm model] else []) ++
+   [featsForm model] ++
    (mayList (complexOriginForm model)) ++
    (mayList (customBackgroundForm model)) ++
    tacticalForms model

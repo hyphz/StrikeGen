@@ -95,7 +95,9 @@ classShapechanger = { name = "Shapechanger",
                modifyBasicMelee = Just modifyBasicMelee,
                modifyBasicRange = Just modifyBasicRange,
                modifyRally = Just modifyRally,
-               modifyCharge = Nothing }
+               modifyCharge = Nothing,
+               modifyHP = Nothing,
+               classFeats = ["Shapechanger Bread and Butter","Multi-Role Shapechanger"] }
 
 
 modifyBasicMelee : Model -> Power -> Power

@@ -15,7 +15,9 @@ classBuddies = { name = "Buddies",
                modifyBasicMelee = Just modifyBasicMelee,
                modifyBasicRange = Just modifyBasicRange,
                modifyRally = Just (\m p -> {p | text = overtext m "BuddiesRally"} ),
-               modifyCharge = Nothing }
+               modifyCharge = Nothing,
+               modifyHP = Just modifyHP,
+               classFeats = [] }
 
 atWillDamage m = if (getLevel m < 5) then 2 else 3
 
@@ -24,6 +26,11 @@ modifyBasicMelee m p = {p | damage = atWillDamage m}
 
 modifyBasicRange : Model -> Power -> Power
 modifyBasicRange m p = {p | damage = atWillDamage m}
+
+modifyHP m h = case (getResponse m "buddy-type") of
+    Just "Super Buddy" -> 5
+    _ -> 8
+
 
 support = (levelTextSpecial "Support Tokens" [1,5,9])
 rousing = (quickSpecial "Rousing")

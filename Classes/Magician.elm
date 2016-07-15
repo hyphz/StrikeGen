@@ -15,7 +15,9 @@ classMagician = { name = "Magician",
                modifyBasicMelee = Just modifyBasicMelee,
                modifyBasicRange = Just modifyBasicRange,
                modifyRally = Just modifyRally,
-               modifyCharge = Nothing }
+               modifyCharge = Nothing,
+               modifyHP = Nothing,
+               classFeats = [] }
 
 
 atWillDamage : Model -> Int
