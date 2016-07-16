@@ -2225,3 +2225,7 @@ Whenever you do not hit with an Encounter Power, you still summon the creature, 
 expend the power. If you use a summoning power several times by this method, you do not
 resummon the creature; the existing summoned creature is the source. If the summoned
 creature is Taken Out, you cannot use the summoning power even if it is not expended.
+@@Multi-RoleShapechanger
+When you use a Transformation Power, you take on the Role associated with that form.
+You may use only one Role Encounter power of each level per combat, even if you take on
+multiple forms.

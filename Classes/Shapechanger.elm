@@ -5,6 +5,12 @@ import FormsModel exposing (..)
 import PowerUtilities exposing (..)
 import Dict
 import List
+import Roles.Striker exposing (roleStriker)
+import Roles.Leader exposing (roleLeader)
+import Roles.Defender exposing (roleDefender)
+import Roles.Controller exposing (roleController)
+import Roles.Blaster exposing (roleBlaster)
+
 
 type alias Shape = {
    name : String,
@@ -73,6 +79,21 @@ shapes =
   in
     Dict.fromList (List.map shapepair [tortoise, bull, hawk, mammoth, viper, kraken])
 
+shapeBbpower m k shape =
+  if (lacksFeat m "Shapechanger Bread and Butter") then [] else
+    case (getResponse m (k++"-bb")) of
+      Nothing -> []
+      Just atWillname -> if (not (List.member atWillname (shapeAtwillNames m k))) then []
+      else [Power "Bread and Butter" ("When any power or ability allows you to make a Basic attack while you are in " ++ shape.name ++ " form, you may use " ++ atWillname ++ " instead.") Misc None 0 0 0 White]
+
+shapeRolePowers m k =
+  if (lacksFeat m "Multi-Role Shapechanger") then [] else
+    case (getResponse m (k++"-role")) of
+      Nothing -> []
+      Just roleName -> case (Dict.get roleName roles) of
+        Nothing -> []
+        Just role -> role.rolePowerList m ++ [quickSpecial "Multi-Role Shapechanger" m]
+
 shapePowerBlock m k =
   case (getResponse m k) of
     Nothing -> []
@@ -80,12 +101,29 @@ shapePowerBlock m k =
       Nothing -> []
       Just shape -> [{name=shapeName,powers = [shape.transform m, shape.special m, shape.atwill1 m, shape.atwill2 m] ++
         atLevel m 3 (shape.l3enc m) ++
-        atLevel m 7 (shape.l7enc m)}]
+        atLevel m 7 (shape.l7enc m) ++
+        shapeBbpower m k shape ++ shapeRolePowers m k
+          }]
+
+shapeAtwillNames m k =
+  case (getResponse m k) of
+      Nothing -> []
+      Just shapeName -> case (Dict.get shapeName shapes) of
+        Nothing -> []
+        Just shape -> [.name (shape.atwill1 m), .name (shape.atwill2 m)]
+
+roles : Dict.Dict String Role
+roles = Dict.fromList [("Blaster",roleBlaster),("Controller",roleController),
+                     ("Defender",roleDefender),("Leader",roleLeader),("Striker",roleStriker)]
 
 
-shapeChoiceField : Model -> String -> String -> (Dict.Dict String Shape) -> Field
+shapeChoiceField : Model -> String -> String -> (Dict.Dict String Shape) -> List Field
 shapeChoiceField m name key list =
-  DropdownField { name=name, del=False, key=key, choices=[""] ++ (Dict.keys (list)) }
+  [DropdownField { name=name, del=False, key=key, choices=[""] ++ (Dict.keys (list)) }] ++
+    (if (hasFeat m "Multi-Role Shapechanger") then [DropdownField {name="Role:", del=False, key=(key++"-role"), choices=[""] ++ (Dict.keys(roles))}] else []) ++
+    (if (hasFeat m "Shapechanger Bread and Butter") then [DropdownField {name="Bread and Butter:", del=False, key=(key++"-bb"), choices=[""]++(shapeAtwillNames m key)}] else [])
+
+
 
 classShapechanger : Class
 classShapechanger = { name = "Shapechanger",
@@ -126,11 +164,33 @@ powerBlocks m = case (getResponse m "shaper-type") of
   Just "Multi-Form" -> List.concatMap (\x -> shapePowerBlock m x) ["shaper-shape1", "shaper-shape2", "shaper-shape3"]
   _ -> []
 
+
+multiRoleForm m k =
+    case (getResponse m (k++"-role")) of
+      Nothing -> []
+      Just roleName -> case (Dict.get roleName roles) of
+        Nothing -> []
+        Just role -> case (getResponse m k) of
+          Nothing -> []
+          Just shapeName -> case (Dict.get shapeName shapes) of
+            Nothing -> []
+            Just shape -> List.map (\x -> {x | name = x.name ++ " (" ++ shapeName ++ ")"}) (role.roleForms m)
+
+multiRoleForms m = if (lacksFeat m "Multi-Role Shapechanger") then [] else
+  case (getResponse m "shaper-type") of
+    Just "Multi-Form" -> multiRoleForm m "shaper-shape1"
+                        ++ multiRoleForm m "shaper-shape2"
+                        ++ multiRoleForm m "shaper-shape3"
+    Just "One-Form" -> multiRoleForm m "shaper-shape1"
+    _ -> []
+
+
 forms m = [Form False "Shapechanger" ([
   DropdownField {name="Type:",key="shaper-type",del=False,choices=["","Multi-Form","One-Form"]}]
   ++ case (getResponse m "shaper-type") of
-    Just "Multi-Form" -> [shapeChoiceField m "Form:" "shaper-shape1" shapes,
-                          shapeChoiceField m "Form:" "shaper-shape2" shapes,
-                          shapeChoiceField m "Form:" "shaper-shape3" shapes]
-    Just "One-Form" -> [shapeChoiceField m "Form:" "shaper-shape1" shapes]
+    Just "Multi-Form" -> shapeChoiceField m "Form:" "shaper-shape1" shapes
+                        ++ shapeChoiceField m "Form:" "shaper-shape2" shapes
+                        ++ shapeChoiceField m "Form:" "shaper-shape3" shapes
+    Just "One-Form" -> shapeChoiceField m "Form:" "shaper-shape1" shapes
     _ -> [])]
+  ++ multiRoleForms m

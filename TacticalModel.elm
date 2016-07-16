@@ -136,11 +136,12 @@ allClassPowers : Model -> List Power
 allClassPowers m = classPowers m ++ List.concatMap .powers (classPowerBlocks m)
 
 rolePowers : Model -> List Power
-rolePowers m = indirectLookup m "basics-role" roles (\x -> x.rolePowerList m) [] []
+rolePowers m = if (isMultiRoleShaper m) then []
+  else indirectLookup m "basics-role" roles (\x -> x.rolePowerList m) [] []
 
 tacticalForms : Model -> List Form
 tacticalForms m = (indirectLookup m "basics-class" classes (\x -> x.classForms m) [] []) ++
-                  (indirectLookup m "basics-role" roles (\x -> x.roleForms m) [] [])
+      if (isMultiRoleShaper m) then [] else (indirectLookup m "basics-role" roles (\x -> x.roleForms m) [] [])
 
 getPowers : Model -> List Power
 getPowers m = basicPowers m ++ classPowers m ++ rolePowers m ++ featPowers m
@@ -194,7 +195,18 @@ notRole m f = not (hasRole m f)
 availableClassFeats : Model -> List String
 availableClassFeats m = indirectLookup m "basics-class" classes .classFeats [] []
 
-availableRoleFeats m = indirectLookup m "basics-role" roles .roleFeats [] []
+isMultiRoleShaper m = (hasClass m "Shapechanger") && (hasFeat m "Multi-Role Shapechanger")
+
+availableRoleFeats m =
+  if (isMultiRoleShaper m) then
+      case (getResponse m "shaper-type") of
+          Just "Multi-Form" -> indirectLookup m "shaper-shape1-role" roles .roleFeats [] []
+                              ++ indirectLookup m "shaper-shape2-role" roles .roleFeats [] []
+                              ++ indirectLookup m "shaper-shape3-role" roles .roleFeats [] []
+          Just "One-Form" -> indirectLookup m "shaper-shape1-role" roles .roleFeats [] []
+          _ -> []
+  else
+      indirectLookup m "basics-role" roles .roleFeats [] []
 
 
 availableFeats : Model -> List String
