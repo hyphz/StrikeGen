@@ -20,18 +20,25 @@ import Material.Icons.Content exposing (add_box)
 import Svg.Attributes
 import Markdown
 
-
+{-| Returns a row with a header and text. Used for the basics table. -}
+headerTableRow : String -> String -> Html Msg
 headerTableRow label value = tr [] [(th [] [text label]), (td [] [text value])]
 
+{-| Placeholder for characters with no name. Yes, cheesy. -}
+noName : Model -> String
 noName m = case (getResponse m "basics-origin") of
   Nothing -> "Amorphous Blob Of Infinite Possibility"
   Just "<Not Selected>" -> "Amorphous Blob of Infinite Possibility"
   Just x -> "The " ++ x ++ " With No Name"
 
+{-| Text for the Role entry. As usual, those pesky MRSs get us. -}
+roleText : Model -> String
 roleText m = case (isMultiRoleShaper m) of
   True -> "Multi-Role Shapeshifter"
   False -> Maybe.withDefault "" (getResponse m "basics-role")
 
+{-| Gets the name given to each wealth level. -}
+wealthDesc : Int -> String
 wealthDesc w = case w of
   0 -> " (Penniless)"
   1 -> " (Poor)"
@@ -39,7 +46,8 @@ wealthDesc w = case w of
   3 -> " (Super-Rich)"
   _ -> " (BUG)"
 
-
+{-| The top header of the character sheet with basic RP material. -}
+sheetHeader : Model -> Html Msg
 sheetHeader m = table [class "allheader"] [tr [] [td [] [table [class "sheetheader"] [
   headerTableRow "Name:" (Maybe.withDefault (noName m) (getResponse m "basics-name")),
   headerTableRow "Background:" (Maybe.withDefault "" (getResponse m "basics-bg")),
@@ -54,7 +62,7 @@ sheetHeader m = table [class "allheader"] [tr [] [td [] [table [class "sheethead
   headerTableRow "HP:" (toString <| getHP m)
  ]]]]
 
-
+{-| CSS class for sourced values in tables. -}
 classForSrc : Int -> String
 classForSrc s = case s of
     0 -> "backgroundSkill"
@@ -62,38 +70,43 @@ classForSrc s = case s of
     2 -> "userSkill"
     _ -> "Broken"
 
+{-| The row of ticks used next to skills and tricks in organic advancement. -}
+ticksRow : List (Html Msg)
 ticksRow =
   List.repeat 10 ( img [src "icons/square.svg", height 16, width 16] [])
-
 
 -- Generates the HTML skill table row for a skill.
 sourcedToHtmlTableRow : Model -> Bool -> Sourced -> Html Msg
 sourcedToHtmlTableRow m o s = tr [] ([(td [class (classForSrc s.source)] [text s.name])] ++
   if (o && organicStyleDisplay m) then [td [class (classForSrc s.source)] ticksRow] else [])
 
-quickTh : String -> Html Msg
-quickTh s = th [] [text s]
-
+{-| Header for a table of sourced data. -}
 sourcedTableHeader : Model -> String -> Bool -> Html Msg
 sourcedTableHeader m h o = case (o && organicStyleDisplay m) of
   False -> tr [] [th [] [text h]]
   True -> tr [] [th [colspan 2] [text h]]
 
+{-| Generic table of sourced data. -}
 sourcedTable : Model -> List Sourced -> String -> Bool -> Html Msg
 sourcedTable m l h o =
   table [] [thead [] [sourcedTableHeader m h o], (tbody [] (List.map (sourcedToHtmlTableRow m o) (sortBy .name l)))]
 
-
+{-| The three main tables of sourced data. -}
+skillTable : Model -> Html Msg
 skillTable m = sourcedTable m (getSkills m) "Skills" True
 
+trickTable : Model -> Html Msg
 trickTable m = sourcedTable m (getTricks m) "Tricks" True
 
-combatApLine = p [] ([text "AP spent in combat:"] ++ ticksRow)
-
-
+{-| The complication table is a bit different because it doesn't have tick rows, even
+if Organic advancement is being used. -}
+compTable : Model -> Html Msg
 compTable m = div [] ([sourcedTable m (getComplications m) "Complications" False] ++
   if (organicStyleDisplay m) then [combatApLine] else [])
 
+{-| The "AP spent in combat" tick line for organic advancement. -}
+combatApLine : Html Msg
+combatApLine = p [] ([text "AP spent in combat:"] ++ ticksRow)
 
 
 -- For some reason Elm modified the HTML library so that instead of passing Html.Events.on a function to apply
@@ -109,6 +122,8 @@ dropdownFieldOption model key opt =
     Nothing -> False
   in option [selected isSelected] [text opt]
 
+{-| Use one of the icons from the Google icon library included as elm. NOT for regular
+SVG icons! -}
 useIcon : (Color.Color -> Int -> Svg.Svg a) -> Int -> Html a
 useIcon icon size = Svg.svg [Svg.Attributes.height (toString size),
     Svg.Attributes.width (toString size)] [icon Color.black size]

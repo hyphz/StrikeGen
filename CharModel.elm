@@ -28,6 +28,7 @@ originSkills : Model -> List String
 originSkills m = indirectLookup m "basics-origin" m.database.origins
   .skillNames [] ["Missing origin"]
 
+{-| Calculates the character's wealth from their origin and background. -}
 getWealth : Model -> Int
 getWealth m =
   let
@@ -58,7 +59,7 @@ complexOrigin : Origin -> (Bool, Bool, Bool, Bool)
 complexOrigin x = ((length x.skillNames) > 2, (length x.complications) > 1,
   x.freeformSkill, x.freeformComplication)
 
-{-| Is this model's origin conmplex and if so, why? -}
+{-| Is this model's origin complex and if so, why? -}
 hasComplexOrigin : Model -> (Bool, Bool, Bool, Bool)
 hasComplexOrigin m = indirectLookup m "basics-origin" m.database.origins
   complexOrigin (False, False, False, False) (False, False, False, False)
@@ -88,6 +89,7 @@ complexOriginForm m = case (hasComplexOrigin m) of
     in
       Just (Form False originName (skillPart ++ complicationPart ++ freeformSkillPart ++ freeformComplicationPart))
 
+{-| Calculate the complications arising from the origin, allowing for freeforms and choices. -}
 resolvedOriginComplications : Model -> List String
 resolvedOriginComplications m = case (hasComplexOrigin m) of
   (False, False, False, False) -> indirectLookup m "basics-origin" m.database.origins .complications [] []
@@ -95,6 +97,8 @@ resolvedOriginComplications m = case (hasComplexOrigin m) of
     (if (complex) then mayList (getResponse m "origin-co") else indirectLookup m "basics-origin" m.database.origins .complications [] []) ++
     (if (freeform) then mayList (getResponse m "origin-cco") else [])
 
+{-| Form for a custom origin. -}
+customOriginForm : Model -> List Form
 customOriginForm m = case (getResponse m "basics-origin") of
   Just "<Custom>" -> [Form False "Custom Origin" ([
      FreeformField {name="Skill:",del=False,key="origin-custom-s1"},
@@ -124,7 +128,9 @@ getSkills m = map (skillNameToSkill 0) (resolvedBackgroundSkills m) -- Backgroun
           ++ map (skillNameToSkill 2) (getLearnedSkills m)
 
 {-| Turns a skill name from the database into a skill storable on the character,
-setting the source and name according to the parameters. -}
+setting the source and name according to the parameters. This is actually used for
+things other than skills because pairing a name and a source turns out to be
+really useful, thus the "Sourced" type. -}
 skillNameToSkill : Int -> String -> Sourced
 skillNameToSkill source name = { name = name, source = source }
 
@@ -138,6 +144,7 @@ customBackgroundForm m =
        FreeformField {name="Skill you need the most?", key="bg-custom-s1", del=False},
        FreeformField {name="Supporting skill or knowledge?", key="bg-custom-s2", del=False},
        FreeformField {name="Social/business skill?", key="bg-custom-s3", del=False},
+       FreeformField {name="Other background skill?", key="bg-custom-s4", del=False},
        DropdownField {name="What helps when times are tough?", del=False, key="bg-custom-wos1", choices=["","Wealth","People"]}]
        ++ mayList (
             case getResponse m "bg-custom-wos1" of
@@ -161,10 +168,13 @@ resolvedBackgroundSkills m = case getResponse m "basics-bg" of
   Just "<Custom>" -> (mayList <| getResponse m "bg-custom-s1") ++
                      (mayList <| getResponse m "bg-custom-s2") ++
                      (mayList <| getResponse m "bg-custom-s3") ++
+                     (mayList <| getResponse m "bg-custom-s4") ++
                       if (getResponse m "bg-custom-wos1" == Just "People") then mayList <| getResponse m "bg-custom-wos1s" else [] ++
                       if (getResponse m "bg-custom-wos2" == Just "Skill") then mayList <| getResponse m "bg-custom-wos2s" else []
   Just _ -> backgroundSkills m
 
+{-| Returns the skill choices for the origin, allowing for it being custom. -}
+resolvedOriginSkills : Model -> List String
 resolvedOriginSkills m = case getResponse m "basics-origin" of
   Nothing -> []
   Just "<Custom>" -> (mayList <| getResponse m "origin-custom-s1") ++
@@ -212,25 +222,38 @@ fieldChanged field m =
     "basics-level" -> validateLevel m
     _ -> m
 
+{-| One entry in an extender form. Takes the model, the name of the field,
+the prefix for the form's keys and the field number. -}
+extenderFormEntry : Model -> String -> String -> Int -> Field
 extenderFormEntry m name prefix x = FreeformField {name=name, del=True, key=(prefix++"-"++(toString x))}
 
+{-| Creates an extendable form with insert/delete buttons. -}
 extenderForm : Model -> String -> String -> String -> Form
 extenderForm m header itemname key = Form True header
   (map (extenderFormEntry m itemname key) [1..(getResponseInt m (key ++ "-count") 0)])
 
+{-| Definitions of the three extendable forms. -}
+learnedSkillsForm : Model -> Form
 learnedSkillsForm m = extenderForm m "Learned Skills" "Skill:" "ls"
 
+learnedTricksForm : Model -> Form
 learnedTricksForm m = extenderForm m "Learned Tricks" "Trick:" "lt"
 
+extraCompsForm : Model -> Form
 extraCompsForm m = extenderForm m "Extra Complications" "Complication:" "lc"
 
-
+{-| Get the full list of tricks. -}
 getTricks : Model -> List Sourced
 getTricks m =
   let
-    bgTrick = case (indirectLookup m "basics-bg" m.database.backgrounds .trick "" "") of
-      "" -> []
-      x -> [x]
+    bgTrick = if (getResponse m "basics-bg") == Just "<Custom>" then
+        case (getResponse m "bg-custom-t") of
+          Nothing -> []
+          Just t -> [t]
+      else
+        case (indirectLookup m "basics-bg" m.database.backgrounds .trick "" "") of
+          "" -> []
+          x -> [x]
     customTrick = mayList (getResponse m "basics-trick")
     levelTricks =
       (if ((getLevel m) >= 2) then mayList (getResponse m "adv-l2trick") else []) ++
@@ -244,6 +267,7 @@ getTricks m =
        ++ (map (skillNameToSkill 2) levelTricks)
        ++ (map (skillNameToSkill 2) organicTricks)
 
+{-| Get the full list of complications. -}
 getComplications : Model -> List Sourced
 getComplications m =
   let
@@ -281,6 +305,7 @@ levelForm model = Form False "Advancement" (
   (if ((getLevel model) >= 10) then [FreeformField {name="Trick", del=False, key="adv-l10trick"}] else [])
   )
 
+{-| Form for feats. -}
 featsForm : Model -> Form
 featsForm m = Form False "Feats" (
   [DropdownField {name="Feat:", del=False, key="feat-1", choices=(availableFeats m)}] ++
@@ -290,11 +315,7 @@ featsForm m = Form False "Feats" (
   (if ((getLevel m) >= 9) then [DropdownField {name="Feat:",del=False,key="feat-5",choices=(availableFeats m)}] else []) ++
   featChoices m)
 
-
-
-
-
-{-| Get the active forms. -}
+{-| The full list of forms to display at any given time. -}
 getForms : Model -> List Form
 getForms model =
    [basicsForm model] ++
@@ -306,11 +327,6 @@ getForms model =
    tacticalForms model ++
    [learnedSkillsForm model] ++
    if (getResponse model "basics-ticks") == Just "Yes" then [learnedTricksForm model, extraCompsForm model] else []
-
-
-
-
-
 
 {-| Update a field on the character when a form value changes, and call validation. -}
 updateFieldResponse : String -> String -> Model -> Model
@@ -336,7 +352,6 @@ updateExtendForm key model =
     "Learned Tricks" -> extendForm "lt-" model
     "Extra Complications" -> extendForm "lc-" model
     _ -> model
-
 
 {-| Closes gaps in the numbering order when an item on an addable form is
 deleted. -}
@@ -374,6 +389,7 @@ updateDeleteField key model =
     reduceCount = (setResponse checkResponseRemoved countName (toString ((getResponseInt checkResponseRemoved countName 0) - 1)))
       in closeGaps keyPrehyphen (getResponseInt reduceCount countName 0) reduceCount
 
+{-| Get all the entries on an extender form, as a list. -}
 getExtendFormEntries : Model -> String -> List String
 getExtendFormEntries m prefix =
   case (getResponse m (prefix ++ "count")) of
@@ -382,14 +398,15 @@ getExtendFormEntries m prefix =
       Err _ -> ["BUG! Mangled ExtendForm Counter " ++ prefix]
       Ok itemCount -> List.map (\x -> Maybe.withDefault "BUG! Broken ExtendForm Entry" (getResponse m (prefix ++ (toString x)))) [1..(itemCount)]
 
+{-| Functions for reading from the three standard extender forms. -}
 getLearnedSkills : Model -> List String
 getLearnedSkills m = getExtendFormEntries m "ls-"
 
+getLearnedTricks : Model -> List String
 getLearnedTricks m = getExtendFormEntries m "lt-"
 
+getExtraComplications : Model -> List String
 getExtraComplications m = getExtendFormEntries m "lc-"
-
-
 
 {-| Encodes the character hash as a Json string. -}
 encodeChar : Model -> String
@@ -410,7 +427,6 @@ handleFileCommand x m = case x of
   "roll20" -> (m, Ports.download ("macros.txt",powerMacros m))
   _ -> (m, Ports.alert ("Invalid message " ++ x ++ " from file menu"))
 
-
 {-| Decode a character hash from a JSON string. -}
 importChar : String -> Model -> (Model, Cmd Msg)
 importChar x m =
@@ -421,7 +437,6 @@ importChar x m =
       Ok chardata -> ({ m | character = chardata }, Cmd.none)
       Err string -> (m, Ports.alert "Error decoding character file.")
 
-
 {-| Add spaces at carriage returns in a string, used to format markdown
 strings from the database for plain text viewing. -}
 tidyEdges : String -> String
@@ -431,7 +446,6 @@ tidyEdges s = s |> String.split "\n" |> String.join " "
 unSlice : Int -> Int -> String -> String
 unSlice start end str =
   (String.slice 0 start str) ++ (String.slice end -1 str)
-
 
 {-| Select a headed paragraph from the markdown text in the text database, and
 extract it, removing the paragraph header. Returns the extracted paragraph and
@@ -512,7 +526,7 @@ powerMacros model =
   String.concat (List.map powerMacro (TacticalModel.getAllPowers model))
 
 
-
+{-| Elm model update function. -}
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model = case msg of
     FormFieldUpdated k s -> (updateFieldResponse k s model, Cmd.none)

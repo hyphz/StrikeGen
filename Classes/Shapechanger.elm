@@ -12,6 +12,9 @@ import Roles.Controller exposing (roleController)
 import Roles.Blaster exposing (roleBlaster)
 
 
+-- Hello, my name is Shapechanger, and I am a pain in the ass.
+
+-- These are called shapes instead of forms because forms are used in FormsModel.
 type alias Shape = {
    name : String,
    transform : (Model -> Power),
@@ -25,6 +28,7 @@ type alias Shape = {
 atWillDamage : Model -> Int
 atWillDamage m = if ((getLevel m) < 5) then 2 else 3
 
+tortoise : Shape
 tortoise = Shape "Tortoise"
   (quickPower "Tortoise's Transformation" Attack Encounter 0 0 3 Purple)
   (levelTextSpecial "Form of the Tortoise" [1, 5, 9])
@@ -33,6 +37,7 @@ tortoise = Shape "Tortoise"
   (quickPower "Perfect Fortress" Attack Encounter 0 0 3 Purple)
   (quickPower "Shield For All" Attack Encounter 0 0 4 Purple)
 
+bull : Shape
 bull = Shape "Bull"
   (quickPower "Bull's Transformation" Attack Encounter 0 0 3 Purple)
   (levelTextSpecial "Form of the Bull" [1, 5, 9])
@@ -41,6 +46,7 @@ bull = Shape "Bull"
   (quickPower "Shove and Follow" Attack Encounter 0 0 0 Purple)
   (quickPower "Crash Test" Attack Encounter 0 0 4 Purple)
 
+hawk : Shape
 hawk = Shape "Hawk"
   (quickPower "Hawk's Transformation" Attack Encounter 0 0 3 Purple)
   (levelTextSpecial "Form of the Hawk" [1, 5, 9])
@@ -49,6 +55,7 @@ hawk = Shape "Hawk"
   (quickPower "Dust Bath" Attack Encounter 0 0 3 Purple)
   (quickPower "Live Bomb" Attack Encounter 0 0 4 Purple)
 
+mammoth : Shape
 mammoth = Shape "Mammoth"
   (levelTextPower "Mammoth's Transformation" Attack Encounter 0 0 3 Purple [1,9])
   (levelTextSpecial "Form of the Mammoth" [1, 5])
@@ -57,6 +64,7 @@ mammoth = Shape "Mammoth"
   (quickPower "Fastball Special" Attack Encounter 0 0 0 Purple)
   (quickPower "Fastball Deluxe" Attack Encounter 0 0 4 Purple)
 
+viper : Shape
 viper = Shape "Viper"
   (quickPower "Viper's Transformation" Attack Encounter 0 0 3 Purple)
   (levelTextSpecial "Form of the Viper" [1, 5, 9])
@@ -65,6 +73,7 @@ viper = Shape "Viper"
   (quickPower "Spit Poison" Attack Encounter 5 0 3 Purple)
   (quickPower "Inescapable Venom" Attack Encounter 0 0 4 Purple)
 
+kraken : Shape
 kraken = Shape "Kraken"
   (quickPower "Kraken's Transformation" Attack Encounter 0 0 3 Purple)
   (levelTextSpecial "Form of the Kraken" [1, 5, 9])
@@ -73,12 +82,16 @@ kraken = Shape "Kraken"
   (quickPower "Choke Out" Attack Encounter 5 0 3 Purple)
   (quickPower "Death Grip" Attack Encounter 0 0 4 Purple)
 
+{-| Dictionary of all shapes. -}
+shapes : Dict.Dict String Shape
 shapes =
   let
     shapepair s = (s.name, s)
   in
     Dict.fromList (List.map shapepair [tortoise, bull, hawk, mammoth, viper, kraken])
 
+{-| Creates the Bread and Butter feat Power for a given shape if it's selected. -}
+shapeBbpower : Model -> String -> Shape -> List Power
 shapeBbpower m k shape =
   if (lacksFeat m "Shapechanger Bread and Butter") then [] else
     case (getResponse m (k++"-bb")) of
@@ -86,6 +99,9 @@ shapeBbpower m k shape =
       Just atWillname -> if (not (List.member atWillname (shapeAtwillNames m k))) then []
       else [Power "Bread and Butter" ("When any power or ability allows you to make a Basic attack while you are in " ++ shape.name ++ " form, you may use " ++ atWillname ++ " instead.") Misc None 0 0 0 White]
 
+{-| MRS: Get all of the powers from a role, decorated with a prefix and form header for the form they're
+specific to. -}
+shapeRolePowers : Model -> String -> List Power
 shapeRolePowers m k =
   if (lacksFeat m "Multi-Role Shapechanger") then [] else
     case (getResponse m (k++"-role")) of
@@ -94,6 +110,8 @@ shapeRolePowers m k =
         Nothing -> []
         Just role -> role.rolePowerListPrefix m (k ++ "-") ++ [quickSpecial "Multi-Role Shapechanger" m]
 
+{-| Gets the shape power block for a given shape, with k being the form key for the shape choice. -}
+shapePowerBlock : Model -> String -> List PowerBlock
 shapePowerBlock m k =
   case (getResponse m k) of
     Nothing -> []
@@ -105,6 +123,9 @@ shapePowerBlock m k =
         shapeBbpower m k shape ++ shapeRolePowers m k
           }]
 
+{-| Gets the names of at-will powers for a given shape, used for choices for the Bread and Butter
+feat. -}
+shapeAtwillNames : Model -> String -> List String
 shapeAtwillNames m k =
   case (getResponse m k) of
       Nothing -> []
@@ -150,7 +171,7 @@ modifyRally m p = case (getResponse m "shaper-type") of
   Just "Multi-Form" -> {p | text = overtext m "MultiFormShaperRally"}
   _ -> p
 
-
+powers : Model -> List Power
 powers m = [quickPower "Blurred Form" Attack AtWill 0 0 2 Green m,
             quickPower "Primal Compulsion" Attack AtWill 10 0 2 Green m] ++
             case (getResponse m "shaper-type") of
@@ -158,13 +179,13 @@ powers m = [quickPower "Blurred Form" Attack AtWill 0 0 2 Green m,
               Just "Multi-Form" -> [quickSpecial "Multi Form Shaper" m]
               _ -> []
 
-
+powerBlocks : Model -> List PowerBlock
 powerBlocks m = case (getResponse m "shaper-type") of
   Just "One-Form" -> shapePowerBlock m "shaper-shape1"
   Just "Multi-Form" -> List.concatMap (\x -> shapePowerBlock m x) ["shaper-shape1", "shaper-shape2", "shaper-shape3"]
   _ -> []
 
-
+multiRoleForm : Model -> String -> List Form
 multiRoleForm m k =
     case (getResponse m (k++"-role")) of
       Nothing -> []
@@ -176,6 +197,7 @@ multiRoleForm m k =
             Nothing -> []
             Just shape -> List.map (\x -> {x | name = x.name ++ " (" ++ shapeName ++ ")"}) (role.roleFormsPrefix m (k ++ "-"))
 
+multiRoleForms : Model -> List Form
 multiRoleForms m = if (lacksFeat m "Multi-Role Shapechanger") then [] else
   case (getResponse m "shaper-type") of
     Just "Multi-Form" -> multiRoleForm m "shaper-shape1"
@@ -184,7 +206,7 @@ multiRoleForms m = if (lacksFeat m "Multi-Role Shapechanger") then [] else
     Just "One-Form" -> multiRoleForm m "shaper-shape1"
     _ -> []
 
-
+forms : Model -> List Form
 forms m = [Form False "Shapechanger" ([
   DropdownField {name="Type:",key="shaper-type",del=False,choices=["","Multi-Form","One-Form"]}]
   ++ case (getResponse m "shaper-type") of

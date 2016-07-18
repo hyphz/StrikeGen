@@ -123,7 +123,6 @@ blankDatabase : Database
 blankDatabase = { backgrounds = Dict.empty, origins = Dict.empty, texts = Dict.empty }
 
 
-
 {-| Turns a maybe value into a single element list for concatting. -}
 mayList : Maybe x -> List x
 mayList x = case x of
@@ -151,6 +150,7 @@ getResponse : Model -> String -> Maybe String
 getResponse model key =
   Dict.get key model.character
 
+{-| Gets a form response from the character store with a prefixed string. -}
 prefixgetResponse : Model -> String -> String -> Maybe String
 prefixgetResponse model p key = getResponse model (p ++ key)
 
@@ -160,7 +160,6 @@ moveResponse m src dest =
   case (getResponse m src) of
     Nothing -> killResponse m dest -- Move the "nothing" by deleting the destination
     Just r -> setResponse (killResponse m src) dest r
-
 
 {-| Gets a form response from the character store, and runs a function on it
 if it exists; otherwise, returns the default value. -}
@@ -185,9 +184,8 @@ getLevel : Model -> Int
 getLevel m =
   getResponseInt m "basics-level" 1
 
-
 {-| Gets a value from the character store, looks it up in another dictionary, and
-then runs a function on it if it's found. If it's not in the store, returns default.
+then runs a function on the result if it's found. If it's not in the store, returns default.
 If the value from the store isn't in the dictionary, returns error. -}
 indirectLookup : Model -> String -> Dict String a -> (a -> b) -> b -> b -> b
 indirectLookup model key db func default error =
@@ -196,22 +194,20 @@ indirectLookup model key db func default error =
       Nothing -> error
       Just o -> func o)
 
-
 {-| Looks up the given key in the text database and returns the text if found,
 otherwise returns the default. -}
 overtext : Model -> String -> String
-overtext model key = Maybe.withDefault ("(Text not available " ++ key ++")") (get key model.database.texts)
-
+overtext model key = Maybe.withDefault ("(Text unavailable or copyrighted. Key: " ++ key ++")") (get key model.database.texts)
 
 {-| Updates the database part of the model.-}
 updateDatabase : (Database -> Database) -> Model -> Model
 updateDatabase updater model = {model | database = (updater model.database) }
 
-{-| What to do with the model if a data load fails. -}
+{-| What to do with the model if a data load fails. Basically, not much. -}
 httpError : Model -> Model
 httpError model =  model
 
-
+{-| JSON decoder for the origins file. -}
 originsDecoder : Decoder (List Origin)
 originsDecoder = "origins" := (Json.Decode.list
     (Json.Decode.object6 Origin
@@ -222,6 +218,7 @@ originsDecoder = "origins" := (Json.Decode.list
       (Json.Decode.oneOf [("freeformSkill" := bool), succeed False])
       (Json.Decode.oneOf [("freeformComplication" := bool), succeed False])))
 
+{-| JSON decoder for the background file. -}
 backgroundsDecoder : Decoder (List Background)
 backgroundsDecoder = "backgrounds" := (Json.Decode.list
   (object4 Background
@@ -230,25 +227,27 @@ backgroundsDecoder = "backgrounds" := (Json.Decode.list
     ("wealth" := int)
     ("trick" := string)))
 
-
-
 {-| Returns the command to load a JSON data file. If it loads successfully, send the
 specified message. If it doesn't, send HTTPLoadError.  -}
 getJsonFileCommand : String -> (String -> Msg) -> Cmd Msg
 getJsonFileCommand fileName signal =
    perform HTTPLoadError signal (getString fileName)
 
+
+{-| Takes a list of items and a function and turns it into a dictionary, running the
+function on each of the items to generate its dictionary key. -}
 toDict : (a -> comparable) -> List a -> Dict comparable a
 toDict keygetter list = Dict.fromList (List.map (\s -> (keygetter s, s)) list)
 
+{-| Unpack backgrounds data from a JSON string. -}
 unpackBackgrounds : String -> Model -> Model
 unpackBackgrounds s model = updateDatabase ( \d ->
  { d | backgrounds = toDict .name ([nullBackground] ++ (withDefault [] (decodeString backgroundsDecoder s)))}) model
 
+{-| Unpack origins data from a JSON string. -}
 unpackOrigins : String -> Model -> Model
 unpackOrigins s model = updateDatabase ( \d ->
  { d | origins = toDict .name ([nullOrigin] ++ (withDefault [] (decodeString originsDecoder s)))}) model
-
 
 {-| Parses the text file blob into the text database. -}
 splitTexts : String -> Dict String String
@@ -266,9 +265,11 @@ splitTexts str =
   in
     Dict.fromList paraPairs
 
+{-| Parses the text file blob and loads it into the database. -}
 unpackTexts : String -> Model -> Model
 unpackTexts str model = updateDatabase ( \d -> {d | texts = splitTexts str} ) model
 
+{-| Cascaded Elm model update function. (Cascaded from CharModel) -}
 dbUpdate : Msg -> Model -> (Model, Cmd Msg)
 dbUpdate msg model = case msg of
     HTTPLoadError e -> (httpError model, Ports.alert "Database load error! Check internet or local data/ path.")
