@@ -146,3 +146,62 @@ div.redpower div.powerhead {
 div.redpower div.powertext {
   background-color: hsl(0,50%,90%);
 }
+
+table.sheetheader {
+  border: 1px solid black;
+  width: 100%;
+}
+
+table.sheetheader th {
+  text-align: left;
+  width: 10%;
+}
+
+table.sheetheader td {
+  width: 100%;
+}
+
+table.tacticalheader {
+  border: 1px solid black;
+  width: 100%;
+  height: 100%;
+}
+
+table.tacticalheader th {
+  text-align: left;
+  width: 10%;
+}
+
+table.allheader {
+  width: 80%;
+}
+
+table.allheader td {
+  width: 50%;
+  height: 100%;
+}
+
+tr:nth-child(even) td.backgroundSkill {
+  background-color: hsl(120,32%,77%);
+}
+
+tr:nth-child(odd) td.backgroundSkill {
+  background-color: hsl(120,50%,90%);  
+}
+
+tr:nth-child(even) td.originSkill {
+  background-color: hsl(50, 50%, 77%);
+}
+
+tr:nth-child(odd) td.originSkill {
+   background-color: hsl(50, 50%, 90%);
+}
+
+
+tr:nth-child(even) td.userSkill {
+    background-color: hsl(230,50%,77%);
+}
+
+tr:nth-child(odd) td.userSkill {
+  background-color: hsl(230,50%,90%);
+}

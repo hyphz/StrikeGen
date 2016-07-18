@@ -92,7 +92,7 @@ shapeRolePowers m k =
       Nothing -> []
       Just roleName -> case (Dict.get roleName roles) of
         Nothing -> []
-        Just role -> role.rolePowerList m ++ [quickSpecial "Multi-Role Shapechanger" m]
+        Just role -> role.rolePowerListPrefix m (k ++ "-") ++ [quickSpecial "Multi-Role Shapechanger" m]
 
 shapePowerBlock m k =
   case (getResponse m k) of
@@ -174,7 +174,7 @@ multiRoleForm m k =
           Nothing -> []
           Just shapeName -> case (Dict.get shapeName shapes) of
             Nothing -> []
-            Just shape -> List.map (\x -> {x | name = x.name ++ " (" ++ shapeName ++ ")"}) (role.roleForms m)
+            Just shape -> List.map (\x -> {x | name = x.name ++ " (" ++ shapeName ++ ")"}) (role.roleFormsPrefix m (k ++ "-"))
 
 multiRoleForms m = if (lacksFeat m "Multi-Role Shapechanger") then [] else
   case (getResponse m "shaper-type") of

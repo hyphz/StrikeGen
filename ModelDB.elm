@@ -97,6 +97,8 @@ type alias Role =
   { name : String,
     rolePowerList : (Model -> List Power),
     roleForms : (Model -> List Form),
+    rolePowerListPrefix : (Model -> String -> List Power),
+    roleFormsPrefix : (Model -> String -> List Form),
     modifySpeed : Maybe (Model -> Int -> Int),
     roleFeats : List String }
 
@@ -114,7 +116,8 @@ nullKit = { name="<Not Selected>",base="",advances=[]}
 
 blankCharacter : Dict String String
 blankCharacter = Dict.fromList [("basics-level","1"),
-                                ("basics-bg","<Not Selected>")]
+                                ("basics-bg","<Not Selected>"),
+                                ("basics-origin","<Not Selected>")]
 
 blankDatabase : Database
 blankDatabase = { backgrounds = Dict.empty, origins = Dict.empty, texts = Dict.empty }
@@ -147,6 +150,9 @@ killResponse model key =
 getResponse : Model -> String -> Maybe String
 getResponse model key =
   Dict.get key model.character
+
+prefixgetResponse : Model -> String -> String -> Maybe String
+prefixgetResponse model p key = getResponse model (p ++ key)
 
 {-| Moves a form response from one key to another. -}
 moveResponse : Model -> String -> String -> Model

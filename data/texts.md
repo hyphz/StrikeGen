@@ -2229,3 +2229,5 @@ creature is Taken Out, you cannot use the summoning power even if it is not expe
 When you use a Transformation Power, you take on the Role associated with that form.
 You may use only one Role Encounter power of each level per combat, even if you take on
 multiple forms.
+@@StrikerSpeedBoost
+While this role is active your speed is increased by 4.

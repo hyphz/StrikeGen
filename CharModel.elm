@@ -73,10 +73,20 @@ complexOriginForm m = case (hasComplexOrigin m) of
     in
       Just (Form False originName (skillPart ++ complicationPart ++ freeformSkillPart ++ freeformComplicationPart))
 
+customOriginForm m = case (getResponse m "basics-origin") of
+  Just "<Custom>" -> [Form False "Custom Origin" ([
+     FreeformField {name="Skill:",del=False,key="origin-custom-s1"},
+     DropdownField {name="Bonus:",del=False,key="origin-custom-wos1",choices=["","Skill","Wealth"]}] ++
+     case (getResponse m "origin-custom-wos1") of
+       Just "Skill" -> [FreeformField {name="Skill:",del=False,key="origin-custom-s2"}]
+       _ -> [])]
+  _ -> []
+
+
 {-| Gets the two skills our origin actually contributes, based on the list
 and/or choices. -}
-resolvedOriginSkills : Model -> List String
-resolvedOriginSkills m = case (hasComplexOrigin m) of
+setOriginSkills : Model -> List String
+setOriginSkills m = case (hasComplexOrigin m) of
   (False, _, False, _) -> originSkills m
   (True, _, False, _) -> mayList (Dict.get "origin-s1" m.character) ++
                mayList (Dict.get "origin-s2" m.character)
@@ -89,6 +99,7 @@ getSkills : Model -> List Skill
 getSkills m = map (skillNameToSkill 0) (resolvedBackgroundSkills m) -- Background
           ++ map (skillNameToSkill 1) (resolvedOriginSkills m) -- Origin
           ++ mayList (Maybe.map (skillNameToSkill 2) (getResponse m "basics-skill"))
+          ++ map (skillNameToSkill 2) (getLearnedSkills m)
 
 {-| Turns a skill name from the database into a skill storable on the character,
 setting the source and name according to the parameters. -}
@@ -132,6 +143,11 @@ resolvedBackgroundSkills m = case getResponse m "basics-bg" of
                       if (getResponse m "bg-custom-wos2" == Just "Skill") then mayList <| getResponse m "bg-custom-wos2s" else []
   Just _ -> backgroundSkills m
 
+resolvedOriginSkills m = case getResponse m "basics-origin" of
+  Nothing -> []
+  Just "<Custom>" -> (mayList <| getResponse m "origin-custom-s1") ++
+                     if (getResponse m "origin-custom-wos1" == Just "Skill") then mayList <| getResponse m "origin-custom-s2" else []
+  Just _ -> setOriginSkills m
 
 {-| Quick function for removing a field value that's out of range, if it
 exists. -}
@@ -189,8 +205,9 @@ basicsForm : Model -> Form
 basicsForm model = Form False "The Basics" [
   FreeformField {name="Name:",del=False, key="basics-name"},
   DropdownField {name="Background:", del=False, key="basics-bg", choices=(["<Custom>"] ++ (Dict.keys model.database.backgrounds))},
-  DropdownField {name="Origin:", del=False, key="basics-origin", choices=(Dict.keys model.database.origins)},
+  DropdownField {name="Origin:", del=False, key="basics-origin", choices=(["<Custom>"] ++ (Dict.keys model.database.origins))},
   NumberField {name="Level:", del=False, key="basics-level", min=1, max=10},
+  DropdownField {name="Show ticks:", del=False, key="basics-ticks", choices=["","No","Yes"]},
   DropdownField {name="Class:", del=False, key="basics-class", choices=([""] ++ Dict.keys classes)},
   DropdownField {name="Role:", del=False, key="basics-role", choices=([""] ++ Dict.keys roles)},
   FreeformField {name="Custom Skill:", del=False, key="basics-skill"},
@@ -230,6 +247,7 @@ getForms model =
    [featsForm model] ++
    (mayList (complexOriginForm model)) ++
    (mayList (customBackgroundForm model)) ++
+  customOriginForm model ++
    tacticalForms model
 
 
@@ -296,6 +314,16 @@ updateDeleteField key model =
     reduceCount = (setResponse checkResponseRemoved countName (toString ((getResponseInt checkResponseRemoved countName 0) - 1)))
       in closeGaps keyPrehyphen (getResponseInt reduceCount countName 0) reduceCount
 
+getExtendFormEntries : Model -> String -> List String
+getExtendFormEntries m prefix =
+  case (getResponse m (prefix ++ "count")) of
+    Nothing -> []
+    Just s -> case (toInt s) of
+      Err _ -> ["BUG! Mangled ExtendForm Counter " ++ prefix]
+      Ok itemCount -> List.map (\x -> Maybe.withDefault "BUG! Broken ExtendForm Entry" (getResponse m (prefix ++ (toString x)))) [1..(itemCount)]
+
+getLearnedSkills : Model -> List String
+getLearnedSkills m = getExtendFormEntries m "ls-"
 
 
 {-| Encodes the character hash as a Json string. -}

@@ -7,8 +7,10 @@ import PowerUtilities exposing (..)
 
 roleDefender : Role
 roleDefender = { name = "Defender",
-               rolePowerList = powers,
-               roleForms = forms,
+                 rolePowerList = (\m -> powers m ""),
+                rolePowerListPrefix = powers,
+                roleForms = (\m -> forms m ""),
+                roleFormsPrefix = forms,
                modifySpeed = Nothing,
               roleFeats = ["Distant Defender"] }
 
@@ -51,25 +53,25 @@ upgraded x m = case x of
 
 
 
-checkUpgrade m p =
+checkUpgrade m p pr =
   if ((getLevel m) < 10) then p else
   case (List.head p) of
     Nothing -> p
-    Just rp -> case (getResponse m "defender-upgrade") of
+    Just rp -> case (getResponse m (pr ++ "defender-upgrade")) of
       Nothing -> p
       Just x -> if (x == rp.name) then upgraded rp.name m else p
 
 
-l2encchosen m = checkUpgrade m (powerlookup m "defender-enc1" encounters)
-l6encchosen m = checkUpgrade m (powerlookup m "defender-enc2" encounters)
+l2encchosen m p = checkUpgrade m (prefixpowerlookup m p "defender-enc1" encounters) p
+l6encchosen m p = checkUpgrade m (prefixpowerlookup m p "defender-enc2" encounters) p
 
-upgradable m = [""] ++ (List.map .name (powerlookup m "defender-enc1" encounters  ++
-                                        powerlookup m "defender-enc2" encounters))
+upgradable m p = [""] ++ (List.map .name (prefixpowerlookup m p "defender-enc1" encounters  ++
+                                        prefixpowerlookup m p "defender-enc2" encounters))
 
 
-powers m = boosts m ++ actionTrigger m ++
-  atLevelList m 2 (l2encchosen m) ++
-  atLevelList m 6 (l6encchosen m) ++
+powers m p = boosts m ++ actionTrigger m ++
+  atLevelList m 2 (l2encchosen m p) ++
+  atLevelList m 6 (l6encchosen m p) ++
   if (hasFeat m "Distant Defender") then [quickSpecial "Distant Defender" m] else []
 
 
@@ -77,8 +79,8 @@ powers m = boosts m ++ actionTrigger m ++
 
 
 
-forms m = [Form False "Defender" (
-    atLevel m 2 (powerChoiceField m "Encounter:" "defender-enc1" encounters)
-  ++ atLevel m 6 (powerChoiceField m "Encounter:" "defender-enc2" encounters)
-  ++ atLevel m 10 (DropdownField { name="Upgrade:",del=False,key="defender-upgrade",choices=(upgradable m)})
+forms m p = [Form False "Defender" (
+    atLevel m 2 (prefixpowerChoiceField m "Encounter:" p "defender-enc1" encounters)
+  ++ atLevel m 6 (prefixpowerChoiceField m "Encounter:" p "defender-enc2" encounters)
+  ++ atLevel m 10 (DropdownField { name="Upgrade:",del=False,key=(p ++ "defender-upgrade"),choices=(upgradable m p)})
   )]

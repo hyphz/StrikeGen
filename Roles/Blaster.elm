@@ -7,8 +7,10 @@ import PowerUtilities exposing (..)
 
 roleBlaster : Role
 roleBlaster = { name = "Blaster",
-               rolePowerList = powers,
-               roleForms = forms,
+               rolePowerList = (\m -> powers m ""),
+               rolePowerListPrefix = powers,
+               roleForms = (\m -> forms m ""),
+               roleFormsPrefix = forms,
                modifySpeed = Nothing,
                roleFeats = ["Beam Blaster","Boosted Blaster"] }
 
@@ -27,8 +29,8 @@ beamBlasterBoost m =  if (getLevel m) < 4 then [quickSpecial "Multitarget Beam B
               else [quickSpecial "Super Multitarget Beam Blaster" m]
 
 
-multiBoost m = if (hasFeat m "Beam Blaster") then beamBlasterBoost m else
-  case (getResponse m "blaster-type") of
+multiBoost m p = if (hasFeat m "Beam Blaster") then beamBlasterBoost m else
+  case (prefixgetResponse m p "blaster-type") of
     Just "Beams" -> beamBoost m
     _ -> blastBoost m
 
@@ -44,12 +46,12 @@ precision m = levelTextPower "Precision" RoleSlot AtWill 0 0 0 Blue [1,4,8] m
 terrain m = levelTextPower "Terrain" RoleSlot AtWill 0 0 0 Blue [1,4,8] m
 
 boostchoices m = powerDict m [precision, terrain]
-cboost m = if (hasFeat m "Boosted Blaster") then [precision m, terrain m] else powerlookup m "blaster-boost" boostchoices
+cboost m p = if (hasFeat m "Boosted Blaster") then [precision m, terrain m] else prefixpowerlookup m p "blaster-boost" boostchoices
 
 actionTrigger m = if (getLevel m) < 6 then [quickPower "Consistent Attack" Reaction Encounter 0 0 0 Yellow m]
                                       else [quickPower "Dependable" Reaction Encounter 0 0 0 Yellow m]
 
-boosts m = multiBoost m ++ cboost m ++ blasterBombardier m
+boosts m p = multiBoost m p ++ cboost m p ++ blasterBombardier m
 
 
 
@@ -70,34 +72,34 @@ upgraded x m = case x of
 
 
 
-checkUpgrade m p =
+checkUpgrade m pr p =
   if ((getLevel m) < 10) then p else
   case (List.head p) of
     Nothing -> p
-    Just rp -> case (getResponse m "blaster-upgrade") of
+    Just rp -> case (getResponse m (pr++"blaster-upgrade")) of
       Nothing -> p
       Just x -> if (x == rp.name) then upgraded rp.name m else p
 
 
-l2encchosen m = checkUpgrade m (powerlookup m "blaster-enc1" encounters)
-l6encchosen m = checkUpgrade m (powerlookup m "blaster-enc2" encounters)
+l2encchosen m pr = checkUpgrade m pr (prefixpowerlookup m pr "blaster-enc1" encounters)
+l6encchosen m pr = checkUpgrade m pr (prefixpowerlookup m pr "blaster-enc2" encounters)
 
-upgradable m = [""] ++ (List.map .name (powerlookup m "blaster-enc1" encounters  ++
-                                        powerlookup m "blaster-enc2" encounters))
-
-
-powers m = boosts m ++ actionTrigger m ++
-  atLevelList m 2 (l2encchosen m) ++
-  atLevelList m 6 (l6encchosen m)
+upgradable m p = [""] ++ (List.map .name (prefixpowerlookup m p "blaster-enc1" encounters  ++
+                                        prefixpowerlookup m p "blaster-enc2" encounters))
 
 
+powers m p = boosts m p ++ actionTrigger m ++
+  atLevelList m 2 (l2encchosen m p) ++
+  atLevelList m 6 (l6encchosen m p)
 
 
 
-forms m = [Form False "Blaster" (
-    [DropdownField { name="Type:", del=False, key="blaster-type",choices=["","Blasts","Beams"] },
-     powerChoiceField m "Boost:" "blaster-boost" boostchoices] ++
-    atLevel m 2 (powerChoiceField m "Encounter:" "blaster-enc1" encounters)
-  ++ atLevel m 6 (powerChoiceField m "Encounter:" "blaster-enc2" encounters)
-  ++ atLevel m 10 (DropdownField { name="Upgrade:",del=False,key="blaster-upgrade",choices=(upgradable m)})
+
+
+forms m p = [Form False "Blaster" (
+    [DropdownField { name="Type:", del=False, key=(p ++ "blaster-type"),choices=["","Blasts","Beams"] },
+     prefixpowerChoiceField m "Boost:" p "blaster-boost" boostchoices] ++
+    atLevel m 2 (prefixpowerChoiceField m "Encounter:" p "blaster-enc1" encounters)
+  ++ atLevel m 6 (prefixpowerChoiceField m "Encounter:" p "blaster-enc2" encounters)
+  ++ atLevel m 10 (DropdownField { name="Upgrade:",del=False,key=(p++"blaster-upgrade"),choices=(upgradable m p)})
   )]

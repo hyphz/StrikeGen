@@ -7,10 +7,12 @@ import String
 
 roleLeader : Role
 roleLeader = { name = "Leader",
-               rolePowerList = powers,
-               roleForms = forms,
                modifySpeed = Nothing,
-              roleFeats = ["Limber Leader"] }
+               rolePowerList = (\m -> powers m ""),
+               rolePowerListPrefix = powers,
+               roleForms = (\m -> forms m ""),
+               roleFormsPrefix = forms,
+               roleFeats = ["Limber Leader"] }
 
 
 actionTrigger m = if (getLevel m) < 6 then [quickPower "Try again!" Reaction Encounter 0 0 0 Yellow m]
@@ -43,20 +45,20 @@ upgraded x m = case x of
 
 
 
-checkUpgrade m p =
+checkUpgrade m pr p =
   if ((getLevel m) < 10) then p else
   case (List.head p) of
     Nothing -> p
-    Just rp -> case (getResponse m "leader-upgrade") of
+    Just rp -> case (getResponse m (pr ++ "leader-upgrade")) of
       Nothing -> p
       Just x -> if (x == rp.name) then upgraded rp.name m else p
 
 
-l2encchosen m = checkUpgrade m (powerlookup m "leader-enc1" encounters)
-l6encchosen m = checkUpgrade m (powerlookup m "leader-enc2" encounters)
+l2encchosen m p = checkUpgrade m p (prefixpowerlookup m p "leader-enc1" encounters)
+l6encchosen m p = checkUpgrade m p (prefixpowerlookup m p "leader-enc2" encounters)
 
-upgradable m = [""] ++ (List.map .name (powerlookup m "leader-enc1" encounters  ++
-                                        powerlookup m "leader-enc2" encounters))
+upgradable m p = [""] ++ (List.map .name (prefixpowerlookup m p "leader-enc1" encounters  ++
+                                        prefixpowerlookup m p "leader-enc2" encounters))
 
 eggpower m = case (getResponse m "basics-name") of
   Nothing -> []
@@ -66,9 +68,9 @@ eggpower m = case (getResponse m "basics-name") of
 
 
 
-powers m = boosts m ++ actionTrigger m ++
-  atLevelList m 2 (l2encchosen m) ++
-  atLevelList m 6 (l6encchosen m) ++
+powers m p = boosts m ++ actionTrigger m ++
+  atLevelList m 2 (l2encchosen m p) ++
+  atLevelList m 6 (l6encchosen m p) ++
   eggpower m
 
 
@@ -76,8 +78,8 @@ powers m = boosts m ++ actionTrigger m ++
 
 
 
-forms m = [Form False "Leader" (
-    atLevel m 2 (powerChoiceField m "Encounter:" "leader-enc1" encounters)
-  ++ atLevel m 6 (powerChoiceField m "Encounter:" "leader-enc2" encounters)
-  ++ atLevel m 10 (DropdownField { name="Upgrade:",del=False,key="leader-upgrade",choices=(upgradable m)})
+forms m p = [Form False "Leader" (
+    atLevel m 2 (prefixpowerChoiceField m "Encounter:" p "leader-enc1" encounters)
+  ++ atLevel m 6 (prefixpowerChoiceField m "Encounter:" p "leader-enc2" encounters)
+  ++ atLevel m 10 (DropdownField { name="Upgrade:",del=False,key=(p++"leader-upgrade"),choices=(upgradable m p)})
   )]

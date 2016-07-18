@@ -7,8 +7,10 @@ import PowerUtilities exposing (..)
 
 roleStriker : Role
 roleStriker = { name = "Striker",
-               rolePowerList = powers,
-               roleForms = forms,
+              rolePowerList = (\m -> powers m ""),
+              rolePowerListPrefix = powers,
+              roleForms = (\m -> forms m ""),
+              roleFormsPrefix = forms,
                modifySpeed = Just modifySpeed,
                roleFeats = ["Savage Striker"] }
 
@@ -26,7 +28,7 @@ modifySpeed m s = if (getLevel m >= 4) then s+4 else s
 actionTrigger m = if (getLevel m) < 6 then [quickPower "Strike Back" Reaction Encounter 0 0 0 Yellow m]
                                       else [quickPower "Dodge and Strike Back" Reaction Encounter 0 0 0 Yellow m]
 
-otherBoost m = case (getResponse m "striker-boost") of
+otherBoost m p = case (prefixgetResponse m p "striker-boost") of
   Just "Mobility" -> [quickShift m]
   Just "Accuracy" -> [drawABead m]
   _ -> []
@@ -59,21 +61,21 @@ upgraded x m = case x of
 
 
 
-checkUpgrade m p =
+checkUpgrade m pr p =
   if ((getLevel m) < 10) then p else
   case (List.head p) of
     Nothing -> p
-    Just rp -> case (getResponse m "striker-upgrade") of
+    Just rp -> case (prefixgetResponse m pr "striker-upgrade") of
       Nothing -> p
       Just x -> if (x == rp.name) then upgraded rp.name m else p
 
 
 encounters m = powerDict m [lightning, strikedodge, windUpStrike, momentaryWeakness]
-l2encchosen m = checkUpgrade m (powerlookup m "striker-enc1" encounters)
-l6encchosen m = checkUpgrade m (powerlookup m "striker-enc2" encounters)
+l2encchosen m p = checkUpgrade m p (prefixpowerlookup m p "striker-enc1" encounters)
+l6encchosen m p = checkUpgrade m p (prefixpowerlookup m p "striker-enc2" encounters)
 
-upgradable m = [""] ++ (List.map .name (powerlookup m "striker-enc1" encounters  ++
-                                        powerlookup m "striker-enc2" encounters))
+upgradable m p = [""] ++ (List.map .name (prefixpowerlookup m p "striker-enc1" encounters  ++
+                                        prefixpowerlookup m p "striker-enc2" encounters))
 
 
 ssLevel m = 1 + ceiling ((toFloat <| getLevel m) / 2)
@@ -84,19 +86,20 @@ savageStriker m = Power "Savage Striker"
   Misc None 0 0 0 White
 
 
-powers m = damageBoost m ++ otherBoost m ++ actionTrigger m ++
-  atLevelList m 2 (l2encchosen m) ++
-  atLevelList m 6 (l6encchosen m) ++
-  if (hasFeat m "Savage Striker") then [savageStriker m] else []
+powers m p = damageBoost m ++ otherBoost m p ++ actionTrigger m ++
+  atLevelList m 2 (l2encchosen m p) ++
+  atLevelList m 6 (l6encchosen m p) ++
+  if (hasFeat m "Savage Striker") then [savageStriker m] else [] ++
+  if (p == "") then [] else [quickSpecial "Strike Speed Boost" m]
 
 
 
 
 
 
-forms m = [Form False "Striker" ([
-  DropdownField { name="Boost:", del=False, key="striker-boost", choices=["","Mobility","Accuracy"] }]
-  ++ atLevel m 2 (powerChoiceField m "Encounter:" "striker-enc1" encounters)
-  ++ atLevel m 6 (powerChoiceField m "Encounter:" "striker-enc2" encounters)
-  ++ atLevel m 10 (DropdownField { name="Upgrade:",del=False,key="striker-upgrade",choices=(upgradable m)})
+forms m p = [Form False "Striker" ([
+  DropdownField { name="Boost:", del=False, key=(p++ "striker-boost"), choices=["","Mobility","Accuracy"] }]
+  ++ atLevel m 2 (prefixpowerChoiceField m "Encounter:" p "striker-enc1" encounters)
+  ++ atLevel m 6 (prefixpowerChoiceField m "Encounter:" p "striker-enc2" encounters)
+  ++ atLevel m 10 (DropdownField { name="Upgrade:",del=False,key=(p++"striker-upgrade"),choices=(upgradable m p)})
   )]

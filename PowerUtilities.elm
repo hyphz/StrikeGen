@@ -23,11 +23,18 @@ powerlookup m key list = case (getResponse m key) of
     Nothing -> []
     Just power -> [power]
 
+prefixpowerlookup : Model -> String -> String -> (Model -> Dict String Power) -> List Power
+prefixpowerlookup m p key list = powerlookup m (p ++ key) list
+
+
 {-| Create a dropdown field listing all the powers from a powerdict generator
 function. -}
 powerChoiceField : Model -> String -> String -> (Model -> Dict String Power) -> Field
 powerChoiceField m name key list =
   DropdownField { name=name, del=False, key=key, choices=[""] ++ (Dict.keys (list m)) }
+
+prefixpowerChoiceField : Model -> String -> String -> String -> (Model -> Dict String Power) -> Field
+prefixpowerChoiceField m name p key list = powerChoiceField m name (p ++ key) list 
 
 {-| Shorthand for a power object with overtext based on name. -}
 quickPower : String -> Slot -> Freq -> Int -> Int -> Int -> PowerStyle -> Model -> Power

@@ -7,8 +7,11 @@ import PowerUtilities exposing (..)
 
 roleController : Role
 roleController = { name = "Controller",
-               rolePowerList = powers,
-               roleForms = forms,
+               rolePowerList = (\m -> powers m ""),
+               rolePowerListPrefix = powers,
+                roleForms = (\m -> forms m ""),
+                roleFormsPrefix = forms,
+
                modifySpeed = Nothing,
               roleFeats = ["Crafty Controller"] }
 
@@ -43,33 +46,31 @@ upgraded x m = case x of
 
 
 
-checkUpgrade m p =
+checkUpgrade m pr p =
   if ((getLevel m) < 10) then p else
   case (List.head p) of
     Nothing -> p
-    Just rp -> case (getResponse m "controller-upgrade") of
+    Just rp -> case (prefixgetResponse m pr "controller-upgrade") of
       Nothing -> p
       Just x -> if (x == rp.name) then upgraded rp.name m else p
 
 
-l2encchosen m = checkUpgrade m (powerlookup m "controller-enc1" encounters)
-l6encchosen m = checkUpgrade m (powerlookup m "controller-enc2" encounters)
+l2encchosen m p = checkUpgrade m p (prefixpowerlookup m p "controller-enc1" encounters)
+l6encchosen m p = checkUpgrade m p (prefixpowerlookup m p "controller-enc2" encounters)
 
-upgradable m = [""] ++ (List.map .name (powerlookup m "controller-enc1" encounters  ++
-                                        powerlookup m "controller-enc2" encounters))
+upgradable m p = [""] ++ (List.map .name (prefixpowerlookup m p "controller-enc1" encounters  ++
+                                        prefixpowerlookup m p "controller-enc2" encounters))
 
 
-powers m = boosts m ++ actionTrigger m ++
-  atLevelList m 2 (l2encchosen m) ++
-  atLevelList m 6 (l6encchosen m) ++
+powers m p = boosts m ++ actionTrigger m ++
+  atLevelList m 2 (l2encchosen m p) ++
+  atLevelList m 6 (l6encchosen m p) ++
     if (hasFeat m "Crafty Controller") then [quickSpecial "Crafty Controller" m] else []
 
 
 
-
-
-forms m = [Form False "Controller" (
-    atLevel m 2 (powerChoiceField m "Encounter:" "controller-enc1" encounters)
-  ++ atLevel m 6 (powerChoiceField m "Encounter:" "controller-enc2" encounters)
-  ++ atLevel m 10 (DropdownField { name="Upgrade:",del=False,key="controller-upgrade",choices=(upgradable m)})
+forms m p = [Form False "Controller" (
+    atLevel m 2 (prefixpowerChoiceField m "Encounter:" p "controller-enc1" encounters)
+  ++ atLevel m 6 (prefixpowerChoiceField m "Encounter:" p "controller-enc2" encounters)
+  ++ atLevel m 10 (DropdownField { name="Upgrade:",del=False,key=(p++"controller-upgrade"),choices=(upgradable m p)})
   )]

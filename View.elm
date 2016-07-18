@@ -11,7 +11,7 @@ import ModelDB exposing (..)
 import Dict exposing (..)
 import Maybe exposing (..)
 import CharModel exposing (getSkills, getForms)
-import TacticalModel exposing (getPowers)
+import TacticalModel exposing (getPowers, isMultiRoleShaper, getHP, getSpeed)
 import FormsModel exposing (..)
 import Color
 import Svg exposing (svg)
@@ -21,23 +21,46 @@ import Svg.Attributes
 import Markdown
 
 
-sourceName : Int -> String
-sourceName s = case s of
-    0 -> "Background"
-    1 -> "Origin"
-    2 -> "Starting"
+headerTableRow label value = tr [] [(th [] [text label]), (td [] [text value])]
+
+noName m = case (getResponse m "basics-origin") of
+  Nothing -> "Amorphous Blob Of Infinite Possibility"
+  Just x -> "The " ++ x ++ " With No Name"
+
+roleText m = case (isMultiRoleShaper m) of
+  True -> "Multi-Role Shapeshifter"
+  False -> Maybe.withDefault "" (getResponse m "basics-role")
+
+sheetHeader m = table [class "allheader"] [tr [] [td [] [table [class "sheetheader"] [
+  headerTableRow "Name:" (Maybe.withDefault (noName m) (getResponse m "basics-name")),
+  headerTableRow "Background:" (Maybe.withDefault "" (getResponse m "basics-bg")),
+  headerTableRow "Origin:" (Maybe.withDefault "" (getResponse m "basics-origin")),
+  headerTableRow "Level:" (toString <| getLevel m)
+ ]],
+ td [] [table [class "tacticalheader"] [
+  headerTableRow "Class:" (Maybe.withDefault "" (getResponse m "basics-class")),
+  headerTableRow "Role:" (roleText m),
+  headerTableRow "Speed:" (toString <| getSpeed m),
+  headerTableRow "HP:" (toString <| getHP m)
+ ]]]]
+
+
+classForSrc : Int -> String
+classForSrc s = case s of
+    0 -> "backgroundSkill"
+    1 -> "originSkill"
+    2 -> "userSkill"
     _ -> "Broken"
 
 -- Generates the HTML skill table row for a skill.
 skillToHtmlTableRow : Skill -> Html Msg
-skillToHtmlTableRow s = tr [] [(td [] [text s.name]),
-                               (td [] [text (sourceName s.source)])]
+skillToHtmlTableRow s = tr [] [(td [class (classForSrc s.source)] [text s.name])]
 
 quickTh : String -> Html Msg
 quickTh s = th [] [text s]
 
 skillTableHeader : Html Msg
-skillTableHeader = tr [] (List.map quickTh ["Name", "Source"])
+skillTableHeader = tr [] (List.map quickTh ["Name"])
 
 skillTable : Model -> Html Msg
 skillTable m =
@@ -71,17 +94,20 @@ formFieldDisplay model field =
       True -> [td [Html.Attributes.width 20,
                   Html.Events.onClick (FieldDeleteClicked (fieldKey field))] [useIcon delete 20]]
       False -> []
+    debugFieldKeys = case (getResponse model "basics-name") of
+      Just "debugfieldkeys" -> .key
+      _ -> .name
   in case field of
-  FreeformField ff -> tr [] ([td [] [(text ff.name)], td colSpanForDel
+  FreeformField ff -> tr [] ([td [] [(text (debugFieldKeys ff))], td colSpanForDel
     [input [(Html.Events.on "change" (targetAndWrap (FormFieldUpdated ff.key))),
             (Html.Attributes.value (Maybe.withDefault "" (get ff.key model.character)))] []]]
     ++ delCol)
 
-  DropdownField df -> tr [] ([td [] [(text df.name)], td colSpanForDel
+  DropdownField df -> tr [] ([td [] [(text (debugFieldKeys df))], td colSpanForDel
     [select [(Html.Events.on "change" (targetAndWrap (FormFieldUpdated df.key)))]
              (List.map ((dropdownFieldOption model) df.key) df.choices)]]
            ++ delCol)
-  NumberField nf -> tr [] ([td [] [(text nf.name)], td colSpanForDel
+  NumberField nf -> tr [] ([td [] [(text (debugFieldKeys nf))], td colSpanForDel
     [input [(Html.Events.on "change" (targetAndWrap (FormFieldUpdated nf.key))),
             (Html.Attributes.value (Maybe.withDefault "" (get nf.key model.character))),
             (Html.Attributes.type' "number"),
@@ -206,4 +232,4 @@ formsDisplay model = div [] ([fileops] ++ (List.map (formDisplay model) (getForm
 
 view : Model -> Html Msg
 view model = div [] [div [Html.Attributes.class "forms"] [formsDisplay model],
-                     div [Html.Attributes.class "sheet"] [skillTable model, powerCards model, powerBlocks model]]
+                     div [Html.Attributes.class "sheet"] [sheetHeader model, skillTable model, powerCards model, powerBlocks model]]
