@@ -39,7 +39,7 @@ type alias Database =
       texts : Dict String String }
 
 
-type alias Skill =
+type alias Sourced =
     { name : String,
       source : Int }
 

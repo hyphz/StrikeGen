@@ -176,9 +176,13 @@ table.allheader {
   width: 80%;
 }
 
-table.allheader td {
-  width: 50%;
+table.allheader td:first-child {
+  width: 70%;
   height: 100%;
+}
+
+table.allheader td:last-child {
+  height: 100%;  
 }
 
 tr:nth-child(even) td.backgroundSkill {

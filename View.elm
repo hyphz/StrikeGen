@@ -10,7 +10,7 @@ import Json.Decode exposing (Decoder, decodeString, (:=), object4, string, list,
 import ModelDB exposing (..)
 import Dict exposing (..)
 import Maybe exposing (..)
-import CharModel exposing (getSkills, getForms)
+import CharModel exposing (getSkills, getForms, getWealth, getTricks, getComplications)
 import TacticalModel exposing (getPowers, isMultiRoleShaper, getHP, getSpeed)
 import FormsModel exposing (..)
 import Color
@@ -25,17 +25,27 @@ headerTableRow label value = tr [] [(th [] [text label]), (td [] [text value])]
 
 noName m = case (getResponse m "basics-origin") of
   Nothing -> "Amorphous Blob Of Infinite Possibility"
+  Just "<Not Selected>" -> "Amorphous Blob of Infinite Possibility"
   Just x -> "The " ++ x ++ " With No Name"
 
 roleText m = case (isMultiRoleShaper m) of
   True -> "Multi-Role Shapeshifter"
   False -> Maybe.withDefault "" (getResponse m "basics-role")
 
+wealthDesc w = case w of
+  0 -> " (Penniless)"
+  1 -> " (Poor)"
+  2 -> " (Rich)"
+  3 -> " (Super-Rich)"
+  _ -> " (BUG)"
+
+
 sheetHeader m = table [class "allheader"] [tr [] [td [] [table [class "sheetheader"] [
   headerTableRow "Name:" (Maybe.withDefault (noName m) (getResponse m "basics-name")),
   headerTableRow "Background:" (Maybe.withDefault "" (getResponse m "basics-bg")),
   headerTableRow "Origin:" (Maybe.withDefault "" (getResponse m "basics-origin")),
-  headerTableRow "Level:" (toString <| getLevel m)
+  headerTableRow "Level:" (toString <| getLevel m),
+  headerTableRow "Wealth:" ((toString <| getWealth m) ++ (wealthDesc (getWealth m)))
  ]],
  td [] [table [class "tacticalheader"] [
   headerTableRow "Class:" (Maybe.withDefault "" (getResponse m "basics-class")),
@@ -52,19 +62,38 @@ classForSrc s = case s of
     2 -> "userSkill"
     _ -> "Broken"
 
+ticksRow =
+  List.repeat 10 ( img [src "icons/square.svg", height 16, width 16] [])
+
+
 -- Generates the HTML skill table row for a skill.
-skillToHtmlTableRow : Skill -> Html Msg
-skillToHtmlTableRow s = tr [] [(td [class (classForSrc s.source)] [text s.name])]
+sourcedToHtmlTableRow : Model -> Bool -> Sourced -> Html Msg
+sourcedToHtmlTableRow m o s = tr [] ([(td [class (classForSrc s.source)] [text s.name])] ++
+  if (o && organicStyleDisplay m) then [td [class (classForSrc s.source)] ticksRow] else [])
 
 quickTh : String -> Html Msg
 quickTh s = th [] [text s]
 
-skillTableHeader : Html Msg
-skillTableHeader = tr [] (List.map quickTh ["Name"])
+sourcedTableHeader : Model -> String -> Bool -> Html Msg
+sourcedTableHeader m h o = case (o && organicStyleDisplay m) of
+  False -> tr [] [th [] [text h]]
+  True -> tr [] [th [colspan 2] [text h]]
 
-skillTable : Model -> Html Msg
-skillTable m =
-  table [] [thead [] [skillTableHeader], (tbody [] (List.map skillToHtmlTableRow (sortBy .name (getSkills m))))]
+sourcedTable : Model -> List Sourced -> String -> Bool -> Html Msg
+sourcedTable m l h o =
+  table [] [thead [] [sourcedTableHeader m h o], (tbody [] (List.map (sourcedToHtmlTableRow m o) (sortBy .name l)))]
+
+
+skillTable m = sourcedTable m (getSkills m) "Skills" True
+
+trickTable m = sourcedTable m (getTricks m) "Tricks" True
+
+combatApLine = p [] ([text "AP spent in combat:"] ++ ticksRow)
+
+
+compTable m = div [] ([sourcedTable m (getComplications m) "Complications" False] ++
+  if (organicStyleDisplay m) then [combatApLine] else [])
+
 
 
 -- For some reason Elm modified the HTML library so that instead of passing Html.Events.on a function to apply
@@ -204,6 +233,11 @@ powerOrder power =
     Red -> 4
     Yellow -> 5
 
+organicStyleDisplay : Model -> Bool
+organicStyleDisplay m = case (getResponse m "basics-ticks") of
+  Just "Yes" -> True
+  _ -> False
+
 powerCards : Model -> Html Msg
 powerCards model =
     div [Html.Attributes.class "powercards"] (List.map powerCard (List.sortBy powerOrder (TacticalModel.getPowers model)))
@@ -232,4 +266,4 @@ formsDisplay model = div [] ([fileops] ++ (List.map (formDisplay model) (getForm
 
 view : Model -> Html Msg
 view model = div [] [div [Html.Attributes.class "forms"] [formsDisplay model],
-                     div [Html.Attributes.class "sheet"] [sheetHeader model, skillTable model, powerCards model, powerBlocks model]]
+                     div [Html.Attributes.class "sheet"] [sheetHeader model, skillTable model, trickTable model, compTable model, powerCards model, powerBlocks model]]

@@ -25,6 +25,8 @@ still might be useful for debugging purposes.
 
 * Icon made by Vaadin from www.flaticon.com: circle (*circle*).
 
+* Icon made by Madebyoliver from www.flaticon.com: square (*square*).
+
 * *download-js" by DANML.
 
 * *lz-string* by Pieroxy.
