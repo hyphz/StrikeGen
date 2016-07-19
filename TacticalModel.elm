@@ -186,9 +186,14 @@ powerFeats m = Dict.fromList ([
   ("Stealthy",[quickSpecial "Stealthy" m, quickPower "Hide" Move AtWill 0 0 0 Yellow m]),
   ("Sprinter",[quickSpecial "Sprinter" m]),
   ("Toughness",[quickSpecial "Toughness" m]),
-  ("Huge",[quickSpecial "Huge" m])
+  ("Huge",[quickSpecial "Huge" m]),
+  ("Steady Hands",[quickSpecial "Steady Hands" m]),
+  ("Gang",[quickSpecial "Gang" m]),
+  ("Spellbreak",[quickSpecial "Spellbreak" m]),
+  ("Combat Resist",[quickSpecial "Combat Resist" m])
   ] ++
-  if (getResponse m "basics-class" /= Just "Summoner") then [("Reliable",[quickSpecial "Reliable" m])] else [])
+  (if (getResponse m "basics-class" /= Just "Summoner") then [("Reliable",[quickSpecial "Reliable" m])] else []) ++
+  (if (hasFeat m "Combat Resist") then [("Area Resist",[quickSpecial "Area Immune" m]),("Combat Immune",[quickSpecial "Combat Immune" m])] else []))
 
 {-| Gets the character's Hit Points by modifying 10. -}
 getHP : Model -> Int

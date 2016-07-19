@@ -21,6 +21,7 @@ type Msg =
   | FormFieldUpdated String String
   | FormAddClicked String
   | TextsLoaded String
+  | KitsLoaded String
   | FileCommand String
   | LoadJson String
   | FieldDeleteClicked String
@@ -36,7 +37,8 @@ type alias Model =
 type alias Database =
     { backgrounds : Dict String Background,
       origins : Dict String Origin,
-      texts : Dict String String }
+      texts : Dict String String,
+      kits : Dict String Kit }
 
 
 type alias Sourced =
@@ -59,12 +61,12 @@ type alias Origin =
 
 type alias Kit =
   { name : String,
-    base : String,
+    mini : Bool,
     advances : List KitAdvance }
 
 type alias KitAdvance =
   { name : String,
-    desc : String }
+    prereqs : List String }
 
 type alias Power =
   { name : String,
@@ -111,8 +113,6 @@ nullBackground = { name="<Not Selected>", skillNames=[], wealth=0, trick=""}
 nullOrigin : Origin
 nullOrigin = { name="<Not Selected>",skillNames=[],complications=[], wealth=0,
   freeformSkill = False, freeformComplication = False}
-nullKit : Kit
-nullKit = { name="<Not Selected>",base="",advances=[]}
 
 blankCharacter : Dict String String
 blankCharacter = Dict.fromList [("basics-level","1"),
@@ -120,7 +120,7 @@ blankCharacter = Dict.fromList [("basics-level","1"),
                                 ("basics-origin","<Not Selected>")]
 
 blankDatabase : Database
-blankDatabase = { backgrounds = Dict.empty, origins = Dict.empty, texts = Dict.empty }
+blankDatabase = { backgrounds = Dict.empty, origins = Dict.empty, texts = Dict.empty, kits = Dict.empty }
 
 
 {-| Turns a maybe value into a single element list for concatting. -}
@@ -227,6 +227,16 @@ backgroundsDecoder = "backgrounds" := (Json.Decode.list
     ("wealth" := int)
     ("trick" := string)))
 
+kitsDecoder : Decoder (List Kit)
+kitsDecoder = "kits" := (Json.Decode.list
+  (Json.Decode.object3 Kit
+    ("name" := string)
+    ("mini" := Json.Decode.bool)
+    ("advances" := (Json.Decode.list
+      (Json.Decode.object2 KitAdvance
+        ("name" := string)
+        ("prereqs" := Json.Decode.list string))))))
+
 {-| Returns the command to load a JSON data file. If it loads successfully, send the
 specified message. If it doesn't, send HTTPLoadError.  -}
 getJsonFileCommand : String -> (String -> Msg) -> Cmd Msg
@@ -249,6 +259,14 @@ unpackOrigins : String -> Model -> Model
 unpackOrigins s model = updateDatabase ( \d ->
  { d | origins = toDict .name ([nullOrigin] ++ (withDefault [] (decodeString originsDecoder s)))}) model
 
+defaultErr x = case x of
+  Err e -> [Kit e False []]
+  Ok o -> o
+
+unpackKits s model = updateDatabase (\d ->
+  { d | kits = toDict .name (defaultErr (decodeString kitsDecoder s))}) model
+
+
 {-| Parses the text file blob into the text database. -}
 splitTexts : String -> Dict String String
 splitTexts str =
@@ -269,11 +287,13 @@ splitTexts str =
 unpackTexts : String -> Model -> Model
 unpackTexts str model = updateDatabase ( \d -> {d | texts = splitTexts str} ) model
 
-{-| Cascaded Elm model update function. (Cascaded from CharModel) -}
+{-| Cascaded Elm model update function. (Cascaded from CharModel)
+  For some bizarre reason, loading kits after texts causes a crash in the built-in HTTP loader. -}
 dbUpdate : Msg -> Model -> (Model, Cmd Msg)
 dbUpdate msg model = case msg of
     HTTPLoadError e -> (httpError model, Ports.alert "Database load error! Check internet or local data/ path.")
     BackgroundsLoaded bgs -> (unpackBackgrounds bgs model, getJsonFileCommand "data/origins.json" OriginsLoaded)
-    OriginsLoaded ogs -> (unpackOrigins ogs model, getJsonFileCommand "data/texts.md" TextsLoaded)
+    OriginsLoaded ogs -> (unpackOrigins ogs model, getJsonFileCommand "data/kits.json" KitsLoaded)
+    KitsLoaded kits -> (unpackKits kits model, getJsonFileCommand "data/texts.md" TextsLoaded)
     TextsLoaded txs -> (unpackTexts txs model, Ports.dbLoaded 0)
     _ -> (model, Cmd.none)

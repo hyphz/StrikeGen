@@ -220,6 +220,12 @@ fieldChanged field m =
   case field of
     "basics-origin" -> validateAlteredOrigin m
     "basics-level" -> validateLevel m
+    "kit-start" -> validateKitProgression m
+    "kit-1" -> validateKitProgression m
+    "kit-2" -> validateKitProgression m
+    "kit-3" -> validateKitProgression m
+    "kit-4" -> validateKitProgression m
+    "kit-5" -> validateKitProgression m
     _ -> m
 
 {-| One entry in an extender form. Takes the model, the name of the field,
@@ -316,12 +322,64 @@ featsForm m = Form False "Feats" (
   (if ((getLevel m) >= 9) then [DropdownField {name="Feat:",del=False,key="feat-5",choices=(availableFeats m)}] else []) ++
   featChoices m)
 
+
+kitChoices m l =
+  List.foldr (++) [] (List.map (\x -> mayList <| getResponse m ("kit-" ++ (toString x))) [1..l])
+
+advancesForKit m k = case (Dict.get k m.database.kits) of
+  Nothing -> []
+  Just kit -> kit.advances
+
+hasKitAdvanceNamed m n l = (List.member n (kitChoices m l)) || (List.member ("Poach: " ++ n) (kitChoices m l))
+
+filterForPrereqs m l list = (List.filter (\x -> List.all (\y -> hasKitAdvanceNamed m y l) x.prereqs) list)
+
+allFullKits m = List.map .name (List.filter (\x -> x.mini == False) (Dict.values m.database.kits))
+
+kitAdvanceOptions : Model -> Int -> List String
+kitAdvanceOptions m limit =
+  let
+    firstKit = case (getResponse m "kit-start") of
+      Nothing -> []
+      Just k -> [k]
+    extensionKits = List.map (String.dropLeft 9) (List.filter (String.startsWith "New Kit: ") (kitChoices m limit))
+    allExistingKits = firstKit ++ extensionKits
+    allAdvancesForExistingKits = filterForPrereqs m limit (List.concatMap (advancesForKit m) allExistingKits)
+    possibleNewKits = List.filter (\x -> not (List.member x allExistingKits)) (allFullKits m)
+    poached = List.any (String.startsWith "Poach: ") (kitChoices m limit)
+    possiblePoaches = if poached then []
+      else filterForPrereqs m limit (List.concatMap (advancesForKit m) possibleNewKits)
+    miniKitAdvances = filterForPrereqs m limit (List.concatMap .advances (List.filter (\x -> x.mini) (Dict.values m.database.kits)))
+  in
+    (List.sort (List.map .name (allAdvancesForExistingKits ++ miniKitAdvances)))
+  ++ (List.sort (List.map (\x -> "New Kit: " ++ x) possibleNewKits))
+  ++ (List.sort (List.map (\x -> "Poach: " ++ x.name) possiblePoaches))
+
+
+kitsForm : Model -> Form
+kitsForm m = Form False "Kits" (
+  [DropdownField {name="Kit:", del=False, key="kit-start", choices=[""] ++ (allFullKits m)},
+  DropdownField {name="Advance:", del=False, key="kit-1", choices=([""] ++ kitAdvanceOptions m 0)}] ++
+  (if ((getLevel m) >= 3) then [DropdownField {name="Advance:", del=False, key="kit-2", choices=([""] ++ (kitAdvanceOptions m 1))}] else []) ++
+  (if ((getLevel m) >= 5) then [DropdownField {name="Advance:", del=False, key="kit-3", choices=([""] ++ (kitAdvanceOptions m 2))}] else []) ++
+  (if ((getLevel m) >= 7) then [DropdownField {name="Advance:", del=False, key="kit-4", choices=([""] ++ (kitAdvanceOptions m 3))}] else []) ++
+  (if ((getLevel m) >= 9) then [DropdownField {name="Advance:", del=False, key="kit-5", choices=([""] ++ (kitAdvanceOptions m 4))}] else [])
+  )
+
+validateKitProgression m =
+  killOutOfRange "kit-1" (kitAdvanceOptions m 0) <|
+  killOutOfRange "kit-2" (kitAdvanceOptions m 1) <|
+  killOutOfRange "kit-3" (kitAdvanceOptions m 2) <|
+  killOutOfRange "kit-4" (kitAdvanceOptions m 3) <|
+  killOutOfRange "kit-5" (kitAdvanceOptions m 4) m
+
 {-| The full list of forms to display at any given time. -}
 getForms : Model -> List Form
 getForms model =
    [basicsForm model] ++
    (if ((getLevel model) >= 2) then [levelForm model] else []) ++
    [featsForm model] ++
+   [kitsForm model] ++
    (mayList (complexOriginForm model)) ++
    (mayList (customBackgroundForm model)) ++
    customOriginForm model ++

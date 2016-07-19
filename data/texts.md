@@ -2231,3 +2231,22 @@ You may use only one Role Encounter power of each level per combat, even if you 
 multiple forms.
 @@StrikerSpeedBoost
 While this role is active your speed is increased by 4.
+@@Spellbreak
+When you hit a magic user with an attack, they must make a Saving Throw in order to cast
+a spell on their next turn.
+@@CombatResist
+Resist 1 damage from magic spells. When a spell hits you with an effect, you may make a
+saving throw to avoid it. This feat requires GM approval.
+@@AreaResist
+Extend the effect of your Combat Resist feat to any creatures within 3 squares.
+@@CombatImmune
+You are immune to spells in combat.
+@@Gang
+In combat, you fight with your gang. Increase your vsize by 2. You can occupy the same
+space as other creatures and can move into their squares without granting Opportunities.
+Your ranged attacks do not grant Opportunities to enemies occupying your space. Once
+per round when you make an attack, each enemy whose space you occupy takes 1 damage.
+Statuses are unchanged as your gang still depends on you to lead them.
+@@SteadyHands
+You never suffer Disadvantage for being Winded or Exhausted. Your attack rolls are not
+penalized for Major Conditions (but other rolls, including those made in combat, still are).

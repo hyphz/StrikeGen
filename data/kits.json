@@ -1,0 +1,350 @@
+{
+	"kits": [
+     {
+			  "name": "Gunslinger",
+				"mini": false,
+				"advances": [
+					{ "name": "Always Draw",
+					  "prereqs": [] },
+					{ "name": "Always Carry a Spare",
+						"prereqs": [] },
+					{ "name": "Trick Shot",
+					  "prereqs": [] },
+					{ "name": "Long Shot",
+						"prereqs": [] },
+					{ "name": "On the Other Foot",
+						"prereqs": [] },
+					{ "name": "Blurred Vision, Steady Hands",
+						"prereqs": [] },
+					{ "name": "I Dare You",
+						"prereqs": [] },
+					{ "name": "Hold It Right There",
+						"prereqs": [] },
+					{ "name": "Use the Scenery",
+						"prereqs": [] }
+				]
+		 },
+		 {
+			  "name": "Psychic",
+				"mini": false,
+				"advances": [
+					{ "name": "Reliable Telepath", "prereqs": [] },
+					{ "name": "Mind Scan", "prereqs": [] },
+					{ "name": "False Mind", "prereqs": [] },
+					{ "name": "Hallucination", "prereqs": [] },
+					{ "name": "Mind Rend", "prereqs": [] },
+					{ "name": "Emotional Manipulation", "prereqs": [] },
+					{ "name": "Suggestion", "prereqs": [] },
+					{ "name": "Astral Projection", "prereqs": [] },
+					{ "name": "Speak with Animals", "prereqs": [] },
+					{ "name": "Speak with Ghosts", "prereqs": [] },
+					{ "name": "Detect Minds", "prereqs": [] },
+					{ "name": "Memory Wipe", "prereqs": [] },
+					{ "name": "Mind Control", "prereqs": ["Mind Scan", "Suggestion"] }
+				]
+		 },
+		 {
+			  "name": "Wayfarer",
+				"mini": false,
+				"advances": [
+					{ "name": "Return Visit", "prereqs": [] },
+					{ "name": "Souvenirs", "prereqs": [] },
+					{ "name": "Go Local", "prereqs": [] },
+					{ "name": "Trader", "prereqs": [] },
+					{ "name": "Logistics", "prereqs": [] },
+					{ "name": "Polyglot", "prereqs": [] },
+					{ "name": "Backtrack", "prereqs": [] },
+					{ "name": "Hardy", "prereqs": [] },
+					{ "name": "Pit Stop", "prereqs": [] },
+					{ "name": "Perfect Sense of Direction", "prereqs": [] },
+					{ "name": "Cartographer", "prereqs": [] },
+					{ "name": "More Stuff To Do", "prereqs": [] },
+					{ "name": "Scout", "prereqs": [] },
+					{ "name": "Local Color", "prereqs": [] },
+					{ "name": "Itinerant Artist", "prereqs": [] }
+				]
+		 },
+		 {
+			 "name": "Boss",
+			 "mini": false,
+			 "advances": [
+				 { "name": "A Growing Concern", "prereqs": [] },
+				 { "name": "Lieutenant", "prereqs": [] },
+				 { "name": "Captain", "prereqs": [] },
+				 { "name": "Upgraded Ship", "prereqs": ["Captain"] },
+				 { "name": "Perfect Loyalty", "prereqs": [] },
+				 { "name": "Territory", "prereqs": [] },
+				 { "name": "Home Improvements", "prereqs": ["Territory"] },
+				 { "name": "Home Field Advantage", "prereqs": ["Territory"] },
+				 { "name": "You Can't Hide", "prereqs": [] },
+				 { "name": "Informants", "prereqs": [] },
+				 { "name": "Specialized Help", "prereqs": [] },
+				 { "name": "Sugar Mama/Daddy", "prereqs": [] }
+			 ]
+		},
+		{
+			"name": "Scholar",
+			"mini": false,
+			"advances": [
+				{ "name": "Polymath", "prereqs": [] },
+				{ "name": "Broad Expertise", "prereqs": [] },
+				{ "name": "Hands on Knowledge", "prereqs": [] },
+				{ "name": "Library", "prereqs": [] },
+				{ "name": "Bestiary", "prereqs": [] },
+				{ "name": "Specialist Scholar", "prereqs": [] },
+				{ "name": "Invention", "prereqs": [] },
+				{ "name": "Experiment", "prereqs": [] },
+				{ "name": "Teaching Is Learning", "prereqs": [] },
+				{ "name": "Academic Colleagues", "prereqs": [] }
+			]
+	 },
+	 {
+		 "name": "Protagonist",
+		 "mini": false,
+		 "advances": [
+			 { "name": "Hero's Journey", "prereqs": [] },
+			 { "name": "Bumbling", "prereqs": [] },
+			 { "name": "My Hero", "prereqs": ["Bumbling"] },
+			 { "name": "Adventurous", "prereqs": [] },
+			 { "name": "Why Me?", "prereqs": [] },
+			 { "name": "Destined for Greatness", "prereqs": [] },
+			 { "name": "Fish out of Water", "prereqs": [] },
+			 { "name": "Do the Right Thing", "prereqs": [] },
+			 { "name": "Talisman", "prereqs": [] },
+			 { "name": "Academic Colleagues", "prereqs": [] },
+			 { "name": "Heart Of The Team", "prereqs": [] },
+			 { "name": "Underestimated", "prereqs": [] },
+			 { "name": "Bluster", "prereqs": [] }
+		 ]
+	},
+	{
+		"name": "Tinker",
+		"mini": false,
+		"advances": [
+			{ "name": "Workshop", "prereqs": [] },
+			{ "name": "Assistants", "prereqs": ["Workshop"] },
+			{ "name": "Mr/Ms. Fix-It", "prereqs": [] },
+			{ "name": "Specialist Tinker", "prereqs": [] },
+			{ "name": "Sufficiently Advanced", "prereqs": ["Specialist Tinker"] },
+			{ "name": "Reverse Engineer", "prereqs": [] },
+			{ "name": "Monstrous Fabrication", "prereqs": [] },
+			{ "name": "Coconut Radio", "prereqs": [] },
+			{ "name": "Miniaturization", "prereqs": [] },
+			{ "name": "Macro-Construction", "prereqs": [] },
+			{ "name": "Recycling", "prereqs": [] }
+		]
+ },
+ {
+	 "name": "Seer",
+	 "mini": false,
+	 "advances": [
+		 { "name": "True Dreaming", "prereqs": [] },
+		 { "name": "Intuition", "prereqs": [] },
+		 { "name": "Find the Pivot", "prereqs": [] },
+		 { "name": "Omens", "prereqs": [] },
+		 { "name": "Danger Sense", "prereqs": [] },
+		 { "name": "Who Can Help", "prereqs": [] },
+		 { "name": "Sacrifice", "prereqs": [] },
+		 { "name": "Major Sacrifice", "prereqs": ["Sacrifice"] },
+		 { "name": "Bad News", "prereqs": [] },
+		 { "name": "Saw That One Coming", "prereqs": [] },
+		 { "name": "Hindsight", "prereqs": [] }
+	 ]
+},
+{
+	"name": "Spy",
+	"mini": false,
+	"advances": [
+		{ "name": "Always On", "prereqs": [] },
+		{ "name": "Charming", "prereqs": [] },
+		{ "name": "Charmed", "prereqs": [] },
+		{ "name": "Fearless", "prereqs": [] },
+		{ "name": "Expensive Tastes", "prereqs": [] },
+		{ "name": "Tailing", "prereqs": [] },
+		{ "name": "Tailed", "prereqs": [] },
+		{ "name": "Escape Artist", "prereqs": [] },
+		{ "name": "Turn", "prereqs": [] },
+		{ "name": "The Bureau", "prereqs": [] },
+		{ "name": "Gadgets", "prereqs": ["The Bureau"] },
+		{ "name": "License to Kill", "prereqs": ["The Bureau"] }
+	]
+},
+{
+	"name": "Flame",
+	"mini": false,
+	"advances": [
+		{ "name": "Moths to the Flame", "prereqs": [] },
+		{ "name": "Dysfunctional", "prereqs": [] },
+		{ "name": "Double Dysfunction", "prereqs": [] },
+		{ "name": "On the Wagon", "prereqs": [] },
+		{ "name": "Superpower", "prereqs": [] },
+		{ "name": "Withdrawal", "prereqs": [] },
+		{ "name": "Kindred Spirit", "prereqs": [] },
+		{ "name": "I Must Have It", "prereqs": [] },
+		{ "name": "Sixth Sense for Trouble", "prereqs": [] },
+		{ "name": "Strange Attractees", "prereqs": [] },
+		{ "name": "Bad Relations", "prereqs": [] },
+		{ "name": "Payback", "prereqs": [] },
+		{ "name": "Race to the Bottom", "prereqs": [] }
+	]
+},
+{
+	"name": "Fountain",
+	"mini": false,
+	"advances": [
+		{ "name": "One Unique Item", "prereqs": [] },
+		{ "name": "Universal Currency", "prereqs": [] },
+		{ "name": "Doubly Driven", "prereqs": [] },
+		{ "name": "Soothing", "prereqs": [] },
+		{ "name": "Popular Charity", "prereqs": [] },
+		{ "name": "See the Best in Everyone", "prereqs": [] },
+		{ "name": "Pity the Enemy", "prereqs": [] },
+		{ "name": "What Goes Around", "prereqs": [] },
+		{ "name": "Righteous Power", "prereqs": [] },
+		{ "name": "Easy Mark", "prereqs": [] },
+		{ "name": "Good Relations", "prereqs": [] },
+		{ "name": "High Road", "prereqs": [] }
+	]
+},
+{
+	"name": "Brute",
+	"mini": false,
+	"advances": [
+		{ "name": "The Alexandrian Solution", "prereqs": [] },
+		{ "name": "Brush It Off", "prereqs": [] },
+		{ "name": "Unstoppable", "prereqs": ["Brush It Off"] },
+		{ "name": "Iron Stomach", "prereqs": [] },
+		{ "name": "Endure Elements", "prereqs": [] },
+		{ "name": "Break Stuff", "prereqs": [] },
+		{ "name": "My Body, My Weapon, My Tool", "prereqs": [] },
+		{ "name": "And Look Good Doing It", "prereqs": [] },
+		{ "name": "No Hunger", "prereqs": [] },
+		{ "name": "Feats of Strength", "prereqs": [] },
+		{ "name": "The Other Part of Valor", "prereqs": [] },
+		{ "name": "No Prison Can Hold Me", "prereqs": [] },
+		{ "name": "Rub Some Salt On It", "prereqs": [] },
+		{ "name": "David and Goliath", "prereqs": [] }
+	]
+},
+{
+	"name": "Sorcerer",
+	"mini": false,
+	"advances": [
+		{ "name": "Widened Expertise", "prereqs": [] },
+		{ "name": "Sorcerous Sanctum", "prereqs": [] },
+		{ "name": "Puissance", "prereqs": [] },
+		{ "name": "Celerity", "prereqs": [] },
+		{ "name": "Reach", "prereqs": [] },
+		{ "name": "Sorcerous Backing", "prereqs": [] },
+		{ "name": "Surge", "prereqs": [] },
+		{ "name": "Augmentation", "prereqs": [] },
+		{ "name": "Exertion", "prereqs": [] },
+		{ "name": "Blood Sorcery", "prereqs": [] },
+		{ "name": "Sorcerous Patron", "prereqs": [] },
+		{ "name": "Kit Expansion", "prereqs": [] }
+	]
+},
+{
+	"name": "Spellbreaker",
+	"mini": true,
+	"advances": [
+		{ "name": "Spellbreak", "prereqs": [] },
+		{ "name": "Resist Spells", "prereqs": [] },
+		{ "name": "Immune", "prereqs": ["Resist Spells"] },
+		{ "name": "Area Null", "prereqs": ["Immune"] }
+	]
+},
+{
+	"name": "Impostor",
+	"mini": true,
+	"advances": [
+		{ "name": "Identity Thief", "prereqs": [] },
+		{ "name": "Perfect Impression", "prereqs": [] },
+		{ "name": "Skinthief", "prereqs": [] }
+	]
+},
+{
+	"name": "Who?",
+	"mini": true,
+	"advances": [
+		{ "name": "Underestimated", "prereqs": [] },
+		{ "name": "Overlooked", "prereqs": [] },
+		{ "name": "Forgotten", "prereqs": [] }
+	]
+},
+{
+	"name": "Doctor",
+	"mini": true,
+	"advances": [
+		{ "name": "First Aid", "prereqs": [] },
+		{ "name": "Healer", "prereqs": ["First Aid"] },
+		{ "name": "Panacea", "prereqs": ["Healer"] }
+	]
+},
+{
+	"name": "Collector",
+	"mini": true,
+	"advances": [
+		{ "name": "I Have One Somewhere", "prereqs": [] },
+		{ "name": "I Must Have It (Collector)", "prereqs": ["I Have One Somewhere"] },
+		{ "name": "Sixth Sense", "prereqs": [] }
+	]
+},
+{
+	"name": "Driver",
+	"mini": true,
+	"advances": [
+		{ "name": "King of the Chase", "prereqs": [] },
+		{ "name": "Shoot and Drive", "prereqs": [] },
+		{ "name": "I'm Just Borrowing It!", "prereqs": [] }
+	]
+},
+{
+	"name": "Investigator",
+	"mini": true,
+	"advances": [
+		{ "name": "A Clue!", "prereqs": [] },
+		{ "name": "Elementary, My Dear", "prereqs": [] },
+		{ "name": "Sleep On It", "prereqs": ["A Clue!"] }
+	]
+},
+{
+	"name": "Face",
+	"mini": true,
+	"advances": [
+		{ "name": "Smooth Patter", "prereqs": [] },
+		{ "name": "Famous", "prereqs": [] },
+		{ "name": "Outrageous Liar", "prereqs": [] },
+		{ "name": "Cold Reading", "prereqs": [] }
+	]
+},
+{
+	"name": "Moneybags",
+	"mini": true,
+	"advances": [
+		{ "name": "Big Spender", "prereqs": [] },
+		{ "name": "Money Sense", "prereqs": [] },
+		{ "name": "Cash is Confidence", "prereqs": [] },
+		{ "name": "Greed", "prereqs": [] }
+	]
+},
+{
+	"name": "GLOBALS",
+	"mini": true,
+	"advances": [
+		{ "name": "Expert", "prereqs": [] },
+		{ "name": "Master", "prereqs": ["Expert"] },
+		{ "name": "Special Communication", "prereqs": []},
+		{ "name": "Special Helpers", "prereqs": ["Special Communication"] },
+		{ "name": "Emotional Power", "prereqs": []},
+		{ "name": "Favored Enemy", "prereqs": []}
+	]
+}
+
+
+
+
+
+
+]
+}
