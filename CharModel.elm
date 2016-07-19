@@ -272,13 +272,14 @@ getComplications : Model -> List Sourced
 getComplications m =
   let
     originComplications = resolvedOriginComplications m
+    customComplication = mayList (getResponse m "basics-comp")
     levelComplications =
       (if ((getLevel m) >= 4) then mayList (getResponse m "adv-l4comp") else []) ++
       (if ((getLevel m) >= 8) then mayList (getResponse m "adv-l8comp") else [])
     organicComplications = getExtraComplications m
   in
     (map (skillNameToSkill 1) originComplications) ++
-    map (skillNameToSkill 2) (levelComplications ++ organicComplications)
+    map (skillNameToSkill 2) (customComplication ++ levelComplications ++ organicComplications)
 
 {-| Form with the most basic common parts of a character. -}
 basicsForm : Model -> Form
