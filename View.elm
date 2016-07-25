@@ -299,4 +299,4 @@ formsDisplay model = div [] ([fileops] ++ (List.map (formDisplay model) (getForm
 
 view : Model -> Html Msg
 view model = div [] [div [Html.Attributes.class "forms"] [formsDisplay model],
-                     div [Html.Attributes.class "sheet"] [sheetHeader model, div [class "sstables"] [skillTable model, compTable model], trickTable model, kitTable model, powerCards model, powerBlocks model]]
+                     div [Html.Attributes.class "sheet"] [sheetHeader model, div [class "sstables"] [skillTable model, compTable model], div [class "tktables"] [trickTable model, kitTable model], powerCards model, powerBlocks model]]
