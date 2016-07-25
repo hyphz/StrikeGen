@@ -212,22 +212,21 @@ tr:nth-child(odd) td.userSkill {
 }
 
 div.sstables {
-  position: relative;
   width: 97%;
-  left: 0;
-  bottom: auto;
-  height: auto;
+  margin-bottom: 5px;
 }
 
 div.comptable {
-  position: absolute;
-  left: 50%;
+  display: inline-block;
+  vertical-align: top; 
   width: 50%;
-  top: 0%;
 }
 div.skilltable {
+  display: inline-block;
   width: 50%;
+  vertical-align: top;
 }
+
 div.skilltable table {
   border: 1px solid black;  
   width: 99%;
@@ -239,17 +238,12 @@ div.comptable table {
 }
 
 div.tktables {
-  position: relative;
-  left: 0;
-  
   width: 97%;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  min-height: 170px;
 }
 
 div.tricktable {
-  left: 0%;
+  display: inline-block;
+  vertical-align: top;
   width: 50%;
 }
 
@@ -263,11 +257,9 @@ div.powercards {
 }
 
 div.kittable {
-  position: absolute;
+  display: inline-block;
   width: 50%;
-  top: 0%;
-  left: 50%;
-  height: 100%;
+  vertical-align: top;
 }
 
 div.kittable table {
