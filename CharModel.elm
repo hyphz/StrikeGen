@@ -91,17 +91,20 @@ complexOriginForm m = case (hasComplexOrigin m) of
 
 {-| Calculate the complications arising from the origin, allowing for freeforms and choices. -}
 resolvedOriginComplications : Model -> List String
-resolvedOriginComplications m = case (hasComplexOrigin m) of
-  (False, False, False, False) -> indirectLookup m "basics-origin" m.database.origins .complications [] []
-  (_, complex, _, freeform) ->
-    (if (complex) then mayList (getResponse m "origin-co") else indirectLookup m "basics-origin" m.database.origins .complications [] []) ++
-    (if (freeform) then mayList (getResponse m "origin-cco") else [])
+resolvedOriginComplications m = case (getResponse m "basics-origin") of
+  Just "<Custom>" -> mayList (getResponse m "origin-custom-co")
+  _ -> case (hasComplexOrigin m) of
+        (False, False, False, False) -> indirectLookup m "basics-origin" m.database.origins .complications [] []
+        (_, complex, _, freeform) ->
+          (if (complex) then mayList (getResponse m "origin-co") else indirectLookup m "basics-origin" m.database.origins .complications [] []) ++
+          (if (freeform) then mayList (getResponse m "origin-cco") else [])
 
 {-| Form for a custom origin. -}
 customOriginForm : Model -> List Form
 customOriginForm m = case (getResponse m "basics-origin") of
   Just "<Custom>" -> [Form False "Custom Origin" ([
      FreeformField {name="Skill:",del=False,key="origin-custom-s1"},
+     FreeformField {name="Complication:",del=False,key="origin-custom-co"},
      DropdownField {name="Bonus:",del=False,key="origin-custom-wos1",choices=["","Skill","Wealth"]}] ++
      case (getResponse m "origin-custom-wos1") of
        Just "Skill" -> [FreeformField {name="Skill:",del=False,key="origin-custom-s2"}]
