@@ -40,7 +40,7 @@ table.form td select {
 
 div.powerbox {
   position: relative;
-  width: 80%;
+  width: 97%;
   margin-bottom: 4px;
 }
 
@@ -91,7 +91,7 @@ div.powericons {
 div.powerblock {
   border: 2px solid black;
   padding: 3px;
-  width: 80%;
+  width: 100%;
   background-color: rgb(90%,90%,90%);
   margin-bottom: 4px;
 }
@@ -173,7 +173,7 @@ table.tacticalheader th {
 }
 
 table.allheader {
-  width: 80%;
+  width: 97%;
 }
 
 table.allheader td:first-child {
@@ -184,6 +184,7 @@ table.allheader td:first-child {
 table.allheader td:last-child {
   height: 100%;  
 }
+
 
 tr:nth-child(even) td.backgroundSkill {
   background-color: hsl(120,32%,77%);
@@ -208,4 +209,45 @@ tr:nth-child(even) td.userSkill {
 
 tr:nth-child(odd) td.userSkill {
   background-color: hsl(230,50%,90%);
+}
+
+div.sstables {
+  position: relative;
+  width: 97%;
+}
+
+div.comptable {
+  position: absolute;
+  left: 50%;
+  width: 50%;
+  top: 0%;
+}
+div.skilltable {
+  width: 50%;
+}
+div.skilltable table {
+  border: 1px solid black;  
+  width: 99%;
+}
+
+div.comptable table {
+  border: 1px solid black;
+  width: 100%;
+}
+
+div.tricktable table {
+  margin-top: 5px;
+  border: 1px solid black;
+}
+
+div.powercards {
+  margin-top: 10px;
+}
+
+div.kittable {
+  margin-top: 5px;
+}
+
+div.kittable table {
+  border: 1px solid black;
 }

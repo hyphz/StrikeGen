@@ -8,6 +8,7 @@ port dbLoaded : Int -> Cmd x -- Junk parameter. Called when loading is done to t
 port doUpload : Int -> Cmd x -- Junk parameter. Tells JS to open a file and send it with loadJson.
 port alert : String -> Cmd x -- Display a JS error box.
 port resetFileMenu : Int -> Cmd x -- Set the file menu selected item back to the header.
+port doPrint : Int -> Cmd x
 
 -- INCOMING
 port loadJson : (String -> x) -> Sub x -- Load a character from a JSON specification.

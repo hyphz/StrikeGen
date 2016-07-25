@@ -487,6 +487,7 @@ handleFileCommand x m = case x of
   "seturl" -> (m, Ports.saveURL (encodeChar m))
   "reset" -> ({m | character = blankCharacter},Ports.resetFileMenu 0)
   "roll20" -> (m, Ports.download ("macros.txt",powerMacros m))
+  "print" -> (m, Ports.doPrint 0)
   _ -> (m, Ports.alert ("Invalid message " ++ x ++ " from file menu"))
 
 {-| Decode a character hash from a JSON string. -}

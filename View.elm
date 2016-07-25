@@ -93,15 +93,15 @@ sourcedTable m l h o =
 
 {-| The three main tables of sourced data. -}
 skillTable : Model -> Html Msg
-skillTable m = sourcedTable m (getSkills m) "Skills" True
+skillTable m = div [class "skilltable"] [sourcedTable m (getSkills m) "Skills" True]
 
 trickTable : Model -> Html Msg
-trickTable m = sourcedTable m (getTricks m) "Tricks" True
+trickTable m = div [class "tricktable"] [sourcedTable m (getTricks m) "Tricks" True]
 
 {-| The complication table is a bit different because it doesn't have tick rows, even
 if Organic advancement is being used. -}
 compTable : Model -> Html Msg
-compTable m = div [] ([sourcedTable m (getComplications m) "Complications" False] ++
+compTable m = div [class "comptable"] ([sourcedTable m (getComplications m) "Complications" False] ++
   if (organicStyleDisplay m) then [combatApLine] else [])
 
 {-| The "AP spent in combat" tick line for organic advancement. -}
@@ -266,6 +266,23 @@ powerBlock block =
 powerBlocks : Model -> Html Msg
 powerBlocks m = div [Html.Attributes.class "powerblocks"] (List.map powerBlock (TacticalModel.getPowerBlocks m))
 
+kitTableRow : Model -> String -> Int -> List (Html Msg)
+kitTableRow m key lev = case (getResponse m key) of
+  Nothing -> []
+  Just adv -> [tr [] [td [] [text ((toString lev) ++":")], td [] [text adv]]]
+
+kitTableBody : Model -> List (Html Msg)
+kitTableBody m = (kitTableRow m "kit-start" 1)
+              ++ (kitTableRow m "kit-1" 1)
+              ++ (if ((getLevel m) >= 3) then (kitTableRow m "kit-2" 3) else [])
+              ++ (if ((getLevel m) >= 5) then (kitTableRow m "kit-3" 5) else [])
+              ++ (if ((getLevel m) >= 7) then (kitTableRow m "kit-4" 7) else [])
+              ++ (if ((getLevel m) >= 9) then (kitTableRow m "kit-5" 9) else [])
+
+
+kitTable : Model -> Html Msg
+kitTable m = div [class "kittable"] [table [] [thead [] [tr [] [th [colspan 2] [text "Kits and Advances"]]],tbody [] (kitTableBody m)]]
+
 
 fileops : Html Msg
 fileops = select [(Html.Events.on "change" (targetAndWrap FileCommand)),Html.Attributes.id "fileops"]
@@ -273,6 +290,7 @@ fileops = select [(Html.Events.on "change" (targetAndWrap FileCommand)),Html.Att
             (option [selected False, value "download"] [text "Download to local file"]),
             (option [selected False, value "upload"] [text "Upload from local file"]),
             (option [selected False, value "seturl"] [text "Save to URL (bookmark to store)"]),
+            (option [selected False, value "print"] [text "Print (to printer, PDF, etc..)"]),
             (option [selected False, value "roll20"] [text "Export Roll20 macros (text file)"]),
             (option [selected False, value "reset"] [text "Clear character (no confirm - save first!)"])]
 
@@ -281,4 +299,4 @@ formsDisplay model = div [] ([fileops] ++ (List.map (formDisplay model) (getForm
 
 view : Model -> Html Msg
 view model = div [] [div [Html.Attributes.class "forms"] [formsDisplay model],
-                     div [Html.Attributes.class "sheet"] [sheetHeader model, skillTable model, trickTable model, compTable model, powerCards model, powerBlocks model]]
+                     div [Html.Attributes.class "sheet"] [sheetHeader model, div [class "sstables"] [skillTable model, compTable model], trickTable model, kitTable model, powerCards model, powerBlocks model]]

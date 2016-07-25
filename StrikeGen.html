@@ -51,6 +51,18 @@
         app.ports.resetFileMenu.subscribe(function(msg) {
           document.getElementById("fileops").selectedIndex = 0;
         });
+        app.ports.doPrint.subscribe(function(msg) {
+          var formsDiv = document.getElementsByClassName("forms")[0];
+          var sheetDiv = document.getElementsByClassName("sheet")[0];
+          var oldFormsDisplay = formsDiv.style.display;
+          var oldSheetLeft = sheetDiv.style.left;
+          formsDiv.style.display = "none";
+          sheetDiv.style.left = "0px";
+          window.print();
+          sheetDiv.style.left = oldSheetLeft;
+          formsDiv.style.display = oldFormsDisplay;
+          document.getElementById("fileops").selectedIndex = 0;
+        });
       }
       function filePicked() {
         var theFile = document.getElementById("filePrompt").files[0];
