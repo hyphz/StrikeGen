@@ -11,6 +11,8 @@ import Json.Encode exposing (encode)
 import Json.Decode
 import TacticalModel exposing (classes, roles, tacticalForms, availableFeats, featChoices)
 import Roll20 exposing (powerMacros)
+import Kits exposing (kitsForm, validateKitProgression)
+import ExtenderForms exposing (extenderForm, extendForm, getExtendFormEntries, updateDeleteField)
 
 {-| ELM Architecture Initialization Function. -}
 init : (Model, Cmd Msg)
@@ -185,16 +187,6 @@ resolvedOriginSkills m = case getResponse m "basics-origin" of
                      if (getResponse m "origin-custom-wos1" == Just "Skill") then mayList <| getResponse m "origin-custom-s2" else []
   Just _ -> setOriginSkills m
 
-{-| Quick function for removing a field value that's out of range, if it
-exists. -}
-killOutOfRange : String -> List String -> Model -> Model
-killOutOfRange field list model =
-  case getResponse model field of
-    Nothing -> model
-    Just val -> case List.member val list of
-      True -> model
-      False -> killResponse model field
-
 {-| When origin is changed, if it's changed to a new complex origin,
 remove any skill choices made for a previous complex origin that aren't
 relevant to the new one. -}
@@ -232,15 +224,6 @@ fieldChanged field m =
     "kit-5" -> validateKitProgression m
     _ -> m
 
-{-| One entry in an extender form. Takes the model, the name of the field,
-the prefix for the form's keys and the field number. -}
-extenderFormEntry : Model -> String -> String -> Int -> Field
-extenderFormEntry m name prefix x = FreeformField {name=name, del=True, key=(prefix++"-"++(toString x))}
-
-{-| Creates an extendable form with insert/delete buttons. -}
-extenderForm : Model -> String -> String -> String -> Form
-extenderForm m header itemname key = Form True header
-  (map (extenderFormEntry m itemname key) [1..(getResponseInt m (key ++ "-count") 0)])
 
 {-| Definitions of the three extendable forms. -}
 learnedSkillsForm : Model -> Form
@@ -328,67 +311,6 @@ featsForm m = Form False "Feats" (
   (if ((getLevel m) >= 9) then [DropdownField {name="Feat:",del=False,key="feat-5",choices=(availableFeats m)}] else []) ++
   featChoices m)
 
-{-| Gets the list of kit options chosen up to the l'th slot. -}
-kitChoices : Model -> Int -> List String
-kitChoices m l =
-  List.foldr (++) [] (List.map (\x -> mayList <| getResponse m ("kit-" ++ (toString x))) [1..l])
-
-{-| Gets the list of advances for a named kit. -}
-advancesForKit : Model -> String -> List KitAdvance
-advancesForKit m k = case (Dict.get k m.database.kits) of
-  Nothing -> []
-  Just kit -> kit.advances
-
-{-| Checks if the character has the named kit advance in any slot up to the l'th, allowing for poaching. -}
-hasKitAdvanceNamed : Model -> String -> Int -> Bool
-hasKitAdvanceNamed m n l = (List.member n (kitChoices m l)) || (List.member ("Poach: " ++ n) (kitChoices m l))
-
-{-| Filters a list of kit advances to remove those whose prerequisites are not met in slots up to the l'th. -}
-filterForPrereqs : Model -> Int -> List KitAdvance -> List KitAdvance
-filterForPrereqs m l list = (List.filter (\x -> List.all (\y -> hasKitAdvanceNamed m y l) x.prereqs) list)
-
-{-| Gets the names of all known kits that are not minikits. -}
-allFullKits : Model -> List String
-allFullKits m = List.map .name (List.filter (\x -> x.mini == False) (Dict.values m.database.kits))
-
-kitAdvanceOptions : Model -> Int -> List String
-kitAdvanceOptions m limit =
-  let
-    firstKit = case (getResponse m "kit-start") of
-      Nothing -> []
-      Just k -> [k]
-    extensionKits = List.map (String.dropLeft 9) (List.filter (String.startsWith "New Kit: ") (kitChoices m limit))
-    allExistingKits = firstKit ++ extensionKits
-    allAdvancesForExistingKits = filterForPrereqs m limit (List.concatMap (advancesForKit m) allExistingKits)
-    possibleNewKits = List.filter (\x -> not (List.member x allExistingKits)) (allFullKits m)
-    poached = List.any (String.startsWith "Poach: ") (kitChoices m limit)
-    possiblePoaches = if poached then []
-      else filterForPrereqs m limit (List.concatMap (advancesForKit m) possibleNewKits)
-    miniKitAdvances = filterForPrereqs m limit (List.concatMap .advances (List.filter (\x -> x.mini) (Dict.values m.database.kits)))
-  in
-    (List.sort (List.map .name (allAdvancesForExistingKits ++ miniKitAdvances)))
-  ++ (List.sort (List.map (\x -> "New Kit: " ++ x) possibleNewKits))
-  ++ (List.sort (List.map (\x -> "Poach: " ++ x.name) possiblePoaches))
-
-
-kitsForm : Model -> Form
-kitsForm m = Form False "Kits" (
-  [DropdownField {name="Kit:", del=False, key="kit-start", choices=[""] ++ (allFullKits m)},
-  DropdownField {name="Advance:", del=False, key="kit-1", choices=([""] ++ kitAdvanceOptions m 0)}] ++
-  (if ((getLevel m) >= 3) then [DropdownField {name="Advance:", del=False, key="kit-2", choices=([""] ++ (kitAdvanceOptions m 1))}] else []) ++
-  (if ((getLevel m) >= 5) then [DropdownField {name="Advance:", del=False, key="kit-3", choices=([""] ++ (kitAdvanceOptions m 2))}] else []) ++
-  (if ((getLevel m) >= 7) then [DropdownField {name="Advance:", del=False, key="kit-4", choices=([""] ++ (kitAdvanceOptions m 3))}] else []) ++
-  (if ((getLevel m) >= 9) then [DropdownField {name="Advance:", del=False, key="kit-5", choices=([""] ++ (kitAdvanceOptions m 4))}] else [])
-  )
-
-validateKitProgression : Model -> Model
-validateKitProgression m =
-  killOutOfRange "kit-1" (kitAdvanceOptions m 0) <|
-  killOutOfRange "kit-2" (kitAdvanceOptions m 1) <|
-  killOutOfRange "kit-3" (kitAdvanceOptions m 2) <|
-  killOutOfRange "kit-4" (kitAdvanceOptions m 3) <|
-  killOutOfRange "kit-5" (kitAdvanceOptions m 4) m
-
 repLine : Model -> Int -> List Field
 repLine m ind =
   [FreeformField {name="Reputation:",del=False, key=("rep-" ++ (toString ind))},
@@ -423,17 +345,6 @@ updateFieldResponse : String -> String -> Model -> Model
 updateFieldResponse key value model =
     fieldChanged key (setResponse model key value)
 
-{-| Add a new entry to a variable length form. -}
-extendForm : String -> Model -> Model
-extendForm prefix model =
-  let
-    oldCount = (getResponseInt model (prefix ++ "count") 0)
-    newCount = (toString (oldCount + 1))
-    countUpdated = setResponse model (prefix ++ "count") newCount
-    newMemberKey = prefix ++ newCount
-  in
-    setResponse countUpdated newMemberKey ""
-
 {-| Called when an add button on an addable form is pressed. -}
 updateExtendForm : String -> Model -> Model
 updateExtendForm key model =
@@ -443,50 +354,6 @@ updateExtendForm key model =
     "Extra Complications" -> extendForm "lc-" model
     _ -> model
 
-{-| Closes gaps in the numbering order when an item on an addable form is
-deleted. -}
-closeGaps' : String -> Int -> Int -> Model -> Model
-closeGaps' prefix current total m =
-  let
-    addPrefix t = prefix ++ (toString t)
-  in
-    if current > total then
-      m
-    else
-      case (Dict.get (addPrefix current) m.character) of
-        Just _ -> closeGaps' prefix (current+1) total m
-        Nothing -> case (Dict.get (addPrefix (current+1)) m.character) of
-          Just _ -> closeGaps' prefix current total (moveResponse m (addPrefix (current+1)) (addPrefix current))
-          Nothing -> Debug.crash ("Two missing items in CLosegaps', current is " ++ (toString current) ++ "prefix is" ++ prefix ++ "total is" ++ (toString total))
-
-closeGaps : String -> Int -> Model -> Model
-closeGaps prefix total m = closeGaps' prefix 1 total m
-
-{-| Called when the delete button on an addable form is pressed. -}
-updateDeleteField : String -> Model -> Model
-updateDeleteField key model =
-  let
-    keyhyphenindex = String.indexes "-" key
-    realKeyHyphenIndex = case (List.head keyhyphenindex) of
-      Nothing -> Debug.crash "Missing hyphen in expandable form deletion process"
-      Just x -> x
-    keyPrehyphen = (String.slice 0 realKeyHyphenIndex key) ++ "-"
-    countName = keyPrehyphen ++ "count"
-    removeResponse = killResponse model key
-    checkResponseRemoved = case (Dict.get key removeResponse.character) of
-      Nothing -> removeResponse
-      Just _ -> Debug.crash ("RemoveResponse didn't work!???")
-    reduceCount = (setResponse checkResponseRemoved countName (toString ((getResponseInt checkResponseRemoved countName 0) - 1)))
-      in closeGaps keyPrehyphen (getResponseInt reduceCount countName 0) reduceCount
-
-{-| Get all the entries on an extender form, as a list. -}
-getExtendFormEntries : Model -> String -> List String
-getExtendFormEntries m prefix =
-  case (getResponse m (prefix ++ "count")) of
-    Nothing -> []
-    Just s -> case (toInt s) of
-      Err _ -> ["BUG! Mangled ExtendForm Counter " ++ prefix]
-      Ok itemCount -> List.map (\x -> Maybe.withDefault "BUG! Broken ExtendForm Entry" (getResponse m (prefix ++ (toString x)))) [1..(itemCount)]
 
 {-| Functions for reading from the three standard extender forms. -}
 getLearnedSkills : Model -> List String

@@ -243,6 +243,16 @@ getJsonFileCommand : String -> (String -> Msg) -> Cmd Msg
 getJsonFileCommand fileName signal =
    perform HTTPLoadError signal (getString fileName)
 
+{-| Quick function for removing a field value that's out of range, if it
+exists. -}
+killOutOfRange : String -> List String -> Model -> Model
+killOutOfRange field list model =
+  case getResponse model field of
+    Nothing -> model
+    Just val -> case List.member val list of
+      True -> model
+      False -> killResponse model field
+
 
 {-| Takes a list of items and a function and turns it into a dictionary, running the
 function on each of the items to generate its dictionary key. -}
