@@ -266,3 +266,20 @@ div.kittable table {
   border: 1px solid black;
   width: 100%;
 }
+
+div.reptable {
+  display: inline-block;
+  margin-top: 10px;
+  width: 48.5%;
+}
+
+div.reptable table {
+  width: 99%;
+  border: 1px solid black;
+}
+
+div.reptable table tr td:nth-child(2) {
+  width: 18%;
+  text-align: right;
+  padding-right: 2px;
+}

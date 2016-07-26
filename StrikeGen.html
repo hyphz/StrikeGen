@@ -56,11 +56,20 @@
           var sheetDiv = document.getElementsByClassName("sheet")[0];
           var oldFormsDisplay = formsDiv.style.display;
           var oldSheetLeft = sheetDiv.style.left;
-          formsDiv.style.display = "none";
-          sheetDiv.style.left = "0px";
+          var oldSheetPosition = sheetDiv.style.position;
+          var oldSheetOverflow = sheetDiv.style.overflowY;
+          var oldSheetWidth = sheetDiv.style.width;
+          formsDiv.style.display = "none"; // Get rid of the forms
+          sheetDiv.style.left = "0px"; // Get rid of left side margin
+          sheetDiv.style.position = "static";
+          sheetDiv.style.overflowY = "visible"; // Without this, sheet is clipped at the bottom of 1 page
+          sheetDiv.style.width = "100%"; // Looks weird on a landscape screen, but without it looks stupid on a portrait page
           window.print();
           sheetDiv.style.left = oldSheetLeft;
           formsDiv.style.display = oldFormsDisplay;
+          sheetDiv.style.position = oldSheetPosition;
+          sheetDiv.style.overflowY = oldSheetOverflow;
+          sheetDiv.style.width = oldSheetWidth;
           document.getElementById("fileops").selectedIndex = 0;
         });
       }

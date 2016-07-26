@@ -284,6 +284,33 @@ kitTable : Model -> Html Msg
 kitTable m = div [class "kittable"] [table [] [thead [] [tr [] [th [colspan 2] [text "Kits and Advances"]]],tbody [] (kitTableBody m)]]
 
 
+repTableRow : Model -> Int -> List (Html Msg)
+repTableRow m i = case (getResponse m ("rep-" ++ (toString i))) of
+  Nothing -> []
+  Just repname -> case (getResponse m ("rept-" ++ (toString i))) of
+    Nothing -> []
+    Just reptype -> if (reptype == "") then [] else [tr [] [td [] [text repname], td [] [text (reptype)]]]
+
+
+repTableBody : Model -> List (Html Msg)
+repTableBody m = repTableRow m 1
+              ++ (if ((getLevel m) >= 4) then (repTableRow m 2) else [])
+              ++ (if ((getLevel m) >= 6) then (repTableRow m 3) else [])
+              ++ (if ((getLevel m) >= 8) then (repTableRow m 4) else [])
+              ++ (if ((getLevel m) >= 10) then (repTableRow m 5) else [])
+
+
+repTable : Model -> List (Html Msg)
+repTable m = if ((getLevel m) < 2) then [] else [div [class "reptable"] [table [] [thead [] [tr [] [th [colspan 2] [text "Reputation"]]],tbody [] (repTableBody m)]]]
+
+
+fallbackDisplay : Model -> List (Html Msg)
+fallbackDisplay m = if ((getLevel m) < 2) then [] else
+  case (getResponse m "adv-fallback") of
+    Just fb -> [p [] [b [] [text "Fallback: "],text fb]]
+    Nothing -> []
+
+
 fileops : Html Msg
 fileops = select [(Html.Events.on "change" (targetAndWrap FileCommand)),Html.Attributes.id "fileops"]
            [(option [selected True, value "nil"] [text "File..."]),
@@ -299,4 +326,4 @@ formsDisplay model = div [] ([fileops] ++ (List.map (formDisplay model) (getForm
 
 view : Model -> Html Msg
 view model = div [] [div [Html.Attributes.class "forms"] [formsDisplay model],
-                     div [Html.Attributes.class "sheet"] [sheetHeader model, div [class "sstables"] [skillTable model, compTable model], div [class "tktables"] [trickTable model, kitTable model], powerCards model, powerBlocks model]]
+                     div [Html.Attributes.class "sheet"] ([sheetHeader model] ++ fallbackDisplay model ++ [div [class "sstables"] [skillTable model, compTable model], div [class "tktables"] [trickTable model, kitTable model]] ++ repTable model ++ [powerCards model, powerBlocks model])]

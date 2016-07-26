@@ -285,7 +285,9 @@ getComplications m =
     levelComplications =
       (if ((getLevel m) >= 4) then mayList (getResponse m "adv-l4comp") else []) ++
       (if ((getLevel m) >= 8) then mayList (getResponse m "adv-l8comp") else [])
-    organicComplications = getExtraComplications m
+    organicComplications = case (getResponse m "basics-ticks") of
+      Just "Yes" -> getExtraComplications m
+      _ -> []
   in
     (map (skillNameToSkill 1) originComplications) ++
     map (skillNameToSkill 2) (customComplication ++ levelComplications ++ organicComplications)
@@ -325,18 +327,27 @@ featsForm m = Form False "Feats" (
   (if ((getLevel m) >= 9) then [DropdownField {name="Feat:",del=False,key="feat-5",choices=(availableFeats m)}] else []) ++
   featChoices m)
 
-
+{-| Gets the list of kit options chosen up to the l'th slot. -}
+kitChoices : Model -> Int -> List String
 kitChoices m l =
   List.foldr (++) [] (List.map (\x -> mayList <| getResponse m ("kit-" ++ (toString x))) [1..l])
 
+{-| Gets the list of advances for a named kit. -}
+advancesForKit : Model -> String -> List KitAdvance
 advancesForKit m k = case (Dict.get k m.database.kits) of
   Nothing -> []
   Just kit -> kit.advances
 
+{-| Checks if the character has the named kit advance in any slot up to the l'th, allowing for poaching. -}
+hasKitAdvanceNamed : Model -> String -> Int -> Bool
 hasKitAdvanceNamed m n l = (List.member n (kitChoices m l)) || (List.member ("Poach: " ++ n) (kitChoices m l))
 
+{-| Filters a list of kit advances to remove those whose prerequisites are not met in slots up to the l'th. -}
+filterForPrereqs : Model -> Int -> List KitAdvance -> List KitAdvance
 filterForPrereqs m l list = (List.filter (\x -> List.all (\y -> hasKitAdvanceNamed m y l) x.prereqs) list)
 
+{-| Gets the names of all known kits that are not minikits. -}
+allFullKits : Model -> List String
 allFullKits m = List.map .name (List.filter (\x -> x.mini == False) (Dict.values m.database.kits))
 
 kitAdvanceOptions : Model -> Int -> List String
@@ -369,12 +380,27 @@ kitsForm m = Form False "Kits" (
   (if ((getLevel m) >= 9) then [DropdownField {name="Advance:", del=False, key="kit-5", choices=([""] ++ (kitAdvanceOptions m 4))}] else [])
   )
 
+validateKitProgression : Model -> Model
 validateKitProgression m =
   killOutOfRange "kit-1" (kitAdvanceOptions m 0) <|
   killOutOfRange "kit-2" (kitAdvanceOptions m 1) <|
   killOutOfRange "kit-3" (kitAdvanceOptions m 2) <|
   killOutOfRange "kit-4" (kitAdvanceOptions m 3) <|
   killOutOfRange "kit-5" (kitAdvanceOptions m 4) m
+
+repLine : Model -> Int -> List Field
+repLine m ind =
+  [FreeformField {name="Reputation:",del=False, key=("rep-" ++ (toString ind))},
+  DropdownField {name="Type:",del=False,key=("rept-" ++ (toString ind)), choices=["","Admired","Famous","Feared"]}]
+
+repForm : Model -> Form
+repForm m = Form False "Reputation"
+  ((if ((getLevel m) >= 2) then (repLine m 1) else []) ++
+  (if ((getLevel m) >= 4) then (repLine m 2) else []) ++
+  (if ((getLevel m) >= 6) then (repLine m 3) else []) ++
+  (if ((getLevel m) >= 8) then (repLine m 4) else []) ++
+  (if ((getLevel m) >= 10) then (repLine m 5) else []))
+
 
 {-| The full list of forms to display at any given time. -}
 getForms : Model -> List Form
@@ -383,6 +409,7 @@ getForms model =
    (if ((getLevel model) >= 2) then [levelForm model] else []) ++
    [featsForm model] ++
    [kitsForm model] ++
+   (if ((getLevel model) >= 2) then [repForm model] else []) ++
    (mayList (complexOriginForm model)) ++
    (mayList (customBackgroundForm model)) ++
    customOriginForm model ++
@@ -393,7 +420,7 @@ getForms model =
 {-| Update a field on the character when a form value changes, and call validation. -}
 updateFieldResponse : String -> String -> Model -> Model
 updateFieldResponse key value model =
-  fieldChanged key (setResponse model key value)
+    fieldChanged key (setResponse model key value)
 
 {-| Add a new entry to a variable length form. -}
 extendForm : String -> Model -> Model
