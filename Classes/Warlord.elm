@@ -18,11 +18,14 @@ classWarlord = { name = "Warlord",
                modifyHP = Nothing,
                classFeats = [] }
 
+atWillDamage : Model -> Int
+atWillDamage m = if (getLevel m < 5) then 2 else 3
+
 modifyBasicMelee : Model -> Power -> Power
-modifyBasicMelee m p = p
+modifyBasicMelee m p = {p | damage = atWillDamage m}
 
 modifyBasicRange : Model -> Power -> Power
-modifyBasicRange m p = p
+modifyBasicRange m p = {p | damage = atWillDamage m}
 
 support = (levelTextSpecial "Support Tokens" [1,5,9])
 rousing = (quickSpecial "Rousing")
@@ -32,17 +35,17 @@ specials m = powerDict m [rousing, enabling, incisive]
 cspecial m = powerlookup m "warlord-special" specials
 
 
-hitThisGuy m = levelTextPower "Hit This Guy" Attack AtWill 0 0 0 Green [1,5,9] m
+hitThisGuy m = levelTextPower "Hit This Thing" Attack AtWill 0 0 0 Green [1,5,9] m
 alleyOop m = levelTextPower "Alley-Oop" Attack AtWill 0 0 -1 Green [1,5,9] m
 punchingBag m = levelTextPower "Morale-Boosting Punching Bag" Attack AtWill -5 0 -1 Green [1,5,9] m
-enumerate m = levelTextPower "Enumerate its Weaknesses" Attack AtWill -5 0 2 Green [1,9] m
-offBalance m = levelTextPower "Knock Him Off Balance" Attack AtWill -5 0 2 Green [1,9] m
-comeHelpMe m = levelTextPower "Come Help Me With This Guy" Attack AtWill 0 0 0 Green [1, 5, 9] m
+enumerate m = levelTextPower "Enumerate its Weaknesses" Attack AtWill -5 0 (atWillDamage m) Green [1,9] m
+offBalance m = levelTextPower "Knock Him Off Balance" Attack AtWill -5 0 (atWillDamage m) Green [1,9] m
+comeHelpMe m = levelTextPower "Come Help Me Over Here" Attack AtWill 0 0 0 Green [1, 5, 9] m
 
 l1atwills m = powerDict m [hitThisGuy, alleyOop, punchingBag, enumerate, offBalance, comeHelpMe]
 l1awchosen m = powerlookup m "warlord-aw1" l1atwills ++ powerlookup m "warlord-aw2" l1atwills
 
-myGrandma m = quickPower "You Hit Like My Grandmother" Attack Encounter 0 0 3 Purple m
+myGrandma m = quickPower "You Hit Like a Baby" Attack Encounter 0 0 3 Purple m
 perfectChance m = quickPower "The Perfect Chance" Attack Encounter 0 0 0 Purple m
 defensiveTac  m = quickPower "Defensive Tactics" Attack Encounter 0 0 0 Purple m
 dontGiveUp m = quickPower "Don't Give Up" Reaction Encounter 0 0 0 Purple m
@@ -52,7 +55,7 @@ l1echosen m = powerlookup m "warlord-enc1" l1encounters
 
 neverSurrender m = quickPower "Never Surrender" Attack Encounter 0 0 0 Purple m
 chanceToRecover m = quickPower "Chance to Recover" Misc Encounter 0 0 0 Purple m
-leaveHimExposed m = quickPower "Leave Him Exposed" Attack Encounter -5 0 3 Purple m
+leaveHimExposed m = quickPower "Leave Them Exposed" Attack Encounter -5 0 3 Purple m
 
 l3encounters m = powerDict m [neverSurrender, chanceToRecover, leaveHimExposed]
 l3echosen m = powerlookup m "warlord-enc3" l3encounters

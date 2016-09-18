@@ -78,7 +78,7 @@ kraken = Shape "Kraken"
   (quickPower "Kraken's Transformation" Attack Encounter 0 0 3 Purple)
   (levelTextSpecial "Form of the Kraken" [1, 5, 9])
   (\m -> quickPower "Grab" Attack AtWill 0 0 (atWillDamage m) Green m)
-  (quickPower "Crush" Attack AtWill 0 0 0 Green)
+  (\m -> levelTextPower "Crush" Attack AtWill 0 0 0 Green [1,4,8] m)
   (quickPower "Choke Out" Attack Encounter 5 0 3 Purple)
   (quickPower "Death Grip" Attack Encounter 0 0 4 Purple)
 

@@ -45,8 +45,7 @@ atwilldamage m = if (getLevel m < 5) then 2 else 3
 
 deadlyPoison : Model -> Power
 deadlyPoison m = {name = "Deadly Poison",
-                 text = (if (getLevel m) < 5 then (overtext m "DeadlyPoison")
-                                      else (overtext m "DeadlyPoison5+")),
+                 text = (overtext m "DeadlyPoison"),
                  slot = Attack,
                  freq = AtWill,
                  range = -5,
@@ -68,8 +67,7 @@ phantasms m = {name = "Phantasms",
 
 terrifyingVisage : Model -> Power
 terrifyingVisage m = {name = "Terrifying Visage",
-                 text = (if (getLevel m) < 5 then (overtext m "TerrifyingVisage")
-                                      else (overtext m "TerrifyingVisage5+")),
+                 text = (overtext m "TerrifyingVisage"),
                  slot = Attack,
                  freq = AtWill,
                  range = 5,

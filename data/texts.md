@@ -1,7 +1,6 @@
 @@MarkOfDeath
 The first time you hit each non-Stooge enemy with an attack
-and deal damage, reduce the damage you deal by one and give it the Mark
-of Death.
+and deal damage, give it the Mark of Death.
 @@LesserGiftOfUndeath
 When a creature with your Mark Of Death is taken out, it stands up on its
 next Initiative count under you control as a Specter. The Specter has 1 Hit
@@ -178,7 +177,7 @@ damage if you are prevented from taking Opportunities.
 You may spend a Move Action to prepare a Ranged Basic Attack to use against the first
 enemy that moves within your range. This attack does not get your Role Boost.
 @@PinDown
-**Effect:** If the target moves more than 2 squares on its next turn, it takes 3 damage.
+**Effect:** If the target moves more than 1 square on its next turn, it takes 3 damage.
 If the target had a prepared action, it loses it. If anyone was Marked by the target,
  the Mark ends.
 @@PinDown5+
@@ -190,10 +189,11 @@ If the target had a prepared action, it loses it. If anyone was Marked by the ta
 If the target had a prepared action, it loses it. If anyone was Marked by the target,
 the Mark ends.
 @@AreaDenial
-**Effect:** Create a 3x3 zone centered on the target.
+**Effect:** Create a 5x5 zone centered on the target.
 Until the end of your next turn, any enemy that takes any action
 in the zone that doesn’t result in them leaving it, or that ends
-their turn in the zone, takes 3 damage.
+their turn in the zone, takes 3 damage. This does not apply to enemies who
+are adjacent to an ally of yours.
 @@AreaDenial5+
 **Effect:** Create a 5x5 zone centered on the target.
 Until the end of your next turn, any enemy that takes any action
@@ -207,9 +207,9 @@ their turn in the zone, takes 5 damage.
 @@TrickArrow
 **Effect:** Choose one effect from the following list:
 
-*Explosive Arrow:* An explosive attaches itself to the target. At the
-start of the target’s next turn, it explodes, dealing 2 damage to the
-target and all adjacent creatures.
+*Explosive Arrow:* An explosive attaches itself to the target. At any
+time before the start of your next turn, you may declare that it explodes,
+dealing 2 damage to the target and all adjacent creatures.
 
 *Alchemist’s Fire:* Ongoing 2 Damage and any creature that starts
 its turn adjacent or moves adjacent gains this same Status (save
@@ -555,12 +555,12 @@ Spend a Support Token when an ally starts their turn to give them extra damage o
 next attack roll equal to the attack's damage line if they hit. You cannot spend more than
 one in this way per turn. Gain a Support Token whenever you use the Assess power. You may
 spend a Move action to use the Assess power.
-@@HitThisGuy1+
+@@HitThisThing1+
 One willing ally within 10 squares makes a Melee or Ranged Basic Attack.
-@@HitThisGuy5+
+@@HitThisThing5+
 One willing ally within 10 squares makes a Melee or Ranged Basic Attack and deals 1 extra
 damage if they hit.
-@@HitThisGuy9+
+@@HitThisThing9+
 One willing ally within 10 squares makes a Melee or Ranged Basic Attack and deals 2 extra
 damage if they hit.
 @@Alley-Oop1+
@@ -590,16 +590,16 @@ Advantage rolls 3 dice and takes the best.
 @@KnockHimOffBalance9+
 **Effect:** The next ally to attack the target has Advantage and deals 1 extra damage if they
 hit.
-@@ComeHelpMeWithThisGuy1+
+@@ComeHelpMeOverHere1+
 One ally within 5 squares may shift 1 square. Then you make a Melee Basic Attack against
 the target.
-@@ComeHelpMeWithThisGuy5+
+@@ComeHelpMeOverHere5+
 One ally within 5 squares may shift 1 square. Then you make a Melee Basic Attack against
 the target and deal 1 extra damage if you hit.
-@@ComeHelpMeWithThisGuy9+
+@@ComeHelpMeOverHere9+
 One ally within 5 squares may shift 1 square. Then you make a Melee Basic Attack against
 the target and deal 2 extra damage if you hit.
-@@YouHitLikeMyGrandmother
+@@YouHitLikeaBaby
 **Effect:** Target is Weakened (save ends).
 @@ThePerfectChance
 One ally within 10 squares makes an attack with Advantage.
@@ -614,7 +614,7 @@ Target one ally within 5 squares that has been Taken Out or is at or below 0 HP.
 ally may re-enter the fight with 5 HP.
 @@ChancetoRecover
 You and each ally may make a Saving Throw.
-@@LeaveHimExposed
+@@LeaveThemExposed
 **Effect:** If the next attack against the target hits, it deals an extra 5 damage.
 @@RousingBattlecry
 Spend a Support token when an ally gets a 1 on any roll to let them reroll it.
@@ -625,7 +625,7 @@ Spend a Support token when an ally makes any roll other than an attack to give t
 @@BiggerPunchingBag
 **Effect:** The next time each ally attacks the target, they have Advantage and regain 2 HP.
 @@LeadTheCharge
-You and two allies make a Charge attack.
+You and two allies make a Charge attack. Your allies' attacks do not benefit from Role Boosts.
 @@AlwaysinPosition
 **Effect:** Until the end of the encounter, whenever the target starts its turn each ally
 may shift 1 square.
@@ -732,8 +732,7 @@ does not require a roll, deal 3 extra damage instead.
 **Effect:** If the target attempts to move on its next turn, it must make a Saving Throw.
 If it fails, it falls Prone.
 @@Margul'sToxicMissile1+
-**Effect:** Target takes 1 Ongoing Damage and loses one point of Resistance if it has
-any (save ends).
+**Effect:** On a failed save, the target is Vulnerable 1 until the end of the encounter.
 @@Margul'sToxicMissile5+
 **Effect:** On a failed save, the target is Vulnerable 1 until the end of the encounter.
 @@TheExcellentPrismaticSpray1+
@@ -830,11 +829,11 @@ or cover on that attack.
 Spend an Action Point. Make an attack against the triggering enemy.
 @@LightningStrikes
 Gain an Attack Action and use it immediately. Do not get your Damage Boost on it.
-@@StrikeandDodge1+
+@@StrikeandShift1+
 Deal 2 damage to each enemy adjacent to you and shift 1 square.
-@@StrikeandDodge6+
+@@StrikeandShift6+
 Deal 3 damage to each enemy adjacent to you and shift 1 square.
-@@StrikeandDodge10+
+@@StrikeandShift10+
 Deal 4 damage to each enemy adjacent to you and shift 1 square.
 @@WindUpStrike
 This power's text is in the source code of Striker.elm because it's recalculated every level.
@@ -854,9 +853,9 @@ Deal 15 extra damage if you hit with your next attack.
 @@PersistentWeakness
 Pick two creatures. Your attacks against them have Advantage and deal 2 extra damage until
 the end of the combat.
-@@HitHim!
+@@Hit'Em!
 One ally may make an attack. They do not get the benefit of their role's boosts.
-@@HitHimHarder!
+@@Hit'EmHarder!
 Two allies may make attacks. They do not get the benefit of their roles' boosts.
 @@Walkitoff!
 You or an ally may make a Saving Throw against an effect, even one that does not normally end
@@ -1013,12 +1012,16 @@ Two targets in range are Weakened (save ends).
 **Trigger:** An enemy moves.
 
 Spend an Action Point. Replace the enemy where it started its movement. Its Move Action is
-still expended.
+still expended. If it moved with an action other than a Move action, the action is still
+expended, but other parts of the action may take effect if they apply from the enemy's new
+position.
 @@Slide!
 **Trigger:** An enemy moves.
 
 Spend an Action Point. Replace the enemy where it started its movement, then slide it its
-speed and knock it Prone. Its Move Action is still expended.
+speed and knock it Prone. Its Move Action is still expended. If it moved with an action
+other than a Move action, the action is still expended, but other parts of the action may
+take effect if they apply from the enemy's new position.
 @@SaveorSuck
 The target must make a Saving Throw. If it fails, it is Stunned until the end of its next
 turn. If it succeeds, it is Distracted instead.
@@ -1273,7 +1276,7 @@ Create a wall of 8 squares of blocking terrain within 10 squares. The entire wal
 within 10 squares of you and must be contiguous. It is 2 squares high. Anyone can
 break a square of this wall by dealing 3 damage to it. Attacking the wall always hits
 as though the attacker rolled a 5.
-@@WhereDidHeComeFrom?
+@@WhereDidItComeFrom?
 Create a wall of 8 squares of within 10 squares. The entire wall must be
 within 10 squares of you and must be contiguous. The wall is blocking terrain and blocks
 line of sight for enemies, but allies may ignore both these features. It is 2 squares high. Anyone can
@@ -1364,7 +1367,7 @@ The zones last until the end of your following turn and have effects based on th
 type.
 @@BlasterBombardier
 Even by using your Blaster role boosts, you may not apply the effect line of your powers
-that create explosions twice. Instead, you may combine any two blast shapes.
+that create explosions twice. Instead, you may combine any two blast shapes that you know.
 @@Grenade
 **Special:** Choose a type of Ammo before you roll this attack.
 
@@ -1489,17 +1492,18 @@ Use in Tortoise form. Level 3. **Effect:** You Resist all damage until the start
 Use in Tortoise form. Level 7. **Effect:** Gain Resist 2 damage until the start of your next turn. Allies also Resist
 2 damage while adjacent to you until the start of your next turn.
 @@FormoftheBull1+
-While in Bull form, all your Bull powers except **Nimble Charge** may be used in place of a basic melee attack while charging. Gain resist 1 to damage taken from Opportunities granted by
+While in Bull form, all your Level 1 Bull powers except **Nimble Charge** may be used in place of a basic melee attack while charging. Gain resist 1 to damage taken from Opportunities granted by
 movement as part of a Charge.
 @@FormoftheBull5+
-While in Bull form, all your Bull powers except **Nimble Charge** may be used in place of a basic melee attack while charging. Gain resist 1 to damage taken from Opportunities granted by
+While in Bull form, all your Level 1 Bull powers except **Nimble Charge** may be used in place of a basic melee attack while charging. Gain resist 1 to damage taken from Opportunities granted by
 movement as part of a Charge. You may charge through enemy squares. Any enemy you charge
 through falls Prone unless it forgoes its Opportunity against you.
 @@FormoftheBull9+
-While in Bull form, all your Bull powers except **Nimble Charge** may be used in place of a basic melee attack while charging. Gain resist 1 to damage taken from Opportunities granted by
+While in Bull form, all your Level 1 Bull powers except **Nimble Charge** may be used in place of a basic melee attack while charging. Gain resist 1 to damage taken from Opportunities granted by
 movement as part of a Charge. Any enemy that takes an opportunity against you while you are
-Charging takes 3 damage. You may charge through enemy squares. Any enemy you charge
-through falls Prone unless it forgoes its Opportunity against you.
+Charging takes 3 damage. You may charge through enemy squares. If any enemy you charge
+through takes an opportunity against you, it falls Prone in addition to the above 3 damage.  
+If it forgoes its Opportunity against you, it takes 3 damage ''or'' falls Prone, its choice.
 @@Bull'sTransformation
 **Special:** You must Charge at least 2 squares and make this attack instead of a Basic Melee
 Attack.
@@ -1596,7 +1600,8 @@ Ongoing 2 damage (save ends).
 **Effect:** Ongoing 2 damage (save ends). At the end of each of the target's turns, if it fails
 its Saving Throw, the Ongoing Damage is doubled.
 @@Venom1+
-Use in Viper form. **Effect:** Ongoing 1 damage (save ends).
+Use in Viper form. **Effect:** Ongoing 1 damage (save ends), or Ongoing 2 Damage if it was
+already taking Ongoing damage.
 @@Venom5+
 Use in Viper form. **Effect:** Ongoing 2 damage (save ends).
 @@Enervation
@@ -1632,8 +1637,12 @@ to avoid the worsening status, although even if it succeeds it will still be gra
 original status.
 @@Grab
 Use in Kraken form. **Effect:** Target is Grabbed.
-@@Crush
-Use in Kraken form. Deal 2 damage to each creature you have Grabbed.
+@@Crush1+
+Use in Kraken form. Deal 3 damage to each creature you have Grabbed.
+@@Crush4+
+Use in Kraken form. Deal 4 damage to each creature you have Grabbed.
+@@Crush8+
+Use in Kraken form. Deal 5 damage to each creature you have Grabbed.
 @@ChokeOut
 Use in Kraken form. Level 3. **Effect:** Target is Grabbed and Weakened while it remains
 Grabbed. If it does not escape on its next turn, it is Incapacitated (save ends).
@@ -1902,7 +1911,7 @@ Cap as the source.
 creature.
 @@MarkedforDeath
 **Effect:** When the target is Taken Out, increase the damage the Red Cap does at
-the end of your turn by 1.
+the end of your turn by 1. This is cumulative.
 @@RedCap1+
 When any enemy is Taken Out, the Red Cap gains 2 Buffer Points.
 
@@ -2121,18 +2130,19 @@ Force an enemy to reroll one attack against you.
 @@LuckyEscaper
 Reroll one Saving Throw, escape attempt, or Panic Roll.
 @@Reliable
-Whenever you do not hit with an Encounter Power, you do not expend it.
+Whenever you do not hit with an Encounter Power, you do not expend it. When you roll a 3
+on an Encounter Power attack roll, it counts as a 4.
 @@MeleeShooter
-Your ranged attacks don't grant Opportunities. Deal 1 extra damage when you hit an
-adjacent foe with a ranged attack.
+Your ranged attacks don't grant Opportunities. You may gain Advantage for Flanking on
+Ranged attacks against adjacent opponents.
 @@Slippery
 Any time you shift, you may shift 1 extra square. Additionally, you may move through
 enemy squares, although you may not end your turn there. When you enter or leave an
 enemy's square, you do not grant them an Opportunity.
 @@Sprinter
 If you have unspent points of movement after your turn, you may spend them to move when
-it is not your turn. You may use this at any time. If you use it in response to another
-event, it resolves as a Reaction.
+it is not your turn. You may use this at any time, but only once per round. If you use it
+in response to another event, it resolves as a Reaction.
 @@FastReactions
 Instead of rolling for Initiative, you always get a 7. You may use your Action Trigger
 twice per encounter.
@@ -2167,7 +2177,8 @@ You must be out of sight when you use this power. Move up to your speed, ending 
 2 squares away from your current location. You must remain out of sight during the movement
 and end in cover or concealment. You are Hidden.
 @@Toughness
-Attacks against you in the first round have Disadvantage. You Resist 1 in the first round.
+Resist 1 damage against everything other than attacks and opportunities (such as Ongoing
+Damage, environmental damage, and zones).
 @@Huge
 Increase your Size by one. Your allies may treat you as terrain granting Full Cover.
 @@SuperClimbing
@@ -2224,7 +2235,8 @@ not benefit from your Role Boosts.
 Whenever you do not hit with an Encounter Power, you still summon the creature, but do not
 expend the power. If you use a summoning power several times by this method, you do not
 resummon the creature; the existing summoned creature is the source. If the summoned
-creature is Taken Out, you cannot use the summoning power even if it is not expended.
+creature is Taken Out, you cannot use the summoning power even if it is not expended. When
+you roll a 3 on an Encounter Power attack roll, it counts as a 4.
 @@Multi-RoleShapechanger
 When you use a Transformation Power, you take on the Role associated with that form.
 You may use only one Role Encounter power of each level per combat, even if you take on

@@ -64,7 +64,7 @@ encounters m = powerDict m [
 
 
 upgraded x m = case x of
-  "That Wasn't There Before" -> [quickPower "Where Did He Come From?" RoleSlot Encounter 0 0 0 Red m]
+  "That Wasn't There Before" -> [quickPower "Where Did It Come From?" RoleSlot Encounter 0 0 0 Red m]
   "Like Maple Syrup" -> [quickPower "Like Concrete" RoleSlot Encounter 0 10 0 Red m]
   "The Friend Zone" -> [quickPower "The Friends with Benefits Zone" RoleSlot Encounter 0 0 0 Red m]
   "The Not So Friendly Zone" -> [quickPower "The Downright Unfriendly Zone" RoleSlot Encounter 0 0 0 Red m]

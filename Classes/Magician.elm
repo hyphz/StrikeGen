@@ -35,7 +35,7 @@ modifyRally m p = {p | text = overtext m "MagicianRally" }
 
 repulsion m = quickPower "The Instant Repulsion" Attack AtWill 0 0 (atWillDamage m) Green m
 lubrication m = quickPower "Liscato's Bountiful Lubrication" Attack AtWill 10 0 (atWillDamage m) Green m
-marguls m = levelTextPower "Margul's Toxic Missile" Attack AtWill 10 0 (atWillDamage m) Green [1,5] m
+marguls m = levelTextPower "Margul's Toxic Missile" Attack AtWill 10 0 (atWillDamage m) Green [1] m
 prismatic = levelTextPower "The Excellent Prismatic Spray" Attack AtWill 10 0 0 Green [1,5]
 awspells m = powerDict m [repulsion, lubrication, marguls, prismatic]
 chosenaws m = powerlookup m "mage-aw1" awspells ++ powerlookup m "mage-aw2" awspells

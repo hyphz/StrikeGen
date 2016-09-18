@@ -35,7 +35,7 @@ otherBoost m p = case (prefixgetResponse m p "striker-boost") of
 
 
 lightning = quickPower "Lightning Strikes" RoleSlot Encounter 0 0 0 Red
-strikedodge = levelTextPower "Strike and Dodge" RoleSlot Encounter 0 0 0 Red [1,6,10]
+strikedodge = levelTextPower "Strike and Shift" RoleSlot Encounter 0 0 0 Red [1,6,10]
 windUpStrike m = let
   extraDamage = truncate (((toFloat (getLevel m)) / 2) + 3)
   in
@@ -47,7 +47,7 @@ windUpStrike m = let
       area = 0,
       damage = 0,
       styl = Red,
-      text = "Deal " ++ (toString extraDamage) ++ " extra damage if you hit with your next attack. If you next attack hits multiple targets, apply this damage to only one of them."}
+      text = "Deal " ++ (toString extraDamage) ++ " extra damage if you hit with your next attack. If your next attack hits multiple targets, apply this damage to only one of them."}
 momentaryWeakness = quickPower "Momentary Weakness" RoleSlot Encounter 0 0 0 Red
 
 

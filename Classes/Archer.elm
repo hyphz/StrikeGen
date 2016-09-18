@@ -38,16 +38,12 @@ atWillDamage m = if (getLevel m < 5) then 2 else 3
 aim = quickPower "Aim" Attack AtWill 0 0 0 Green
 flare m = (quickPower "Flare" Attack AtWill (sniperDouble m 10) 0 (atWillDamage m) Green) m
 pinDown m = {name = "Pin Down",
-           text = if (getLevel m) < 5 then overtext m "PinDown" else
-                  if (getLevel m) < 9 then overtext m "PinDown5+" else
-                    overtext m "PinDown9+",
+           text = overtext m "PinDown",
           slot=Attack, freq=AtWill,
           range=(sniperDouble m 10), area=0, damage=(atWillDamage m), styl=Green}
 
 areaDenial m = {name = "Area Denial",
-           text = if (getLevel m) < 5 then overtext m "AreaDenial" else
-                  if (getLevel m) < 9 then overtext m "AreaDenial5+" else
-                    overtext m "AreaDenial9+",
+           text = overtext m "AreaDenial",
           slot=Attack, freq=AtWill,
           range=(sniperDouble m 10), area=0, damage=(atWillDamage m), styl=Green}
 

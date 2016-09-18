@@ -27,7 +27,7 @@ boosts m = case (hasFeat m "Limber Leader") of
 
 
 encounters m = powerDict m [
-  quickPower "Hit Him!" RoleSlot Encounter 0 0 0 Red,
+  quickPower "Hit 'Em!" RoleSlot Encounter 0 0 0 Red,
   quickPower "Walk it off!" RoleSlot Encounter 0 0 0 Red,
   quickPower "Mass Heal" RoleSlot Encounter 0 0 0 Red,
   quickPower "Keep Walking!" Reaction Encounter 0 0 0 Red,
@@ -36,7 +36,7 @@ encounters m = powerDict m [
 
 
 upgraded x m = case x of
-  "Hit Him!" -> [quickPower "Hit Him Harder!" RoleSlot Encounter 0 0 0 Red m]
+  "Hit 'Em!" -> [quickPower "Hit 'Em Harder!" RoleSlot Encounter 0 0 0 Red m]
   "Walk it off!" -> [quickPower "Walk it off harder!" RoleSlot Encounter 0 0 0 Red m]
   "Mass Heal" -> [quickPower "Fresh Start" RoleSlot Encounter 0 0 0 Red m]
   "Keep Walking!" -> [quickPower "You're Fine!" Reaction Encounter 0 0 0 Red m]
