@@ -310,7 +310,7 @@ versatileMinorPowers m =
 {-| Get all powers granted by Minor Role feats. -}
 minorFeatPowers : Model -> List Power
 minorFeatPowers m =
-  (if (hasFeat m "Minor Striker" && notRole m "Striker") then [levelTextSpecial "Minor Striker" [1,4,8] m, powerToFeatEncounter <| Roles.Striker.quickShift m] else []) ++
+  (if (hasFeat m "Minor Striker" && notRole m "Striker") then [levelTextPower "Minor Striker" Misc Encounter 0 0 0 Yellow [1,4,8] m, powerToFeatEncounter <| Roles.Striker.quickShift m] else []) ++
   (if (hasFeat m "Minor Leader" && notRole m "Leader") then [quickPower "Minor Leader Slide" Misc Encounter 0 0 0 Yellow m, levelTextPower "Minor Leader Heal" RoleSlot Encounter 0 0 0 Yellow [1,4,8] m] else []) ++
   (if (hasFeat m "Minor Defender" && notRole m "Defender") then [quickSpecial "Minor Defender" m, powerToFeatEncounter <| Roles.Defender.mark m] else []) ++
   (if (hasFeat m "Minor Blaster" && notRole m "Blaster") then [quickPower "Minor Blaster" Misc Encounter 0 0 0 Yellow m, powerToFeatEncounter <| Roles.Blaster.terrain m] else []) ++
