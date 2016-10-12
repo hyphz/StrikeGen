@@ -39,6 +39,7 @@ marguls m = levelTextPower "Margul's Toxic Missile" Attack AtWill 10 0 (atWillDa
 prismatic = levelTextPower "The Excellent Prismatic Spray" Attack AtWill 10 0 0 Green [1,5]
 awspells m = powerDict m [repulsion, lubrication, marguls, prismatic]
 chosenaws m = powerlookup m "mage-aw1" awspells ++ powerlookup m "mage-aw2" awspells
+              ++ powerlookup m "mage-aw3" awspells
 
 friendship = quickPower "Word of Instant Friendship" Attack Encounter 10 0 3 Purple
 encystment = quickPower "Momentary Encystment" Attack Encounter 10 0 3 Purple
@@ -138,6 +139,7 @@ bloodPowers m =
 starForm m =
   [powerChoiceField m "At-Will:" "mage-aw1" awspells,
    powerChoiceField m "At-Will:" "mage-aw2" awspells,
+   powerChoiceField m "At-Will:" "mage-aw3" awspells,
    powerChoiceField m "Encounter:" "mage-enc1" encspells,
    powerChoiceField m "Encounter:" "mage-enc2" encspells,
    powerChoiceField m "Encounter:" "mage-enc3" encspells]

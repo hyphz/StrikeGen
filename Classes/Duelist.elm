@@ -49,6 +49,7 @@ ifollow = quickPower "Where You Go I Follow" Attack Encounter 0 0 4 Purple
 
 l1atwills m = powerDict m [getOverHere, noEscape, demandAttention, exploitWeakness, guessingGame]
 l1awchosen m = powerlookup m "duelist-aw1" l1atwills ++ powerlookup m "duelist-aw2" l1atwills
+            ++ powerlookup m "duelist-aw3" l1atwills
 
 l1encounters m = powerDict m [noOneElse, perfectDefense]
 l1echosen m = powerlookup m "duelist-enc1" l1encounters
@@ -77,6 +78,7 @@ forms m = [Form False "Duelist" ([
   DropdownField { name="Feature", del=False, key="duelist-feature", choices=["","Find an Opening","Throw off their Aim","Force their position"] },
   powerChoiceField m "At-Will:" "duelist-aw1" l1atwills,
   powerChoiceField m "At-Will:" "duelist-aw2" l1atwills,
+  powerChoiceField m "At-Will:" "duelist-aw3" l1atwills,
   powerChoiceField m "Encounter:" "duelist-enc1" l1encounters]
   ++ (atLevel m 3 (powerChoiceField m "Encounter:" "duelist-enc3" l3encounters))
   ++ (atLevel m 7 (powerChoiceField m "Encounter:" "duelist-enc7" l7encounters))

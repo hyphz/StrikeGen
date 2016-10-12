@@ -113,9 +113,9 @@ pRally m = applyClassModifier m .modifyRally {name = "Rally",
                }
 
 {-| The assess power. -}
-pAssess : Power
-pAssess = {name = "Assess",
-               text = "Roll a die and ask the GM that many questions as listed on page 90.",
+pAssess : Model -> Power
+pAssess m = {name = "Assess",
+               text = overtext m "GlobalAssess",
                slot = RoleSlot,
                freq = AtWill,
                range = 0,
@@ -129,7 +129,7 @@ nullPowerModifier _ p = p
 
 {-| List of the basic powers all characters have. -}
 basicPowers : Model -> List Power
-basicPowers m = [pmeleeBasic m, prangedBasic m, pcharge m, pRally m, pAssess]
+basicPowers m = [pmeleeBasic m, prangedBasic m, pcharge m, pRally m, pAssess m]
 
 {-| Looks up and calls the function to get the selected class' power list. Note that it will
 vary based on decisions made in the class form. -}

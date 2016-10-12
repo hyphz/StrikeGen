@@ -44,6 +44,7 @@ comeHelpMe m = levelTextPower "Come Help Me Over Here" Attack AtWill 0 0 0 Green
 
 l1atwills m = powerDict m [hitThisGuy, alleyOop, punchingBag, enumerate, offBalance, comeHelpMe]
 l1awchosen m = powerlookup m "warlord-aw1" l1atwills ++ powerlookup m "warlord-aw2" l1atwills
+              ++ powerlookup m "warlord-aw3" l1atwills
 
 myGrandma m = quickPower "You Hit Like a Baby" Attack Encounter 0 0 3 Purple m
 perfectChance m = quickPower "The Perfect Chance" Attack Encounter 0 0 0 Purple m
@@ -89,6 +90,7 @@ forms m = [Form False "Warlord" ([
   powerChoiceField m "Feature:" "warlord-special" specials,
   powerChoiceField m "At-Will:" "warlord-aw1" l1atwills,
   powerChoiceField m "At-Will:" "warlord-aw2" l1atwills,
+  powerChoiceField m "At-Will:" "warlord-aw3" l1atwills,
   powerChoiceField m "Encounter:" "warlord-enc1" l1encounters]
   ++ (atLevel m 3 (powerChoiceField m "Encounter:" "warlord-enc3" l3encounters))
   ++ (atLevel m 7 (powerChoiceField m "Encounter:" "warlord-enc7" l7encounters))

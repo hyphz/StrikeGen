@@ -57,7 +57,8 @@ l1atwills m = powerDict m [
     (quickPower "Hot Bomb" Misc AtWill 0 0 0 Green)]
 
 l1awchosen m = [quickPower "Grenade" Attack AtWill 10 0 (atWillDamage m) Green m] ++
- powerlookup m "bombard-aw1" l1atwills ++ powerlookup m "bombard-aw2" l1atwills
+ powerlookup m "bombard-aw1" l1atwills ++ powerlookup m "bombard-aw2" l1atwills ++
+   powerlookup m "bombard-aw3" l1atwills
 
 l1encounters m = powerDict m [
    (quickPower "Energizing Bomb" Misc Encounter 0 0 0 Purple),
@@ -93,6 +94,7 @@ forms m = [Form False "Bombardier" ([
   powerChoiceField m "Type:" "bombard-feature" specials,
   powerChoiceField m "At-Will:" "bombard-aw1" l1atwills,
   powerChoiceField m "At-Will:" "bombard-aw2" l1atwills,
+  powerChoiceField m "At-Will:" "bombard-aw3" l1atwills,
   powerChoiceField m "Encounter:" "bombard-enc1" l1encounters]
   ++ (atLevel m 3 (powerChoiceField m "Encounter:" "bombard-enc3" l3encounters))
   ++ (atLevel m 7 (powerChoiceField m "Encounter:" "bombard-enc7" l7encounters))

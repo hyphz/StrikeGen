@@ -28,11 +28,13 @@ shift, or by twice that number otherwise.
 @@Phantasms
 **Effect:** The next ally to attack the target has Advantage.
 @@TerrifyingVisage
-**Effect:** Target must use its Move Action on its turn to move its speed away
-from you or take 3 damage.
+**Effect:** On the target's next turn, they must spend a Move Action to make their
+best effort to move as far away from you as possible with one action, or else take
+3 damage.
 @@TerrifyingVisage5+
-**Effect:** Target must use its Move Action on its turn to move its speed away
-from you before taking any other actions, or take 3 damage.
+**Effect:** On the target's next turn, they must spend a Move Action to make their
+best effort to move as far away from you as possible with one action, or else take
+3 damage.
 @@CommandUndead
 **Special:** May only target undead creatures (or appropriate reskin).
 
@@ -995,13 +997,15 @@ All allies adjacent to you have cover from melee attacks while adjacent to you, 
 fail to end their turn adjacent to you. This effect ends if you are Incapacitated.
 @@ControlBoost
 When you roll a 3-6 on an attack, you may choose to either Slow the target until the end of
-its next turn, or to slide the target 3 squares.
+its next turn, or to slide the target 3 squares. This may used to trigger conditional
+effects of the attack.
 @@ImprovedControlBoost
 When you roll a 3-6 on an attack, you may choose to either knock the target Prone, or to
-slide the target 6 squares.
+slide the target 6 squares. This may used to trigger conditional effects of the attack.
 @@SuperControlBoost
 When you roll a 3-6 on an attack, you may choose to either knock the target Prone and it
-cannot stand up (save ends), or to slide the target 10 squares.
+cannot stand up (save ends), or to slide the target 10 squares. This may used to trigger conditional
+effects of the attack.
 @@SapStrength1+
 Target is Weakened until the end of its next turn.
 @@SapStrength4+
@@ -1013,15 +1017,15 @@ Two targets in range are Weakened (save ends).
 
 Spend an Action Point. Replace the enemy where it started its movement. Its Move Action is
 still expended. If it moved with an action other than a Move action, the action is still
-expended, but other parts of the action may take effect if they apply from the enemy's new
-position.
+expended and the target may no longer move using that action, but other parts of the
+action may take effect if they apply from the enemy's new position.
 @@Slide!
 **Trigger:** An enemy moves.
 
 Spend an Action Point. Replace the enemy where it started its movement, then slide it its
 speed and knock it Prone. Its Move Action is still expended. If it moved with an action
-other than a Move action, the action is still expended, but other parts of the action may
-take effect if they apply from the enemy's new position.
+other than a Move action, the action is still expended and the target may no longer move using that action,
+but other parts of the action may take effect if they apply from the enemy's new position.
 @@SaveorSuck
 The target must make a Saving Throw. If it fails, it is Stunned until the end of its next
 turn. If it succeeds, it is Distracted instead.
@@ -1468,9 +1472,9 @@ following benefits to your transformed Form for the rest of the combat:
 * Plus 4 speed.
 * All your melee attacks become "melee or ranged 5".
 @@BlurredForm
-**Effect:** Shift 2 squares.
+**Effect:** Shift 2 squares. You may use this in any form.
 @@PrimalCompulsion
-**Effect:** Slide the target 2 squares.
+**Effect:** Slide the target 2 squares. You may use this in any form.
 @@FormoftheTortoise1+
 While in Tortoise form, you resist 1 damage.
 @@FormoftheTortoise5+
@@ -1492,14 +1496,14 @@ Use in Tortoise form. Level 3. **Effect:** You Resist all damage until the start
 Use in Tortoise form. Level 7. **Effect:** Gain Resist 2 damage until the start of your next turn. Allies also Resist
 2 damage while adjacent to you until the start of your next turn.
 @@FormoftheBull1+
-While in Bull form, all your Level 1 Bull powers except **Nimble Charge** may be used in place of a basic melee attack while charging. Gain resist 1 to damage taken from Opportunities granted by
+Gain resist 1 to damage taken from Opportunities granted by
 movement as part of a Charge.
 @@FormoftheBull5+
-While in Bull form, all your Level 1 Bull powers except **Nimble Charge** may be used in place of a basic melee attack while charging. Gain resist 1 to damage taken from Opportunities granted by
+Gain resist 1 to damage taken from Opportunities granted by
 movement as part of a Charge. You may charge through enemy squares. Any enemy you charge
 through falls Prone unless it forgoes its Opportunity against you.
 @@FormoftheBull9+
-While in Bull form, all your Level 1 Bull powers except **Nimble Charge** may be used in place of a basic melee attack while charging. Gain resist 1 to damage taken from Opportunities granted by
+Gain resist 1 to damage taken from Opportunities granted by
 movement as part of a Charge. Any enemy that takes an opportunity against you while you are
 Charging takes 3 damage. You may charge through enemy squares. If any enemy you charge
 through takes an opportunity against you, it falls Prone in addition to the above 3 damage.  
@@ -1510,8 +1514,8 @@ Attack.
 
 **Effect:** Target is knocked Prone and is Distracted until the end of its next turn.
 @@BullRush
-Use in Bull form. **Effect:** Push the target a number of squares equal to the distance you
-Charged to make this attack.
+Use in Bull form. You may use this power in place of a basic melee attack while Charging.
+**Effect:** Push the target a number of squares equal to the distance you Charged to make this attack.
 @@NimbleCharge
 Use in Bull form. Shift 1 square and Charge in either order. Do not replace the Melee Basic
 Attack with any other power.
@@ -1600,12 +1604,12 @@ Ongoing 2 damage (save ends).
 **Effect:** Ongoing 2 damage (save ends). At the end of each of the target's turns, if it fails
 its Saving Throw, the Ongoing Damage is doubled.
 @@Venom1+
-Use in Viper form. **Effect:** Ongoing 1 damage (save ends), or Ongoing 2 Damage if it was
+Use in Viper form. **Effect:** Ongoing 1 damage (save ends), or Ongoing 2 Damage (save ends) if it was
 already taking Ongoing damage.
 @@Venom5+
 Use in Viper form. **Effect:** Ongoing 2 damage (save ends).
 @@Enervation
-Use in Viper form. **Effect:** Target deals 1 less damage on its attacks until the end of its next turn.
+Use in Viper form. **Effect:** Target deals 1 less damage on its attacks (save ends).
 @@SpitPoison
 Use in Viper form. Level 3. **Effect:** Target is Blinded until the end of its next turn.
 @@InescapableVenom
@@ -2212,8 +2216,10 @@ You or an ally regains 4 HP.
 @@MinorDefender
 You do an additional point of damage on Opportunities.
 @@MinorBlaster
-Turn a melee attack into a Blast 1, or a Range X attack into a Burst 1 centered with
-X, targeting all creatures in the zone.
+Turn a melee attack into a Blast 1. You may move the center of the zone one square
+for each square of Reach you have. Or, turn a Range X attack into a Burst 1 centered within
+X, targeting all creatures in the zone. It still grants opportunities as though it was
+Range X.
 @@MinorController
 When you hit an enemy with an attack, ignore your Role Boost and instead
 slide the enemy 3 squares and it is Slowed until the end of its next turn.
@@ -2221,9 +2227,11 @@ slide the enemy 3 squares and it is Slowed until the end of its next turn.
 Slide an ally 3 squares.
 @@DistantDefender
 When an enemy grants you an Opportunity, you may choose to Slow them until the
-end of their next turn instead of dealing damage.
+end of their next turn instead of dealing damage. You may take advantage of
+Opportunities within 8 squares of you, even if your longest ranged power has a
+shorter range than that.
 @@CraftyController
-Once per combat, when an enemy succeeds on a Saving Throw. You may make them reroll.
+Once per combat, when an enemy succeeds on a Saving Throw, you may make them reroll.
 If they succeed again, you may slide them 2 squares.
 @@FastArcher
 Double your base damage when ranged attacking enemies with the Mob trait. When you
@@ -2254,7 +2262,7 @@ Extend the effect of your Combat Resist feat to any creatures within 3 squares.
 @@CombatImmune
 You are immune to spells in combat.
 @@Gang
-In combat, you fight with your gang. Increase your vsize by 2. You can occupy the same
+In combat, you fight with your gang. Increase your size by 2. You can occupy the same
 space as other creatures and can move into their squares without granting Opportunities.
 Your ranged attacks do not grant Opportunities to enemies occupying your space. Once
 per round when you make an attack, each enemy whose space you occupy takes 1 damage.
@@ -2262,3 +2270,25 @@ Statuses are unchanged as your gang still depends on you to lead them.
 @@SteadyHands
 You never suffer Disadvantage for being Winded or Exhausted. Your attack rolls are not
 penalized for Major Conditions (but other rolls, including those made in combat, still are).
+@@SpeakWithDead
+**Effect:** If your target is Taken Out before the start of your next turn, you gain
+Advantage on your first attack on your next turn and may ask one question from the Assess
+list. (If your group prefers it, you need not be restricted to the Assess list; ask any
+question and the target must answer honestly.)
+@@GlobalAssess
+Roll a die and ask the GM that many questions from the list below.
+
+About an enemy:
+
+ * How many hit points does it have?
+ * How would you summarize its powers?
+ * What are its special traits?
+ * Is it carrying anything strange or unique?
+
+About the encounter:
+
+ * Who is really in charge?
+ * What can I use against the enemies?
+ * What can they use against me?
+ * Are there hidden doors or traps?
+ * Are there hidden enemies?

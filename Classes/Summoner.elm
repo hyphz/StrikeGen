@@ -199,6 +199,7 @@ spirits m = powerDict m [
 powers m = [levelTextSpecial "Summoning" [1,5] m] ++
             eggpower m ++
             powerlookup m "summon-sp1" spirits ++
+            powerlookup m "summon-sp2" spirits ++
             if (hasFeat m "Reliable Summoner") then [quickSpecial "Reliable Summoner" m] else []
             
 
@@ -218,6 +219,7 @@ powerBlocks m = summonPowerBlock m "summon-type1" 1
 
 forms m = [Form False "Summoner" ([
   powerChoiceField m "Spirit:" "summon-sp1" spirits,
+  powerChoiceField m "Spirit:" "summon-sp2" spirits,
   DropdownField {name="First Type:",key="summon-type1",del=False,choices=["","Elementals","Fey"]}]
   ++ summonChoiceField m "summon-type1" 1
   ++ summonChoiceField m "summon-type1" 2 ++

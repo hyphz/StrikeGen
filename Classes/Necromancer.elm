@@ -149,6 +149,9 @@ markOfDeath m = {name = "Mark of Death",
               styl = White
             }
 
+speakWithDead : Model -> Power
+speakWithDead m = quickPower "Speak With Dead" Attack AtWill -5 0 (atwilldamage m) Green m
+
 
 
 
@@ -192,7 +195,7 @@ l1encpower m = powerlookup m "necro-enc" l1encoptions
 l3encpower m = powerlookup m "necro-enc3" l3encoptions
 l7encpower m = powerlookup m "necro-enc7" l7encoptions
 
-necroPowers m = [commandUndead m, markOfDeath m] ++
+necroPowers m = [commandUndead m, markOfDeath m, speakWithDead m] ++
     (giftPower m) ++ (l1atwillpower1 m) ++ (l1atwillpower2 m) ++ (l1encpower m) ++
     (if ((getLevel m) >= 3) then (l3encpower m) else []) ++
     (if ((getLevel m) >= 7) then (l7encpower m) else [])
