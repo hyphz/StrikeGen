@@ -2134,8 +2134,7 @@ Force an enemy to reroll one attack against you.
 @@LuckyEscaper
 Reroll one Saving Throw, escape attempt, or Panic Roll.
 @@Reliable
-Whenever you do not hit with an Encounter Power, you do not expend it. When you roll a 3
-on an Encounter Power attack roll, it counts as a 4.
+Whenever you do not hit with an Encounter Power, you do not expend it. 
 @@MeleeShooter
 Your ranged attacks don't grant Opportunities. You may gain Advantage for Flanking on
 Ranged attacks against adjacent opponents.
