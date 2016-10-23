@@ -175,8 +175,8 @@ resolvedBackgroundSkills m = case getResponse m "basics-bg" of
                      (mayList <| getResponse m "bg-custom-s2") ++
                      (mayList <| getResponse m "bg-custom-s3") ++
                      (mayList <| getResponse m "bg-custom-s4") ++
-                      if (getResponse m "bg-custom-wos1" == Just "People") then mayList <| getResponse m "bg-custom-wos1s" else [] ++
-                      if (getResponse m "bg-custom-wos2" == Just "Skill") then mayList <| getResponse m "bg-custom-wos2s" else []
+                      (if (getResponse m "bg-custom-wos1" == Just "People") then mayList <| getResponse m "bg-custom-wos1s" else []) ++
+                      (if (getResponse m "bg-custom-wos2" == Just "Skill") then mayList <| getResponse m "bg-custom-wos2s" else [])
   Just _ -> backgroundSkills m
 
 {-| Returns the skill choices for the origin, allowing for it being custom. -}
