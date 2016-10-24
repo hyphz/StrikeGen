@@ -1,0 +1,108 @@
+<html>
+<head>
+  <title>Strike! Character Generator</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-86194169-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  <script src="StrikeGen.js"></script>
+  <script src="download.js"></script>
+  <script src="lz-string.min.js"></script>
+  <script>
+      function loaded() {
+        var node=document.getElementById("main");
+        app = Elm.Main.embed(node);
+        app.ports.download.subscribe(function(dlinfo) {
+          fileSupport = window.File && window.FileReader && window.FileList && window.Blob;
+          if (!fileSupport) {
+            window.alert("Your browser doesn't support local file access! Try save to URL.");
+            return;
+          }
+          download(dlinfo[1], dlinfo[0], "text/plain");
+          document.getElementById("fileops").selectedIndex = 0;
+        });
+        app.ports.saveURL.subscribe(function(data) {
+          var oldHref = window.location.href;
+          var loc = oldHref.indexOf("?");
+          if (loc != -1) {
+             oldHref = oldHref.slice(0,loc);
+          }
+          var str = LZString.compressToEncodedURIComponent(data);
+          window.location.assign(oldHref + "?load=" + str);
+        });
+        app.ports.dbLoaded.subscribe(function(junk) {
+          var ourHref = window.location.href;
+          var loc = ourHref.indexOf("?load=");
+          if (loc != -1) {
+            var compressed = ourHref.slice(loc+6);
+            var decompressed = LZString.decompressFromEncodedURIComponent(compressed);
+            app.ports.loadJson.send(decompressed);
+          }
+        });
+        app.ports.doUpload.subscribe(function(junk) {
+          fileSupport = window.File && window.FileReader && window.FileList && window.Blob;
+          if (!fileSupport) {
+            window.alert("Your browser doesn't support local file access! Try save to URL.");
+            return;
+          }
+          document.getElementById("fileops").selectedIndex = 0;
+          document.getElementById("filePrompt").click();
+        });
+        app.ports.alert.subscribe(function(msg) {
+          window.alert(msg);
+        });
+        app.ports.resetFileMenu.subscribe(function(msg) {
+          document.getElementById("fileops").selectedIndex = 0;
+        });
+        app.ports.doPrint.subscribe(function(msg) {
+          var formsDiv = document.getElementsByClassName("forms")[0];
+          var sheetDiv = document.getElementsByClassName("sheet")[0];
+          var oldFormsDisplay = formsDiv.style.display;
+          var oldSheetLeft = sheetDiv.style.left;
+          var oldSheetPosition = sheetDiv.style.position;
+          var oldSheetOverflow = sheetDiv.style.overflowY;
+          var oldSheetWidth = sheetDiv.style.width;
+          formsDiv.style.display = "none"; // Get rid of the forms
+          sheetDiv.style.left = "0px"; // Get rid of left side margin
+          sheetDiv.style.position = "static";
+          sheetDiv.style.overflowY = "visible"; // Without this, sheet is clipped at the bottom of 1 page
+          sheetDiv.style.width = "100%"; // Looks weird on a landscape screen, but without it looks stupid on a portrait page
+          window.print();
+          sheetDiv.style.left = oldSheetLeft;
+          formsDiv.style.display = oldFormsDisplay;
+          sheetDiv.style.position = oldSheetPosition;
+          sheetDiv.style.overflowY = oldSheetOverflow;
+          sheetDiv.style.width = oldSheetWidth;
+          document.getElementById("fileops").selectedIndex = 0;
+        });
+      }
+      function filePicked() {
+        var theFile = document.getElementById("filePrompt").files[0];
+        if (!theFile) {
+          window.alert("Missing file. Your browser has some strange ideas about file dialogs..");
+          return;
+        }
+        var r = new FileReader();
+        r.onload = function(e) {
+          var contents = e.target.result;
+          app.ports.loadJson.send(contents);
+        }
+        r.onerror = function(e) {
+          window.alert("Error getting file contents.");
+        }
+        r.readAsText(theFile);
+      }
+  </script>
+</head>
+<body onload="loaded()">
+  <div id="main"> </div>
+  <input id="filePrompt" type="file" style="display: none;" onChange="filePicked()"></input>
+</body>
+</html>
