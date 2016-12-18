@@ -368,6 +368,12 @@ powerCard power =
                 Purple ->
                     "purplepower"
 
+                Cyan ->
+                    "cyanpower"
+
+                Orange ->
+                    "orangepower"
+
         typeIcon =
             case power.slot of
                 Attack ->
@@ -472,17 +478,23 @@ powerOrder power =
         Green ->
             1
 
-        Blue ->
+        Orange ->
             2
 
-        Purple ->
+        Blue ->
             3
 
-        Red ->
+        Purple ->
             4
 
-        Yellow ->
+        Cyan ->
             5
+            
+        Red ->
+            6
+
+        Yellow ->
+            7
 
 
 organicStyleDisplay : Model -> Bool

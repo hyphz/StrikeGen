@@ -329,6 +329,26 @@
 	]
 },
 {
+	"name": "Sneak",
+	"mini": true,
+	"advances": [
+		{ "name": "Always Hide", "prereqs": [] },
+		{ "name": "Sneak in Plain Sight", "prereqs": [] },
+		{ "name": "Eavesdropper", "prereqs": [] },
+		{ "name": "Fast Hands", "prereqs": [] }
+	]
+},
+{
+	"name": "Poisoner",
+	"mini": true,
+	"advances": [
+		{ "name": "Poison Eater", "prereqs": [] },
+		{ "name": "Poisonous Concoction", "prereqs": [] },
+		{ "name": "Poisonous Arts", "prereqs": [] }
+	]
+},
+
+{
 	"name": "GLOBALS",
 	"mini": true,
 	"advances": [

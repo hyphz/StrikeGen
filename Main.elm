@@ -1,16 +1,16 @@
-module Main exposing (..)
+module Main exposing (main)
 
 import Html
-import View exposing (..)
-import CharModel exposing (..)
-import ModelDB exposing (..)
-import Ports exposing (..)
+import View
+import ModelDB
+import CharModel
+import Ports
 
-
+main : Program Never ModelDB.Model ModelDB.Msg
 main =
-    Html.program { init = init, view = view, update = update, subscriptions = subscriptions }
+    Html.program { init = CharModel.init, view = View.view, update = CharModel.update, subscriptions = subscriptions }
 
 
-subscriptions : Model -> Sub Msg
+subscriptions : ModelDB.Model -> Sub ModelDB.Msg
 subscriptions _ =
-    loadJson LoadJson
+    Ports.loadJson ModelDB.LoadJson

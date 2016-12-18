@@ -160,7 +160,8 @@ type PowerStyle
     | Yellow
     | Green
     | Purple
-
+    | Cyan
+    | Orange
 
 nullBackground : Background
 nullBackground =

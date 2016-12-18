@@ -11,6 +11,7 @@ import Classes.Bombardier exposing (classBombardier)
 import Classes.Summoner exposing (classSummoner)
 import Classes.Shapechanger exposing (classShapechanger)
 import Classes.Buddies exposing (classBuddies)
+import Classes.Rogue exposing (classRogue)
 import Roles.Striker exposing (roleStriker)
 import Roles.Leader exposing (roleLeader)
 import Roles.Defender exposing (roleDefender)
@@ -34,6 +35,7 @@ classes =
         , ( "Martial Artist", classMA )
         , ( "Magician", classMagician )
         , ( "Necromancer", classNecro )
+        , ( "Rogue", classRogue )
         , ( "Shapechanger", classShapechanger )
         , ( "Simplified", classSimplified )
         , ( "Summoner", classSummoner )
@@ -276,6 +278,7 @@ powerFeats m =
          , ( "Gang", [ quickSpecial "Gang" m ] )
          , ( "Spellbreak", [ quickSpecial "Spellbreak" m ] )
          , ( "Combat Resist", [ quickSpecial "Combat Resist" m ] )
+         , ( "Never Flat-Footed", [quickSpecial "Never Flat-Footed" m])
          ]
             ++ (if (getResponse m "basics-class" /= Just "Summoner") then
                     [ ( "Reliable", [ quickSpecial "Reliable" m ] ) ]

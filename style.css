@@ -147,6 +147,22 @@ div.redpower div.powertext {
   background-color: hsl(0,50%,90%);
 }
 
+div.orangepower div.powerhead {
+  background-color: hsl(30,80%,72%);
+}
+
+div.orangepower div.powertext {
+  background-color: hsl(30,80%,90%);
+}
+
+div.cyanpower div.powerhead {
+  background-color: hsl(180,50%,72%);
+}
+
+div.cyanpower div.powertext {
+  background-color: hsl(180,50%,90%);
+}
+
 table.sheetheader {
   border: 1px solid black;
   width: 100%;

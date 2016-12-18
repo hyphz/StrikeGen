@@ -2134,7 +2134,7 @@ Force an enemy to reroll one attack against you.
 @@LuckyEscaper
 Reroll one Saving Throw, escape attempt, or Panic Roll.
 @@Reliable
-Whenever you do not hit with an Encounter Power, you do not expend it. 
+Whenever you do not hit with an Encounter Power, you do not expend it.
 @@MeleeShooter
 Your ranged attacks don't grant Opportunities. You may gain Advantage for Flanking on
 Ranged attacks against adjacent opponents.
@@ -2291,3 +2291,9 @@ About the encounter:
  * What can they use against me?
  * Are there hidden doors or traps?
  * Are there hidden enemies?
+@@NeverFlat-Footed
+Text for this feat can be found in the Rogue supplement.
+@@RogueCopyrightWarning
+The text for Rogue powers is copyrighted. It can be found in the Rogue supplement.
+If you are running locally and own the supplement, you can add the texts yourself
+by editing *data/texts.md*, but must then not distribute that file further.
