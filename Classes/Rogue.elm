@@ -118,7 +118,7 @@ l7encounters m =
         [ (quickPower "Garotte" Attack Encounter 0 0 4 Purple)
         , (quickPower "Hamstring" Attack Encounter -5 0 4 Purple)
         , (quickPower "Knockout" Attack Encounter -5 0 4 Purple)
-        , (quickPower "Big Kaboom" Misc Encounter 0 0 0 Purple)
+        , (quickPower "Throw Sand" Misc Encounter 0 0 0 Purple)
         ]
 
 
