@@ -691,7 +691,7 @@ You may not use any Encounter Spells until after you have taken damage.
 After choosing an attack, but before rolling, you may inflict 2 damage on yourself
 to gain Potency. This damage cannot be resisted or reduced. If you hit with your attack,
 one target that was hit takes 2 extra damage from Potency. If your attack power
-does not require a roll, deal 1 extra damage instead.
+does not require a roll, deal 1 extra damage to one target instead.
 @@BloodMagic5+
 You may not use any Encounter Spells until after you have taken damage.
 
@@ -701,7 +701,7 @@ and ignores any Statuses you have that would hinder the attack.
 After choosing an attack, but before rolling, you may inflict 2 damage on yourself
 to gain Potency. This damage cannot be resisted or reduced. If you hit with your attack,
 one target that was hit takes 4 extra damage from Potency. If your attack power
-does not require a roll, deal 2 extra damage instead.
+does not require a roll, deal 2 extra damage to one target instead.
 @@BloodMagic7+
 You may not use any Encounter Spells until after you have taken damage.
 
@@ -714,7 +714,7 @@ and ignores any Statuses you have that would hinder the attack.
 After choosing an attack, but before rolling, you may inflict 2 damage on yourself
 to gain Potency. This damage cannot be resisted or reduced. If you hit with your attack,
 one target that was hit takes 4 extra damage from Potency. If your attack power
-does not require a roll, deal 2 extra damage instead.
+does not require a roll, deal 2 extra damage to one target instead.
 @@BloodMagic9+
 You may not use any Encounter Spells until after you have taken damage.
 
