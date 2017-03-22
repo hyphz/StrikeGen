@@ -19,10 +19,12 @@ classSimplified =
     }
 
 
+powers : Model -> List Power
 powers m =
-    []
+    []  -- Well, they did say it was simplified..
 
 
+simpleDamageEffect : Model -> String
 simpleDamageEffect m =
     if (getLevel m) < 3 then
         "**Effect**: 1 damage."
@@ -31,7 +33,7 @@ simpleDamageEffect m =
     else
         "**Effect**: 3 damage."
 
-
+simpleDamageValue : Model -> Int
 simpleDamageValue m =
     if (getLevel m) < 5 then
         2
@@ -40,11 +42,11 @@ simpleDamageValue m =
     else
         4
 
-
+meleeSpecial : String
 meleeSpecial =
     "\n\n**Special**: Treat any 2s rolled on the dice as though they were 5s."
 
-
+simpleBasicMelee : Model -> Power -> Power
 simpleBasicMelee m p =
     case (getResponse m "simple-type") of
         Just "Melee" ->
@@ -53,13 +55,13 @@ simpleBasicMelee m p =
         Just "None" ->
             { p | text = simpleDamageEffect m, damage = simpleDamageValue m }
 
-        Nothing ->
+        Nothing -> -- Assume no specialization if none is selected
             { p | text = simpleDamageEffect m, damage = simpleDamageValue m }
 
         _ ->
             p
 
-
+simpleBasicRange : Model -> Power -> Power
 simpleBasicRange m p =
     case (getResponse m "simple-type") of
         Just "Ranged" ->
@@ -68,13 +70,13 @@ simpleBasicRange m p =
         Just "None" ->
             { p | text = simpleDamageEffect m, damage = simpleDamageValue m, range = 10 }
 
-        Nothing ->
+        Nothing -> -- Assume no specialization if none is selected
             { p | text = simpleDamageEffect m, damage = simpleDamageValue m, range = 10 }
 
         _ ->
             p
 
-
+forms : Model -> List Form
 forms m =
     [ Form False
         "Simplified Class"

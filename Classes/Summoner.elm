@@ -32,7 +32,7 @@ atWillDamage m =
     else
         3
 
-
+fire : Summon
 fire =
     Summon "Fire Elemental"
         Elemental
@@ -40,7 +40,7 @@ fire =
         (\m -> quickPower "Elemental Flare" Attack AtWill 0 0 (atWillDamage m) Green m)
         (levelTextSpecial "Fire Elemental" [ 1, 5, 9 ])
 
-
+water : Summon
 water =
     Summon "Water Elemental"
         Elemental
@@ -48,7 +48,7 @@ water =
         (\m -> quickPower "Drowning" Attack AtWill 0 0 (atWillDamage m) Green m)
         (levelTextSpecial "Water Elemental" [ 1, 5, 9 ])
 
-
+air : Summon
 air =
     Summon "Air Elemental"
         Elemental
@@ -56,7 +56,7 @@ air =
         (\m -> quickPower "Whirlwind" Attack AtWill 0 0 (atWillDamage m) Green m)
         (levelTextSpecial "Air Elemental" [ 1, 5, 9 ])
 
-
+earth : Summon
 earth =
     Summon "Earth Elemental"
         Elemental
@@ -64,7 +64,7 @@ earth =
         (\m -> quickPower "Quake" Attack AtWill 0 0 (atWillDamage m) Green m)
         (levelTextSpecial "Earth Elemental" [ 1, 5, 9 ])
 
-
+nymph : Summon
 nymph =
     Summon "Nymph"
         Fey
@@ -72,7 +72,7 @@ nymph =
         (\m -> quickPower "Innocent Charm" Attack AtWill 10 0 (atWillDamage m) Green m)
         (levelTextSpecial "Nymph" [ 1, 5, 9 ])
 
-
+feegles : Summon
 feegles =
     Summon "Feegles"
         Fey
@@ -80,7 +80,7 @@ feegles =
         (\m -> quickPower "Crivens!" Attack AtWill 0 0 (atWillDamage m) Green m)
         (levelTextSpecial "Feegle" [ 1, 5, 9 ])
 
-
+wisp : Summon
 wisp =
     Summon "Wisp"
         Fey
@@ -88,7 +88,7 @@ wisp =
         (\m -> quickPower "Trick" Attack AtWill 5 0 (atWillDamage m) Green m)
         (levelTextSpecial "Wisp" [ 1, 5, 9 ])
 
-
+redcap : Summon
 redcap =
     Summon "Red Cap"
         Fey
@@ -96,7 +96,7 @@ redcap =
         (\m -> quickPower "Marked for Death" Attack AtWill -5 0 (atWillDamage m) Green m)
         (levelTextSpecial "Red Cap" [ 1, 5, 9 ])
 
-
+aprot : Summon
 aprot =
     Summon "Angel of Protection"
         Angel
@@ -104,7 +104,7 @@ aprot =
         (\m -> quickPower "Protective Smite" Attack AtWill -5 0 (atWillDamage m) Green m)
         (quickSpecial "Angel of Protection")
 
-
+aveng : Summon
 aveng =
     Summon "Angel of Vengeance"
         Angel
@@ -112,7 +112,7 @@ aveng =
         (\m -> quickPower "Vengeful Smite" Attack AtWill -5 0 (atWillDamage m) Green m)
         (quickSpecial "Angel of Vengeance")
 
-
+aheal : Summon
 aheal =
     Summon "Angel of Healing"
         Angel
@@ -120,7 +120,7 @@ aheal =
         (\m -> quickPower "Healing Smite" Attack AtWill -5 0 (atWillDamage m) Green m)
         (quickSpecial "Angel of Healing")
 
-
+dwrath : Summon
 dwrath =
     Summon "Daemon of Wrath"
         Demon
@@ -128,7 +128,7 @@ dwrath =
         (\m -> quickPower "Wrathful Claw" Attack AtWill 0 0 (atWillDamage m) Green m)
         (quickSpecial "Daemon of Wrath")
 
-
+dsloth : Summon
 dsloth =
     Summon "Daemon of Sloth"
         Demon
@@ -136,7 +136,7 @@ dsloth =
         (\m -> quickPower "Slothful Stupor" Attack AtWill 0 0 (atWillDamage m) Green m)
         (quickSpecial "Daemon of Sloth")
 
-
+dpride : Summon
 dpride =
     Summon "Daemon of Pride"
         Demon
@@ -144,7 +144,7 @@ dpride =
         (\m -> quickPower "Prideful Arrogance" Attack AtWill 0 0 (atWillDamage m) Green m)
         (quickSpecial "Daemon of Pride")
 
-
+theMother : Summon
 theMother =
     Summon "The Mother"
         Greater
@@ -152,7 +152,7 @@ theMother =
         (\m -> quickPower "Spawn" Attack AtWill 0 0 0 Green m)
         (quickSpecial "The Mother")
 
-
+theVoice : Summon
 theVoice =
     Summon "The Voice"
         Greater
@@ -160,7 +160,7 @@ theVoice =
         (\m -> quickPower "Confusion" Attack AtWill 0 0 3 Green m)
         (quickSpecial "The Voice")
 
-
+theStrangler : Summon
 theStrangler =
     Summon "The Strangler"
         Greater
@@ -168,7 +168,7 @@ theStrangler =
         (\m -> quickPower "Spawn" Attack AtWill 0 0 3 Green m)
         (quickSpecial "The Strangler")
 
-
+theContagion : Summon
 theContagion =
     Summon "Contagion"
         Greater
@@ -176,7 +176,7 @@ theContagion =
         (\m -> quickPower "Worsening Plague" Attack AtWill 0 0 3 Green m)
         (quickSpecial "Contagion")
 
-
+allSummons : List Summon
 allSummons =
     [ fire
     , water
@@ -203,19 +203,19 @@ summonToPair : Summon -> ( String, Summon )
 summonToPair s =
     ( s.name, s )
 
-
+allSummonsDict : Dict.Dict String Summon
 allSummonsDict =
     Dict.fromList (List.map summonToPair allSummons)
 
-
+typeSummonsDict : SummonType -> Dict.Dict String Summon
 typeSummonsDict k =
     Dict.fromList (List.map summonToPair (List.filter (\x -> x.kind == k) allSummons))
 
-
+summonTypeNames : Dict.Dict String SummonType
 summonTypeNames =
     Dict.fromList [ ( "Elementals", Elemental ), ( "Fey", Fey ), ( "Angels", Angel ), ( "Daemons", Demon ) ]
 
-
+typePrefix : SummonType -> String
 typePrefix t =
     case t of
         Elemental ->
@@ -233,7 +233,7 @@ typePrefix t =
         Greater ->
             "summon-g"
 
-
+singularName : SummonType -> String
 singularName t =
     case t of
         Elemental ->
@@ -251,11 +251,14 @@ singularName t =
         Greater ->
             "Greater:"
 
-
+summonFieldName : SummonType -> Int -> String
 summonFieldName t ind =
     ((typePrefix t) ++ toString ind)
 
-
+{-| Returns the field specification for the (index)th summon choice of the kind
+    chosen by the player in the key (typelookup).
+-}
+summonChoiceField : Model -> String -> Int -> List Field
 summonChoiceField m typelookup index =
     case (getResponse m typelookup) of
         Nothing ->
@@ -269,11 +272,19 @@ summonChoiceField m typelookup index =
                 Just summonType ->
                     summonChoiceFieldDirect m summonType index
 
+{-| Returns the field specification for the (index)th summon choice of the kind
+specified in the call (used directly for Greater summons)
+-}
 
+summonChoiceFieldDirect : Model -> SummonType -> Int -> List Field
 summonChoiceFieldDirect m summonType index =
     [ DropdownField { name = (singularName summonType), del = False, key = (summonFieldName summonType index), choices = [ "" ] ++ (Dict.keys (typeSummonsDict summonType)) } ]
 
+{-| Returns the power block for the (index)th summon choice of the kind chosen by the
+player in the key (typelookup).
+-}
 
+summonPowerBlock : Model -> String -> Int -> List PowerBlock
 summonPowerBlock m typelookup index =
     case (getResponse m typelookup) of
         Nothing ->
@@ -287,7 +298,11 @@ summonPowerBlock m typelookup index =
                 Just summonType ->
                     summonPowerBlockDirect m summonType index
 
+{-| Returns the power block for the (index)th summon choice of the kind specified in
+the call (used directly for Greater summons)
+-}
 
+summonPowerBlockDirect : Model -> SummonType -> Int -> List PowerBlock
 summonPowerBlockDirect m summonType index =
     case (getResponse m (summonFieldName summonType index)) of
         Nothing ->
@@ -332,6 +347,7 @@ modifyRally m p =
         { p | text = overtext m "SummonerRally" }
 
 
+eggpower : Model -> List Power
 eggpower m =
     case (getResponse m "basics-name") of
         Nothing ->
@@ -343,7 +359,7 @@ eggpower m =
             else
                 []
 
-
+spirits : Model -> Dict.Dict String Power
 spirits m =
     powerDict m
         [ quickPower "Punisher" Attack AtWill 10 0 (atWillDamage m) Green
@@ -352,7 +368,7 @@ spirits m =
         , quickPower "Shadow" Attack AtWill 10 0 (atWillDamage m) Green
         ]
 
-
+powers : Model -> List Power
 powers m =
     [ levelTextSpecial "Summoning" [ 1, 5 ] m ]
         ++ eggpower m
@@ -364,14 +380,7 @@ powers m =
             []
 
 
-greaterSummonPowerBlock =
-    []
-
-
-greaterSummonChoiceField m i =
-    []
-
-
+powerBlocks : Model -> List PowerBlock
 powerBlocks m =
     summonPowerBlock m "summon-type1" 1
         ++ summonPowerBlock m "summon-type1" 2
@@ -384,6 +393,7 @@ powerBlocks m =
         ++ atLevelList m 9 (summonPowerBlockDirect m Greater 2)
 
 
+forms : Model -> List Form
 forms m =
     [ Form False
         "Summoner"
