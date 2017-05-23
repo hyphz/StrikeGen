@@ -53,21 +53,9 @@ support : Model -> Power
 support =
     (levelTextSpecial "Support Tokens" [ 1, 5, 9 ])
 
-rousing : Model -> Power
-rousing =
-    (quickSpecial "Rousing")
-
-enabling : Model -> Power
-enabling =
-    (quickSpecial "Enabling")
-
-incisive : Model -> Power
-incisive =
-    (quickSpecial "Incisive")
-
 specials : Model -> Dict.Dict String Power
 specials m =
-    powerDict m [ rousing, enabling, incisive ]
+    powerDict m [ quickSpecial "Rousing", quickSpecial "Enabling", quickSpecial "Incisive" ]
 
 {-| Buddy active powers as raw string to include in the Buddy description. We don't divide these into
     level-based categories because all levels can be used in different contexts.

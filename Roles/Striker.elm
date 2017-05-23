@@ -175,7 +175,7 @@ powers m p =
                 ++ if (p == "") then
                     []
                    else
-                    [ quickSpecial "Strike Speed Boost" m ]
+                    [ quickSpecial "Striker Speed Boost" m ]
 
 
 forms m p =
