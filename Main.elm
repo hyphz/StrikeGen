@@ -1,11 +1,12 @@
 module Main exposing (main)
 
-import Html
 import Browser
-import View
-import ModelDB
 import CharModel
+import Html
+import ModelDB
 import Ports
+import View
+
 
 main : Program Int ModelDB.Model ModelDB.Msg
 main =

@@ -1,24 +1,24 @@
-module CharModel exposing (..)
+module CharModel exposing (OriginComplexity, backgroundSkills, basicsForm, complexOrigin, complexOriginForm, customBackgroundForm, customOriginForm, encodeChar, extraCompsForm, featsForm, fieldChanged, getComplications, getExtraComplications, getForms, getLearnedSkills, getLearnedTricks, getSkills, getTricks, getWealth, handleFileCommand, hasComplexOrigin, importChar, init, learnedSkillsForm, learnedTricksForm, levelForm, originComplications, originSkills, repForm, repLine, resolvedBackgroundSkills, resolvedOriginComplications, resolvedOriginSkills, setOriginSkills, simpleOriginComplexity, skillNameToSkill, update, updateExtendForm, updateFieldResponse, validateAlteredOrigin, validateLevel)
 
-import List exposing (map, head, length, filter, sortBy)
-import Result exposing (withDefault)
-import ModelDB exposing (..)
 import Dict exposing (Dict, insert)
-import String exposing (toInt, concat)
+import ExtenderForms exposing (extendForm, extenderForm, getExtendFormEntries, updateDeleteField)
 import FormsModel exposing (..)
-import Ports exposing (download, saveURL)
-import Json.Encode exposing (encode)
 import Json.Decode
-import TacticalModel exposing (classes, roles, tacticalForms, availableFeats, featChoices)
-import Roll20 exposing (powerMacros)
+import Json.Encode exposing (encode)
 import Kits exposing (kitsForm, validateKitProgression)
-import ExtenderForms exposing (extenderForm, extendForm, getExtendFormEntries, updateDeleteField)
+import List exposing (filter, head, length, map, sortBy)
+import ModelDB exposing (..)
+import Ports exposing (download, saveURL)
+import Result exposing (withDefault)
+import Roll20 exposing (powerMacros)
+import String exposing (concat, toInt)
+import TacticalModel exposing (availableFeats, classes, featChoices, roles, tacticalForms)
 
 
 {-| ELM Architecture Initialization Function.
 -}
 init : Int -> ( Model, Cmd Msg )
-init _  =
+init _ =
     ( { character = blankCharacter
       , database = blankDatabase
       }
@@ -56,30 +56,21 @@ getWealth : Model -> Int
 getWealth m =
     let
         backgroundWealth =
-            case (getResponse m "basics-bg") of
+            case getResponse m "basics-bg" of
+                {- If custom background, calculate wealth from answers to standard questions. -}
                 Just "<Custom>" ->
-                    (if (getResponse m "bg-custom-wos1") == Just "Wealth" then
-                        1
-                     else
-                        0
-                    )
-                        + (if (getResponse m "bg-custom-wos2") == Just "Money" then
-                            1
-                           else
-                            0
-                          )
-
+                    (if getResponse m "bg-custom-wos1" == Just "Wealth" then 1 else 0)
+                        + (if getResponse m "bg-custom-wos2" == Just "Money" then 1 else 0)
+                {- Else, just get wealth from background. -}
                 _ ->
                     indirectLookup m "basics-bg" m.database.backgrounds .wealth 0 0
 
         originWealth =
-            case (getResponse m "basics-origin") of
+            case getResponse m "basics-origin" of
+                {-If custom origin, calculate wealth from answer to question. -}
                 Just "<Custom>" ->
-                    if (getResponse m "origin-custom-wos1") == Just "Wealth" then
-                        1
-                    else
-                        0
-
+                    if getResponse m "origin-custom-wos1" == Just "Wealth" then 1 else 0
+                {- Else. just get wealth from background. -}
                 _ ->
                     indirectLookup m "basics-origin" m.database.origins .wealth 0 0
     in
@@ -99,34 +90,38 @@ originComplications m =
 
 
 
--- Origins can be a bit of a nuisance because some of them have more skills and
--- complications than they're supposed to have, and the player is supposed to
--- choose which ones to go for. So we have to offer a choice if we have one of
--- these.
+{- Origins can be a bit of a nuisance because some of them have more skills and
+  complications than they're supposed to have, and the player is supposed to
+  choose which ones to go for. So we have to offer a choice if we have one of
+  these. -}
+
 
 type alias OriginComplexity =
-  { complexSkills : Bool,
-    complexComplication : Bool,
-    freeformSkill : Bool,
-    freeformComplication : Bool }
+    { complexSkills : Bool
+    , complexComplication : Bool
+    , freeformSkill : Bool
+    , freeformComplication : Bool
+    }
 
 
 simpleOriginComplexity : OriginComplexity
 simpleOriginComplexity =
-  { complexSkills = False, complexComplication = False,
-    freeformSkill = False, freeformComplication = False }
+    { complexSkills = False
+    , complexComplication = False
+    , freeformSkill = False
+    , freeformComplication = False
+    }
 
 
 {-| Is an origin complex and if so, why?
 -}
 complexOrigin : Origin -> OriginComplexity
 complexOrigin x =
-    { complexSkills = ((length x.skillNames) > 2),
-      complexComplication = ((length x.complications) > 1),
-      freeformSkill = x.freeformSkill,
-      freeformComplication = x.freeformComplication }
-
-
+    { complexSkills = length x.skillNames > 2  {- Because there's a choice of skills? -}
+    , complexComplication = length x.complications > 1 {- Because there's a choice of complications? -}
+    , freeformSkill = x.freeformSkill {- Because there's a freeform skill? -}
+    , freeformComplication = x.freeformComplication {- Because there's a freeform complication? -}
+    }
 
 
 {-| Is this model's origin complex and if so, why?
@@ -145,27 +140,31 @@ hasComplexOrigin m =
 -}
 complexOriginForm : Model -> Maybe Form
 complexOriginForm m =
-    let formParts { complexSkills, complexComplication, freeformSkill, freeformComplication } =
+    let
+        formParts { complexSkills, complexComplication, freeformSkill, freeformComplication } =
             let
                 skillPart =
+                    {- If complex skills, add choice dropdowns for skills. -}
                     case complexSkills of
                         True ->
-                            [ DropdownField { name = "First Skill:", del = False, key = "origin-s1", choices = ([ "" ] ++ originSkills m) }
-                            , DropdownField { name = "Second Skill:", del = False, key = "origin-s2", choices = ([ "" ] ++ originSkills m) }
+                            [ DropdownField { name = "First Skill:", del = False, key = "origin-s1", choices = [ "" ] ++ originSkills m }
+                            , DropdownField { name = "Second Skill:", del = False, key = "origin-s2", choices = [ "" ] ++ originSkills m }
                             ]
 
                         False ->
                             []
 
                 complicationPart =
+                    {- If complex complication, add choice dropdown for complication. -}
                     case complexComplication of
                         True ->
-                            [ DropdownField { name = "Complication:", del = False, key = "origin-co", choices = ([ "" ] ++ originComplications m) } ]
+                            [ DropdownField { name = "Complication:", del = False, key = "origin-co", choices = [ "" ] ++ originComplications m } ]
 
                         False ->
                             []
 
                 freeformSkillPart =
+                    {- If freeform skill, add freeform skill field. -}
                     case freeformSkill of
                         True ->
                             [ FreeformField { name = "Custom skill:", del = False, key = "origin-cs" } ]
@@ -174,6 +173,7 @@ complexOriginForm m =
                             []
 
                 freeformComplicationPart =
+                    {- If freeform complication, add freeform complication field. -}
                     case freeformComplication of
                         True ->
                             [ FreeformField { name = "Complication:", del = False, key = "origin-cco" } ]
@@ -182,6 +182,8 @@ complexOriginForm m =
                             []
 
                 originName =
+                    {- Get origin name. It should be defined since this function shouldn't be running
+                       if the origin isn't complex, and if we know it's complex we should know the name. -}
                     case getResponse m "basics-origin" of
                         Just x ->
                             x
@@ -189,35 +191,41 @@ complexOriginForm m =
                         Nothing ->
                             "(BUG) Origin complex but missing"
             in
-                Just (Form False originName (skillPart ++ complicationPart ++ freeformSkillPart ++ freeformComplicationPart))
+            Just (Form False originName (skillPart ++ complicationPart ++ freeformSkillPart ++ freeformComplicationPart))
+    in
+    formParts (hasComplexOrigin m)
 
-     in
-        formParts(hasComplexOrigin m)
 
 {-| Calculate the complications arising from the origin, allowing for freeforms and choices.
 -}
 resolvedOriginComplications : Model -> List String
 resolvedOriginComplications m =
-    case (getResponse m "basics-origin") of
+    case getResponse m "basics-origin" of
+        {- If it's a custom origin, get the custom freeform complication. -}
         Just "<Custom>" ->
             mayList (getResponse m "origin-custom-co")
 
         _ ->
-            (if (.complexComplication (hasComplexOrigin m)) then
+            {- If complex complication, get the chosen complication; else, get the origin's
+               single complication.-}
+            (if .complexComplication (hasComplexOrigin m) then
                 mayList (getResponse m "origin-co")
-            else
+             else
                 indirectLookup m "basics-origin" m.database.origins .complications [] []
-            ) ++
-            (if (.freeformComplication (hasComplexOrigin m)) then
-                mayList (getResponse m "origin-cco")
-            else [])
+            )
+                {- If freeform complication, include it. -}
+                ++ (if .freeformComplication (hasComplexOrigin m) then
+                        mayList (getResponse m "origin-cco")
+                    else
+                        []
+                   )
 
 
 {-| Form for a custom origin.
 -}
 customOriginForm : Model -> List Form
 customOriginForm m =
-    case (getResponse m "basics-origin") of
+    case getResponse m "basics-origin" of
         Just "<Custom>" ->
             [ Form False
                 "Custom Origin"
@@ -225,12 +233,13 @@ customOriginForm m =
                  , FreeformField { name = "Complication:", del = False, key = "origin-custom-co" }
                  , DropdownField { name = "Bonus:", del = False, key = "origin-custom-wos1", choices = [ "", "Skill", "Wealth" ] }
                  ]
-                    ++ case (getResponse m "origin-custom-wos1") of
-                        Just "Skill" ->
-                            [ FreeformField { name = "Skill:", del = False, key = "origin-custom-s2" } ]
+                    ++ (case getResponse m "origin-custom-wos1" of
+                            Just "Skill" ->
+                                [ FreeformField { name = "Skill:", del = False, key = "origin-custom-s2" } ]
 
-                        _ ->
-                            []
+                            _ ->
+                                []
+                       )
                 )
             ]
 
@@ -243,17 +252,27 @@ and/or choices.
 -}
 setOriginSkills : Model -> List String
 setOriginSkills m =
-    let hco = hasComplexOrigin m in
+    let
+        hco =
+            hasComplexOrigin m
+    in
+    {- If no skill choices and no freeform skill, just use skills from the origin template. -}
+    if not hco.complexSkills && not hco.freeformSkill then
+        originSkills m
 
-        if ((not hco.complexSkills) && (not hco.freeformSkill)) then originSkills m
-        else if (hco.complexSkills && (not hco.freeformSkill)) then
-            mayList (Dict.get "origin-s1" m.character)
-                ++ mayList (Dict.get "origin-s2" m.character)
-        else if ((not hco.complexSkills) && hco.freeformSkill) then
-            originSkills m ++ mayList (Dict.get "origin-cs" m.character)
-        else
-            mayList (Dict.get "origin-s1" m.character)
-                ++ mayList (Dict.get "origin-cs" m.character)
+    {- If complex skills and no freeform skill, get the two skill choices. -}
+    else if hco.complexSkills && not hco.freeformSkill then
+        mayList (Dict.get "origin-s1" m.character)
+            ++ mayList (Dict.get "origin-s2" m.character)
+
+    {- If freeform skill and no complex skill, get the template fixed skills and the freeform one. -}
+    else if not hco.complexSkills && hco.freeformSkill then
+        originSkills m ++ mayList (Dict.get "origin-cs" m.character)
+
+    {- Else, get the chosen skill and the freeform skill. -}
+    else
+        mayList (Dict.get "origin-s1" m.character)
+            ++ mayList (Dict.get "origin-cs" m.character)
 
 
 {-| Gets the list of character skills.
@@ -262,11 +281,9 @@ getSkills : Model -> List Sourced
 getSkills m =
     map (skillNameToSkill 0) (resolvedBackgroundSkills m)
         -- Background
-        ++
-            map (skillNameToSkill 1) (resolvedOriginSkills m)
+        ++ map (skillNameToSkill 1) (resolvedOriginSkills m)
         -- Origin
-        ++
-            mayList (Maybe.map (skillNameToSkill 2) (getResponse m "basics-skill"))
+        ++ mayList (Maybe.map (skillNameToSkill 2) (getResponse m "basics-skill"))
         ++ map (skillNameToSkill 2) (getLearnedSkills m)
 
 
@@ -337,13 +354,15 @@ resolvedBackgroundSkills m =
                 ++ (mayList <| getResponse m "bg-custom-s2")
                 ++ (mayList <| getResponse m "bg-custom-s3")
                 ++ (mayList <| getResponse m "bg-custom-s4")
-                ++ (if (getResponse m "bg-custom-wos1" == Just "People") then
+                ++ (if getResponse m "bg-custom-wos1" == Just "People" then
                         mayList <| getResponse m "bg-custom-wos1s"
+
                     else
                         []
                    )
-                ++ (if (getResponse m "bg-custom-wos2" == Just "Skill") then
+                ++ (if getResponse m "bg-custom-wos2" == Just "Skill" then
                         mayList <| getResponse m "bg-custom-wos2s"
+
                     else
                         []
                    )
@@ -362,10 +381,12 @@ resolvedOriginSkills m =
 
         Just "<Custom>" ->
             (mayList <| getResponse m "origin-custom-s1")
-                ++ if (getResponse m "origin-custom-wos1" == Just "Skill") then
-                    mayList <| getResponse m "origin-custom-s2"
-                   else
-                    []
+                ++ (if getResponse m "origin-custom-wos1" == Just "Skill" then
+                        mayList <| getResponse m "origin-custom-s2"
+
+                    else
+                        []
+                   )
 
         Just _ ->
             setOriginSkills m
@@ -377,13 +398,15 @@ relevant to the new one.
 -}
 validateAlteredOrigin : Model -> Model
 validateAlteredOrigin m =
-    if ((hasComplexOrigin m) == simpleOriginComplexity) then m else
-            (killOutOfRange "origin-s1"
+    if hasComplexOrigin m == simpleOriginComplexity then
+        m
+
+    else
+        killOutOfRange "origin-s1"
+            (originSkills m)
+            (killOutOfRange "origin-s2"
                 (originSkills m)
-                (killOutOfRange "origin-s2"
-                    (originSkills m)
-                    (killOutOfRange "origin-co" (originComplications m) m)
-                )
+                (killOutOfRange "origin-co" (originComplications m) m)
             )
 
 
@@ -397,15 +420,17 @@ validateLevel m =
             setResponse m "basics-level" "1"
 
         Just x ->
-            case (toInt x) of
+            case toInt x of
                 Nothing ->
                     setResponse m "basics-level" "1"
 
                 Just l ->
                     if l < 1 then
                         setResponse m "basics-level" "1"
+
                     else if l > 10 then
                         setResponse m "basics-level" "10"
+
                     else
                         m
 
@@ -466,15 +491,16 @@ getTricks : Model -> List Sourced
 getTricks m =
     let
         bgTrick =
-            if (getResponse m "basics-bg") == Just "<Custom>" then
-                case (getResponse m "bg-custom-t") of
+            if getResponse m "basics-bg" == Just "<Custom>" then
+                case getResponse m "bg-custom-t" of
                     Nothing ->
                         []
 
                     Just t ->
                         [ t ]
+
             else
-                case (indirectLookup m "basics-bg" m.database.backgrounds .trick "" "") of
+                case indirectLookup m "basics-bg" m.database.backgrounds .trick "" "" of
                     "" ->
                         []
 
@@ -485,34 +511,37 @@ getTricks m =
             mayList (getResponse m "basics-trick")
 
         levelTricks =
-            (if ((getLevel m) >= 2) then
+            (if getLevel m >= 2 then
                 mayList (getResponse m "adv-l2trick")
+
              else
                 []
             )
-                ++ (if ((getLevel m) >= 6) then
+                ++ (if getLevel m >= 6 then
                         mayList (getResponse m "adv-l6trick")
+
                     else
                         []
                    )
-                ++ (if ((getLevel m) >= 10) then
+                ++ (if getLevel m >= 10 then
                         mayList (getResponse m "adv-l10trick")
+
                     else
                         []
                    )
 
         organicTricks =
-            case (getResponse m "basics-ticks") of
+            case getResponse m "basics-ticks" of
                 Just "Yes" ->
                     getLearnedTricks m
 
                 _ ->
                     []
     in
-        (map (skillNameToSkill 0) bgTrick)
-            ++ (map (skillNameToSkill 2) customTrick)
-            ++ (map (skillNameToSkill 2) levelTricks)
-            ++ (map (skillNameToSkill 2) organicTricks)
+    map (skillNameToSkill 0) bgTrick
+        ++ map (skillNameToSkill 2) customTrick
+        ++ map (skillNameToSkill 2) levelTricks
+        ++ map (skillNameToSkill 2) organicTricks
 
 
 {-| Get the full list of complications.
@@ -527,27 +556,29 @@ getComplications m =
             mayList (getResponse m "basics-comp")
 
         levelComplications =
-            (if ((getLevel m) >= 4) then
+            (if getLevel m >= 4 then
                 mayList (getResponse m "adv-l4comp")
+
              else
                 []
             )
-                ++ (if ((getLevel m) >= 8) then
+                ++ (if getLevel m >= 8 then
                         mayList (getResponse m "adv-l8comp")
+
                     else
                         []
                    )
 
         organicComplications =
-            case (getResponse m "basics-ticks") of
+            case getResponse m "basics-ticks" of
                 Just "Yes" ->
                     getExtraComplications m
 
                 _ ->
                     []
     in
-        (map (skillNameToSkill 1) innerOriginComplications)
-            ++ map (skillNameToSkill 2) (customComplication ++ levelComplications ++ organicComplications)
+    map (skillNameToSkill 1) innerOriginComplications
+        ++ map (skillNameToSkill 2) (customComplication ++ levelComplications ++ organicComplications)
 
 
 {-| Form with the most basic common parts of a character.
@@ -557,12 +588,12 @@ basicsForm model =
     Form False
         "The Basics"
         [ FreeformField { name = "Name:", del = False, key = "basics-name" }
-        , DropdownField { name = "Background:", del = False, key = "basics-bg", choices = ([ "<Custom>" ] ++ (Dict.keys model.database.backgrounds)) }
-        , DropdownField { name = "Origin:", del = False, key = "basics-origin", choices = ([ "<Custom>" ] ++ (Dict.keys model.database.origins)) }
+        , DropdownField { name = "Background:", del = False, key = "basics-bg", choices = [ "<Custom>" ] ++ Dict.keys model.database.backgrounds }
+        , DropdownField { name = "Origin:", del = False, key = "basics-origin", choices = [ "<Custom>" ] ++ Dict.keys model.database.origins }
         , NumberField { name = "Level:", del = False, key = "basics-level", min = 1, max = 10 }
         , DropdownField { name = "Organic:", del = False, key = "basics-ticks", choices = [ "", "No", "Yes" ] }
-        , DropdownField { name = "Class:", del = False, key = "basics-class", choices = ([ "" ] ++ Dict.keys classes) }
-        , DropdownField { name = "Role:", del = False, key = "basics-role", choices = ([ "" ] ++ Dict.keys roles) }
+        , DropdownField { name = "Class:", del = False, key = "basics-class", choices = [ "" ] ++ Dict.keys classes }
+        , DropdownField { name = "Role:", del = False, key = "basics-role", choices = [ "" ] ++ Dict.keys roles }
         , FreeformField { name = "Custom Skill:", del = False, key = "basics-skill" }
         , FreeformField { name = "Custom Trick:", del = False, key = "basics-trick" }
         , FreeformField { name = "Complication:", del = False, key = "basics-comp" }
@@ -575,30 +606,35 @@ levelForm : Model -> Form
 levelForm model =
     Form False
         "Advancement"
-        ((if ((getLevel model) >= 2) then
+        ((if getLevel model >= 2 then
             [ FreeformField { name = "Fallback", del = False, key = "adv-fallback" }
             , FreeformField { name = "Trick", del = False, key = "adv-l2trick" }
             ]
+
           else
             []
          )
-            ++ (if ((getLevel model) >= 4) then
+            ++ (if getLevel model >= 4 then
                     [ FreeformField { name = "Complication", del = False, key = "adv-l4comp" } ]
+
                 else
                     []
                )
-            ++ (if ((getLevel model) >= 6) then
+            ++ (if getLevel model >= 6 then
                     [ FreeformField { name = "Trick", del = False, key = "adv-l6trick" } ]
+
                 else
                     []
                )
-            ++ (if ((getLevel model) >= 8) then
+            ++ (if getLevel model >= 8 then
                     [ FreeformField { name = "Complication", del = False, key = "adv-l8comp" } ]
+
                 else
                     []
                )
-            ++ (if ((getLevel model) >= 10) then
+            ++ (if getLevel model >= 10 then
                     [ FreeformField { name = "Trick", del = False, key = "adv-l10trick" } ]
+
                 else
                     []
                )
@@ -611,24 +647,28 @@ featsForm : Model -> Form
 featsForm m =
     Form False
         "Feats"
-        ([ DropdownField { name = "Feat:", del = False, key = "feat-1", choices = (availableFeats m) } ]
-            ++ (if ((getLevel m) >= 3) then
-                    [ DropdownField { name = "Feat:", del = False, key = "feat-2", choices = (availableFeats m) } ]
+        ([ DropdownField { name = "Feat:", del = False, key = "feat-1", choices = availableFeats m } ]
+            ++ (if getLevel m >= 3 then
+                    [ DropdownField { name = "Feat:", del = False, key = "feat-2", choices = availableFeats m } ]
+
                 else
                     []
                )
-            ++ (if ((getLevel m) >= 5) then
-                    [ DropdownField { name = "Feat:", del = False, key = "feat-3", choices = (availableFeats m) } ]
+            ++ (if getLevel m >= 5 then
+                    [ DropdownField { name = "Feat:", del = False, key = "feat-3", choices = availableFeats m } ]
+
                 else
                     []
                )
-            ++ (if ((getLevel m) >= 7) then
-                    [ DropdownField { name = "Feat:", del = False, key = "feat-4", choices = (availableFeats m) } ]
+            ++ (if getLevel m >= 7 then
+                    [ DropdownField { name = "Feat:", del = False, key = "feat-4", choices = availableFeats m } ]
+
                 else
                     []
                )
-            ++ (if ((getLevel m) >= 9) then
-                    [ DropdownField { name = "Feat:", del = False, key = "feat-5", choices = (availableFeats m) } ]
+            ++ (if getLevel m >= 9 then
+                    [ DropdownField { name = "Feat:", del = False, key = "feat-5", choices = availableFeats m } ]
+
                 else
                     []
                )
@@ -638,8 +678,8 @@ featsForm m =
 
 repLine : Model -> Int -> List Field
 repLine m ind =
-    [ FreeformField { name = "Reputation:", del = False, key = ("rep-" ++ (String.fromInt ind)) }
-    , DropdownField { name = "Type:", del = False, key = ("rept-" ++ (String.fromInt ind)), choices = [ "", "Admired", "Famous", "Feared" ] }
+    [ FreeformField { name = "Reputation:", del = False, key = "rep-" ++ String.fromInt ind }
+    , DropdownField { name = "Type:", del = False, key = "rept-" ++ String.fromInt ind, choices = [ "", "Admired", "Famous", "Feared" ] }
     ]
 
 
@@ -647,28 +687,33 @@ repForm : Model -> Form
 repForm m =
     Form False
         "Reputation"
-        ((if ((getLevel m) >= 2) then
-            (repLine m 1)
+        ((if getLevel m >= 2 then
+            repLine m 1
+
           else
             []
          )
-            ++ (if ((getLevel m) >= 4) then
-                    (repLine m 2)
+            ++ (if getLevel m >= 4 then
+                    repLine m 2
+
                 else
                     []
                )
-            ++ (if ((getLevel m) >= 6) then
-                    (repLine m 3)
+            ++ (if getLevel m >= 6 then
+                    repLine m 3
+
                 else
                     []
                )
-            ++ (if ((getLevel m) >= 8) then
-                    (repLine m 4)
+            ++ (if getLevel m >= 8 then
+                    repLine m 4
+
                 else
                     []
                )
-            ++ (if ((getLevel m) >= 10) then
-                    (repLine m 5)
+            ++ (if getLevel m >= 10 then
+                    repLine m 5
+
                 else
                     []
                )
@@ -680,27 +725,31 @@ repForm m =
 getForms : Model -> List Form
 getForms model =
     [ basicsForm model ]
-        ++ (if ((getLevel model) >= 2) then
+        ++ (if getLevel model >= 2 then
                 [ levelForm model ]
+
             else
                 []
            )
         ++ [ featsForm model ]
         ++ [ kitsForm model ]
-        ++ (if ((getLevel model) >= 2) then
+        ++ (if getLevel model >= 2 then
                 [ repForm model ]
+
             else
                 []
            )
-        ++ (mayList (complexOriginForm model))
-        ++ (mayList (customBackgroundForm model))
+        ++ mayList (complexOriginForm model)
+        ++ mayList (customBackgroundForm model)
         ++ customOriginForm model
         ++ tacticalForms model
         ++ [ learnedSkillsForm model ]
-        ++ if (getResponse model "basics-ticks") == Just "Yes" then
-            [ learnedTricksForm model, extraCompsForm model ]
-           else
-            []
+        ++ (if getResponse model "basics-ticks" == Just "Yes" then
+                [ learnedTricksForm model, extraCompsForm model ]
+
+            else
+                []
+           )
 
 
 {-| Update a field on the character when a form value changes, and call validation.
@@ -791,12 +840,12 @@ importChar x m =
         newChar =
             Json.Decode.decodeString (Json.Decode.dict Json.Decode.string) x
     in
-        case newChar of
-            Ok chardata ->
-                ( { m | character = chardata }, Cmd.none )
+    case newChar of
+        Ok chardata ->
+            ( { m | character = chardata }, Cmd.none )
 
-            Err string ->
-                ( m, Ports.alert "Error decoding character file." )
+        Err string ->
+            ( m, Ports.alert "Error decoding character file." )
 
 
 {-| Elm model update function.
