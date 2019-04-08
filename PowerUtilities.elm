@@ -141,7 +141,7 @@ levelTextPower name slot freq range area damage col thresholds model =
                     findThreshold thresholds 1
 
                 textKey =
-                    (String.filter (\x -> (x /= ' ')) name) ++ (toString nearestThreshold) ++ "+"
+                    (String.filter (\x -> (x /= ' ')) name) ++ (String.fromInt nearestThreshold) ++ "+"
             in
                 overtext m (textKey)
     in

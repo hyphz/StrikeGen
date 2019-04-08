@@ -31,7 +31,7 @@ textExtract section text =
             List.head (String.indexes ("**" ++ section ++ ":**") text)
 
         possEnds =
-            (String.indexes "\n\n" text) ++ (String.indexes "\x0D\n\x0D\n" text) ++ [ String.length text ]
+            (String.indexes "\n\n" text) ++ (String.indexes "\u{000D}\n\u{000D}\n" text) ++ [ String.length text ]
 
         realEnd =
             case start of
@@ -81,15 +81,15 @@ powerMacro power =
                     if power.range == 0 then
                         "{{Range=Melee}}"
                     else if power.range > 0 then
-                        ("{{Range=Ranged " ++ toString power.range ++ "}}")
+                        ("{{Range=Ranged " ++ String.fromInt power.range ++ "}}")
                     else
-                        ("{{Range=Melee or Ranged " ++ toString power.range ++ "}}")
+                        ("{{Range=Melee or Ranged " ++ String.fromInt power.range ++ "}}")
 
                 _ ->
                     if power.range > 0 then
-                        ("{{Range=Ranged " ++ toString power.range ++ "}}")
+                        ("{{Range=Ranged " ++ String.fromInt power.range ++ "}}")
                     else if power.range < 0 then
-                        ("{{Range=Adjacent or ranged " ++ toString (-power.range) ++ "}}")
+                        ("{{Range=Adjacent or ranged " ++ String.fromInt (-power.range) ++ "}}")
                     else
                         ""
 
@@ -121,18 +121,16 @@ powerMacro power =
                     ""
 
                 _ ->
-                    "{{Area=" ++ (toString power.area) ++ "}}"
+                    "{{Area=" ++ (String.fromInt power.area) ++ "}}"
 
         damageDesc =
             case power.damage of
                 0 ->
                     ""
 
-                (-1) ->
-                    "{{Damage=Support}}"
-
-                _ ->
-                    "{{Damage=" ++ (toString power.damage) ++ "}}"
+                _ -> if power.damage == -1 then
+                       "{{Damage=Support}}"
+                     else "{{Damage=" ++ (String.fromInt power.damage) ++ "}}"
 
         ( triggerDesc, triggerRest ) =
             extractToMacroPart "Trigger" power.text
@@ -149,6 +147,7 @@ powerMacro power =
         ( marconDesc, marconRest ) =
             extractToMacroPart "Continuous" martialRest
 
+        
         restText =
             if (effectRest /= "") then
                 "{{Text=" ++ tidyEdges marconRest ++ "}}"
@@ -169,7 +168,7 @@ powerMacro power =
             ++ martialDesc
             ++ marconDesc
             ++ restText
-            ++ "\x0D\n\x0D\n"
+            ++ "\u{000D}\n\u{000D}\n"
 
 
 {-| Create the power macro data file for export.

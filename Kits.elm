@@ -10,7 +10,7 @@ import FormsModel exposing (..)
 -}
 kitChoices : Model -> Int -> List String
 kitChoices m l =
-    List.foldr (++) [] (List.map (\x -> mayList <| getResponse m ("kit-" ++ (toString x))) (List.range 1 l))
+    List.foldr (++) [] (List.map (\x -> mayList <| getResponse m ("kit-" ++ (String.fromInt x))) (List.range 1 l))
 
 
 {-| Gets the list of advances for a named kit.

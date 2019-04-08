@@ -80,7 +80,7 @@ windUpStrike m =
         , area = 0
         , damage = 0
         , styl = Red
-        , text = "Deal " ++ (toString extraDamage) ++ " extra damage if you hit with your next attack. If your next attack hits multiple targets, apply this damage to only one of them."
+        , text = "Deal " ++ (String.fromInt extraDamage) ++ " extra damage if you hit with your next attack. If your next attack hits multiple targets, apply this damage to only one of them."
         }
 
 
@@ -153,7 +153,7 @@ ssLevel m =
 
 savageStriker m =
     Power "Savage Striker"
-        ("When your attack reduces an enemy's Hit Points to " ++ (toString (ssLevel m)) ++ " or less, they are Taken Out. This does not apply to Goons or Stooges.")
+        ("When your attack reduces an enemy's Hit Points to " ++ (String.fromInt (ssLevel m)) ++ " or less, they are Taken Out. This does not apply to Goons or Stooges.")
         Misc
         None
         0

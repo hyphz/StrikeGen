@@ -253,7 +253,7 @@ singularName t =
 
 summonFieldName : SummonType -> Int -> String
 summonFieldName t ind =
-    ((typePrefix t) ++ toString ind)
+    ((typePrefix t) ++ String.fromInt ind)
 
 {-| Returns the field specification for the (index)th summon choice of the kind
     chosen by the player in the key (typelookup).

@@ -85,16 +85,16 @@ sheetHeader m =
                     [ headerTableRow "Name:" (Maybe.withDefault (noName m) (getResponse m "basics-name"))
                     , headerTableRow "Background:" (Maybe.withDefault "" (getResponse m "basics-bg"))
                     , headerTableRow "Origin:" (Maybe.withDefault "" (getResponse m "basics-origin"))
-                    , headerTableRow "Level:" (toString <| getLevel m)
-                    , headerTableRow "Wealth:" ((toString <| getWealth m) ++ (wealthDesc (getWealth m)))
+                    , headerTableRow "Level:" (String.fromInt <| getLevel m)
+                    , headerTableRow "Wealth:" ((String.fromInt <| getWealth m) ++ (wealthDesc (getWealth m)))
                     ]
                 ]
             , td []
                 [ table [ class "tacticalheader" ]
                     [ headerTableRow "Class:" (Maybe.withDefault "" (getResponse m "basics-class"))
                     , headerTableRow "Role:" (roleText m)
-                    , headerTableRow "Speed:" (toString <| getSpeed m)
-                    , headerTableRow "HP:" (toString <| getHP m)
+                    , headerTableRow "Speed:" (String.fromInt <| getSpeed m)
+                    , headerTableRow "HP:" (String.fromInt <| getHP m)
                     ]
                 ]
             ]
@@ -223,8 +223,8 @@ SVG icons!
 useIcon : (Color.Color -> Int -> Svg.Svg a) -> Int -> Html a
 useIcon icon size =
     Svg.svg
-        [ Svg.Attributes.height (toString size)
-        , Svg.Attributes.width (toString size)
+        [ Svg.Attributes.height (String.fromInt size)
+        , Svg.Attributes.width (String.fromInt size)
         ]
         [ icon Color.black size ]
 
@@ -295,8 +295,8 @@ formFieldDisplay model field =
                             [ (Html.Events.on "change" (targetAndWrap (FormFieldUpdated nf.key)))
                             , (Html.Attributes.value (Maybe.withDefault "" (get nf.key model.character)))
                             , (Html.Attributes.type_ "number")
-                            , (Html.Attributes.min <| toString nf.min)
-                            , (Html.Attributes.max <| toString nf.max)
+                            , (Html.Attributes.min <| String.fromInt nf.min)
+                            , (Html.Attributes.max <| String.fromInt nf.max)
                             ]
                             []
                         ]
@@ -335,13 +335,6 @@ formDisplay model form =
             ]
 
 
-mdOptions : Markdown.Options
-mdOptions =
-    { githubFlavored = Nothing
-    , defaultHighlighting = Nothing
-    , sanitize = True
-    , smartypants = False
-    }
 
 
 powerCard : Power -> Html Msg
@@ -417,13 +410,13 @@ powerCard power =
                     x ->
                         if (x > 0) then
                             [ img [ src "icons/range.svg", height 16, width 16 ] []
-                            , (text (toString power.range))
+                            , (text (String.fromInt power.range))
                             ]
                         else
                             [ img [ src "icons/melee.svg", height 16, width 16 ] []
                             , text ("/")
                             , img [ src "icons/range.svg", height 16, width 16 ] []
-                            , (text (toString (-power.range)))
+                            , (text (String.fromInt (-power.range)))
                             ]
             else
                 []
@@ -435,7 +428,7 @@ powerCard power =
 
                 x ->
                     [ img [ src "icons/area.svg", height 16, width 16 ] []
-                    , (text (toString power.area))
+                    , (text (String.fromInt power.area))
                     ]
 
         damageIcon =
@@ -443,14 +436,12 @@ powerCard power =
                 0 ->
                     []
 
-                (-1) ->
+                x -> if (x == -1) then
                     [ img [ src "icons/damage.svg", height 16, width 16 ] []
                     , (text "S")
-                    ]
-
-                x ->
+                    ] else
                     [ img [ src "icons/damage.svg", height 16, width 16 ] []
-                    , (text (toString power.damage))
+                    , (text (String.fromInt power.damage))
                     ]
 
         iconblock =
@@ -465,7 +456,7 @@ powerCard power =
                 , div [ class "powericons" ] iconblock
                 , div [ class "powertype" ] [ text freqText ]
                 ]
-            , div [ class "powertext" ] [ Markdown.toHtmlWith mdOptions [] power.text ]
+            , div [ class "powertext" ] ( Markdown.toHtml Nothing power.text )
             ]
 
 
@@ -489,7 +480,7 @@ powerOrder power =
 
         Cyan ->
             5
-            
+
         Red ->
             6
 
@@ -532,7 +523,7 @@ kitTableRow m key lev =
             []
 
         Just adv ->
-            [ tr [] [ td [] [ text ((toString lev) ++ ":") ], td [] [ text adv ] ] ]
+            [ tr [] [ td [] [ text ((String.fromInt lev) ++ ":") ], td [] [ text adv ] ] ]
 
 
 kitTableBody : Model -> List (Html Msg)
@@ -568,12 +559,12 @@ kitTable m =
 
 repTableRow : Model -> Int -> List (Html Msg)
 repTableRow m i =
-    case (getResponse m ("rep-" ++ (toString i))) of
+    case (getResponse m ("rep-" ++ (String.fromInt i))) of
         Nothing ->
             []
 
         Just repname ->
-            case (getResponse m ("rept-" ++ (toString i))) of
+            case (getResponse m ("rept-" ++ (String.fromInt i))) of
                 Nothing ->
                     []
 

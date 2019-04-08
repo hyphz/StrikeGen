@@ -17,8 +17,8 @@ import ExtenderForms exposing (extenderForm, extendForm, getExtendFormEntries, u
 
 {-| ELM Architecture Initialization Function.
 -}
-init : ( Model, Cmd Msg )
-init =
+init : Int -> ( Model, Cmd Msg )
+init _  =
     ( { character = blankCharacter
       , database = blankDatabase
       }
@@ -104,39 +104,48 @@ originComplications m =
 -- choose which ones to go for. So we have to offer a choice if we have one of
 -- these.
 
+type alias OriginComplexity =
+  { complexSkills : Bool,
+    complexComplication : Bool,
+    freeformSkill : Bool,
+    freeformComplication : Bool }
+
+
+simpleOriginComplexity : OriginComplexity
+simpleOriginComplexity =
+  { complexSkills = False, complexComplication = False,
+    freeformSkill = False, freeformComplication = False }
+
 
 {-| Is an origin complex and if so, why?
 -}
-complexOrigin : Origin -> ( Bool, Bool, Bool, Bool )
+complexOrigin : Origin -> OriginComplexity
 complexOrigin x =
-    ( (length x.skillNames) > 2
-    , (length x.complications) > 1
-    , x.freeformSkill
-    , x.freeformComplication
-    )
+    { complexSkills = ((length x.skillNames) > 2),
+      complexComplication = ((length x.complications) > 1),
+      freeformSkill = x.freeformSkill,
+      freeformComplication = x.freeformComplication }
+
+
 
 
 {-| Is this model's origin complex and if so, why?
 -}
-hasComplexOrigin : Model -> ( Bool, Bool, Bool, Bool )
+hasComplexOrigin : Model -> OriginComplexity
 hasComplexOrigin m =
     indirectLookup m
         "basics-origin"
         m.database.origins
         complexOrigin
-        ( False, False, False, False )
-        ( False, False, False, False )
+        simpleOriginComplexity
+        simpleOriginComplexity
 
 
 {-| Form for making the choices resulting from having a complex origin.
 -}
 complexOriginForm : Model -> Maybe Form
 complexOriginForm m =
-    case (hasComplexOrigin m) of
-        ( False, False, False, False ) ->
-            Nothing
-
-        ( complexSkills, complexComplications, freeformSkill, freeformComplication ) ->
+    let formParts { complexSkills, complexComplication, freeformSkill, freeformComplication } =
             let
                 skillPart =
                     case complexSkills of
@@ -149,7 +158,7 @@ complexOriginForm m =
                             []
 
                 complicationPart =
-                    case complexComplications of
+                    case complexComplication of
                         True ->
                             [ DropdownField { name = "Complication:", del = False, key = "origin-co", choices = ([ "" ] ++ originComplications m) } ]
 
@@ -182,6 +191,8 @@ complexOriginForm m =
             in
                 Just (Form False originName (skillPart ++ complicationPart ++ freeformSkillPart ++ freeformComplicationPart))
 
+     in
+        formParts(hasComplexOrigin m)
 
 {-| Calculate the complications arising from the origin, allowing for freeforms and choices.
 -}
@@ -192,21 +203,14 @@ resolvedOriginComplications m =
             mayList (getResponse m "origin-custom-co")
 
         _ ->
-            case (hasComplexOrigin m) of
-                ( False, False, False, False ) ->
-                    indirectLookup m "basics-origin" m.database.origins .complications [] []
-
-                ( _, complex, _, freeform ) ->
-                    (if (complex) then
-                        mayList (getResponse m "origin-co")
-                     else
-                        indirectLookup m "basics-origin" m.database.origins .complications [] []
-                    )
-                        ++ (if (freeform) then
-                                mayList (getResponse m "origin-cco")
-                            else
-                                []
-                           )
+            (if (.complexComplication (hasComplexOrigin m)) then
+                mayList (getResponse m "origin-co")
+            else
+                indirectLookup m "basics-origin" m.database.origins .complications [] []
+            ) ++
+            (if (.freeformComplication (hasComplexOrigin m)) then
+                mayList (getResponse m "origin-cco")
+            else [])
 
 
 {-| Form for a custom origin.
@@ -239,18 +243,15 @@ and/or choices.
 -}
 setOriginSkills : Model -> List String
 setOriginSkills m =
-    case (hasComplexOrigin m) of
-        ( False, _, False, _ ) ->
-            originSkills m
+    let hco = hasComplexOrigin m in
 
-        ( True, _, False, _ ) ->
+        if ((not hco.complexSkills) && (not hco.freeformSkill)) then originSkills m
+        else if (hco.complexSkills && (not hco.freeformSkill)) then
             mayList (Dict.get "origin-s1" m.character)
                 ++ mayList (Dict.get "origin-s2" m.character)
-
-        ( False, _, True, _ ) ->
+        else if ((not hco.complexSkills) && hco.freeformSkill) then
             originSkills m ++ mayList (Dict.get "origin-cs" m.character)
-
-        ( True, _, True, _ ) ->
+        else
             mayList (Dict.get "origin-s1" m.character)
                 ++ mayList (Dict.get "origin-cs" m.character)
 
@@ -376,11 +377,7 @@ relevant to the new one.
 -}
 validateAlteredOrigin : Model -> Model
 validateAlteredOrigin m =
-    case hasComplexOrigin m of
-        ( False, False, False, False ) ->
-            m
-
-        _ ->
+    if ((hasComplexOrigin m) == simpleOriginComplexity) then m else
             (killOutOfRange "origin-s1"
                 (originSkills m)
                 (killOutOfRange "origin-s2"
@@ -401,10 +398,10 @@ validateLevel m =
 
         Just x ->
             case (toInt x) of
-                Err _ ->
+                Nothing ->
                     setResponse m "basics-level" "1"
 
-                Ok l ->
+                Just l ->
                     if l < 1 then
                         setResponse m "basics-level" "1"
                     else if l > 10 then
@@ -523,7 +520,7 @@ getTricks m =
 getComplications : Model -> List Sourced
 getComplications m =
     let
-        originComplications =
+        innerOriginComplications =
             resolvedOriginComplications m
 
         customComplication =
@@ -549,7 +546,7 @@ getComplications m =
                 _ ->
                     []
     in
-        (map (skillNameToSkill 1) originComplications)
+        (map (skillNameToSkill 1) innerOriginComplications)
             ++ map (skillNameToSkill 2) (customComplication ++ levelComplications ++ organicComplications)
 
 
@@ -641,8 +638,8 @@ featsForm m =
 
 repLine : Model -> Int -> List Field
 repLine m ind =
-    [ FreeformField { name = "Reputation:", del = False, key = ("rep-" ++ (toString ind)) }
-    , DropdownField { name = "Type:", del = False, key = ("rept-" ++ (toString ind)), choices = [ "", "Admired", "Famous", "Feared" ] }
+    [ FreeformField { name = "Reputation:", del = False, key = ("rep-" ++ (String.fromInt ind)) }
+    , DropdownField { name = "Type:", del = False, key = ("rept-" ++ (String.fromInt ind)), choices = [ "", "Admired", "Famous", "Feared" ] }
     ]
 
 

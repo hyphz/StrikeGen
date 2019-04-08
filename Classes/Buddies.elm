@@ -225,12 +225,12 @@ buddyPassiveChoice m k x =
                 MustNew ->
                     [ "" ]
                         ++ List.sort
-                            (List.filter (\x -> not (List.member x (buddyPassiveChoices m))) (Dict.keys buddyPassives)
+                            (List.filter (\p -> not (List.member p (buddyPassiveChoices m))) (Dict.keys buddyPassives)
                                 ++ mayList (getResponse m k)
                             )
 
                 MustBoost ->
-                    [ "" ] ++ List.sort (List.filter (\x -> (List.member x (buddyPassiveChoices m))) (Dict.keys buddyPassives))
+                    [ "" ] ++ List.sort (List.filter (\p -> (List.member p (buddyPassiveChoices m))) (Dict.keys buddyPassives))
         , name =
             case x of
                 Either ->

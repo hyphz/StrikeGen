@@ -1,6 +1,6 @@
 module ModelDB exposing (..)
 
-import Http exposing (getString, Error)
+import Http exposing (Error)
 import Dict exposing (..)
 import FormsModel exposing (..)
 import Json.Decode
@@ -192,6 +192,8 @@ blankDatabase : Database
 blankDatabase =
     { backgrounds = Dict.empty, origins = Dict.empty, texts = Dict.empty, kits = Dict.empty }
 
+blankModel : Model
+blankModel = { character = blankCharacter, database = blankDatabase }
 
 {-| Turns a maybe value into a single element list for concatting.
 -}
@@ -278,10 +280,10 @@ getResponseInt model key default =
 
         Just x ->
             case (toInt x) of
-                Err _ ->
+                Nothing ->
                     default
 
-                Ok i ->
+                Just i ->
                     i
 
 
@@ -332,23 +334,20 @@ httpError : Model -> Model
 httpError model =
     model
 
-{-| Redefining the json decode function that was removed in 0.18 -}
-(:=) : String -> Decoder x -> Decoder x
-(:=) fieldname decoder = Json.Decode.field fieldname decoder
 
 {-| JSON decoder for the origins file.
 -}
 originsDecoder : Decoder (List Origin)
 originsDecoder =
-    "origins"
-        := (Json.Decode.list
+    Json.Decode.field "origins"
+          (Json.Decode.list
                 (Json.Decode.map6 Origin
-                    ("name" := string)
-                    ("skillNames" := Json.Decode.list string)
-                    ("wealth" := int)
-                    ("complications" := Json.Decode.list string)
-                    (Json.Decode.oneOf [ ("freeformSkill" := bool), succeed False ])
-                    (Json.Decode.oneOf [ ("freeformComplication" := bool), succeed False ])
+                    (Json.Decode.field "name" string)
+                    (Json.Decode.field "skillNames" (Json.Decode.list string))
+                    (Json.Decode.field "wealth" int)
+                    (Json.Decode.field "complications" (Json.Decode.list string))
+                    (Json.Decode.oneOf [ (Json.Decode.field "freeformSkill" bool), succeed False ])
+                    (Json.Decode.oneOf [ (Json.Decode.field "freeformComplication" bool), succeed False ])
                 )
            )
 
@@ -357,29 +356,29 @@ originsDecoder =
 -}
 backgroundsDecoder : Decoder (List Background)
 backgroundsDecoder =
-    "backgrounds"
-        := (Json.Decode.list
+    Json.Decode.field "backgrounds"
+        (Json.Decode.list
                 (map4 Background
-                    ("name" := string)
-                    ("skillNames" := Json.Decode.list string)
-                    ("wealth" := int)
-                    ("trick" := string)
+                    (Json.Decode.field "name" string)
+                    (Json.Decode.field "skillNames" (Json.Decode.list string))
+                    (Json.Decode.field "wealth" int)
+                    (Json.Decode.field "trick" string)
                 )
            )
 
 
 kitsDecoder : Decoder (List Kit)
 kitsDecoder =
-    "kits"
-        := (Json.Decode.list
+    Json.Decode.field "kits"
+          (Json.Decode.list
                 (map3 Kit
-                    ("name" := string)
-                    ("mini" := Json.Decode.bool)
-                    ("advances"
-                        := (Json.Decode.list
+                    (Json.Decode.field "name" string)
+                    (Json.Decode.field "mini" Json.Decode.bool)
+                    (Json.Decode.field "advances"
+                           (Json.Decode.list
                                 (Json.Decode.map2 KitAdvance
-                                    ("name" := string)
-                                    ("prereqs" := Json.Decode.list string)
+                                    (Json.Decode.field "name" string)
+                                    (Json.Decode.field "prereqs" (Json.Decode.list string))
                                 )
                            )
                     )
@@ -387,12 +386,14 @@ kitsDecoder =
            )
 
 
+
 {-| Returns the command to load a JSON data file. If it loads successfully, send the
 specified message. If it doesn't, send HTTPLoadError.
 -}
 getJsonFileCommand : String -> (Result Error String -> Msg) -> Cmd Msg
 getJsonFileCommand fileName signal =
-    Http.send signal (getString fileName)
+    Http.get { url = fileName, expect = Http.expectString signal }
+
 
 
 {-| Quick function for removing a field value that's out of range, if it
@@ -446,7 +447,7 @@ unpackOrigins s model =
 defaultErr x =
     case x of
         Err e ->
-            [ Kit e False [] ]
+            [ Kit "Error" False [] ]
 
         Ok o ->
             o
