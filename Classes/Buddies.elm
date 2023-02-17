@@ -63,9 +63,9 @@ specials m =
 buddyActives : Dict.Dict String String
 buddyActives =
     Dict.fromList
-        [ ( "Pushy", "N: Push 2. B: Push 2 and Prone until end of their turn. S: Throw 4 and Prone until end of their next turn, and any enemies adjacent to where the target lands are Prone until the end of their next turns." )
+        [ ( "Pushy", "N: Push 2. B: Push 2 and knocked Prone. S: Throw 4, knocked Prone, and any enemies adjacent to where the target lands are knocked Prone." )
         , ( "Enervating", "N: Slowed until end of turn. B: Weakened and Slowed until end of turn. S: Blinded until end of turn." )
-        , ( "Focused", "N: Marked until end of turn. B: Marked and if it grants an Opportunity while within reach it is knocked Prone (all until end of turn). S: Marked, knocked Prone, and standing up grants an Opportunity to your Buddy (all until end of turn)." )
+        , ( "Focused", "N: Marked until end of turn. B: Marked and if it grants an Opportunity while within reach it is knocked Prone (both until end of its next turn). S: Knocked Prone; also, Marked, and standing up grants an Opportunity to your Buddy (both until end of its next turn)." )
         , ( "Scary", "N: Harried until end of turn. B: Next time you hit the target it is Panicked on its next turn. S: Target is Panicked until the end of its next turn. Next turn, it is Harried until the end of its next turn." )
         , ( "Dizzying", "N: Distracted until end of turn. B: Dazed until end of turn. S: Stunned until end of turn." )
         , ( "Handsy", "N: Grabbed, but automatically succeeds at escape roll. B: Grabbed and Ongoing 2 Damage while Grabbed. S: Restrained until escape." )
